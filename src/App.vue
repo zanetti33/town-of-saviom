@@ -28,7 +28,7 @@ onMounted(async () => {
     }
   } catch (e) {
     console.log("No session found");
-    if (currentPath !== '/login') {
+    if (route.path !== '/login') {
         router.push('/login');
     }
   } finally {
