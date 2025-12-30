@@ -41,13 +41,13 @@ export default {
                 if (response.status === 200 || response.status === 201) {
                     this.players = response.data.players;
                     this.roomName = response.data.name;
-                    this.setupSocket(LOBBY_API_URL);
+                    this.setupSocket(LOBBY_API_URL, response.data._id);
                 }
             } catch (error) {
                 console.error('Error joining room:', error);
             }
         },
-        setupSocket(url) {
+        setupSocket(url, roomId) {
             const authStore = useAuthStore();
             console.log(`using access token: ${authStore.accessToken}`)
             this.socket = io(url, {
@@ -62,6 +62,7 @@ export default {
             
             this.socket.on('connect', () => {
                 this.connectionStatus = 'Connected to lobby';
+                this.socket.emit("JOIN_LOBBY_ROOM", roomId);
                 console.log('Socket Connected:', this.socket.id);
             });
 
