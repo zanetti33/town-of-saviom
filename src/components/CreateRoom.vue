@@ -43,6 +43,7 @@
                 </div>
                 <button type="submit">Create</button>
             </form>
+            <button @click="$router.push('/dashboard')">Return to dashboard</button>
             <p v-if="error">{{ error }}</p>
         </div>
     </div>
@@ -80,8 +81,8 @@ const postRoom = async (name, gameMode, roomCapacity) => {
         const res = await lobbyApi.post('/rooms', { name, gameMode, roomCapacity });
 
         console.log("Create room successful:", res.data);
-        console.log("Push on lobby list");
-        router.push('/rooms');
+        console.log("Push on lobby");
+        router.push(`/rooms/${res.data._id}`);
     } catch (err) {
         console.error("Create room failed:", err);
         alert("Create room failed");
