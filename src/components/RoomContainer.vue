@@ -8,6 +8,7 @@
                 {{ player.name }}
             </li>
         </ul>
+        <button @click="onExitButtonClick">Exit</button>
     </div>
 </template>
 
@@ -15,42 +16,41 @@
 import { lobbyApi, LOBBY_API_URL } from '../services/api';
 import { io } from 'socket.io-client';
 import { useAuthStore } from '../stores/authStore';
+import router from '../router';
 
 export default {
     data() {
         return {
             players: [],
             socket: null,
-            roomName: null
+            roomName: null,
+            roomId: null
         };
     },
     mounted() {
         this.joinRoom();
     },
     beforeUnmount() {
-        if (this.socket) {
-            this.socket.disconnect();
-            console.log("Socket disconnected");
-        }
+        this.leaveRoom();
     },
     methods: {
         async joinRoom() {
             try {
-                const roomId = this.$route.params.id;
-                const response = await lobbyApi.post(`/rooms/${roomId}/players`);
+                this.roomId = this.$route.params.id;
+                const response = await lobbyApi.post(`/rooms/${this.roomId}/players`);
                 if (response.status === 200 || response.status === 201) {
                     this.players = response.data.players;
                     this.roomName = response.data.name;
-                    this.setupSocket(LOBBY_API_URL, response.data._id);
+                    this.setupSocket();
                 }
             } catch (error) {
                 console.error('Error joining room:', error);
             }
         },
-        setupSocket(url, roomId) {
+        setupSocket() {
             const authStore = useAuthStore();
             console.log(`using access token: ${authStore.accessToken}`)
-            this.socket = io(url, {
+            this.socket = io(LOBBY_API_URL, {
                 auth: {
                     token: authStore.accessToken 
                 },
@@ -62,7 +62,7 @@ export default {
             
             this.socket.on('connect', () => {
                 this.connectionStatus = 'Connected to lobby';
-                this.socket.emit("JOIN_LOBBY_ROOM", roomId);
+                this.socket.emit("JOIN_LOBBY_ROOM", this.roomId);
                 console.log('Socket Connected:', this.socket.id);
             });
 
@@ -113,6 +113,23 @@ export default {
                 // Navigate to game board or change view
                 console.log("Game started!", gameData);
             });
+        },
+        async leaveRoom() {
+            try {
+                const response = await lobbyApi.delete(`/rooms/${this.roomId}/players`);
+                if (response.status === 200) {
+                    console.log("Successfully removed");
+                }
+                if (this.socket) {
+                    this.socket.disconnect();
+                    console.log("Socket disconnected");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        onExitButtonClick() {
+            router.push("/rooms");
         }
     }
 };
