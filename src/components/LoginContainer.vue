@@ -26,6 +26,7 @@
                 <button type="submit">Login</button>
             </form>
             <p v-if="error">{{ error }}</p>
+            <button @click="$router.push('/register')">Register</button>
         </div>
     </div>
 </template>

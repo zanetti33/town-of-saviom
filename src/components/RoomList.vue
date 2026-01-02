@@ -4,6 +4,7 @@
             <h3>{{ room.name }}</h3>
             <button class="join-btn" @click="joinRoom(room)">Join</button>
         </div>
+        <button @click="$router.push('/dashboard')">Return to dashboard</button>
     </div>
 </template>
 

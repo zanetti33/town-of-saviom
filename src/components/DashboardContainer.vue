@@ -5,8 +5,7 @@
             <p>Welcome, Player</p>
         </div>
 
-        <button @click="login" v-if="user==null">Login</button>
-        <button @click="logout" v-if="user!=null">Logout</button>
+        <button @click="logout">Logout</button>
         <button @click="createRoom">Create Room</button>
         <button @click="joinRoom">Join Room</button>
         <button @click="openOptions">Options</button>
@@ -15,14 +14,6 @@
 
 <script>
 export default {
-    data() {
-        return {
-            user: null
-        };
-    },
-    mounted() {
-        this.user = this.getUser();
-    },
     name: 'DashboardContainer',
     methods: {
         login() {
@@ -44,15 +35,13 @@ export default {
             console.log('Logout clicked');
             router.push('/logout');
         },
-        async getUser() { 
-            const user = await loginApi.get('/users/me');
-            console.log("Fetched user info:", user.data);
-            return user.data;
-        }
+        register() {
+            console.log('Register clicked');
+            router.push('/register');
+        },
     }
 };
 
-import { loginApi } from '../services/api';
 import router from '../router';
 </script>
 
