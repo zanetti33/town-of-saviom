@@ -38,11 +38,11 @@ export default {
             try {
                 const roomId = this.$route.params.id;
                 const response = await lobbyApi.post(`/rooms/${roomId}/players`);
-                    if (response.status === 200 || response.status === 201) {
-                        this.players = response.data.players;
-                        this.roomName = response.data.name;
-                        this.setupSocket(LOBBY_API_URL, response.data._id);
-                    }
+                if (response.status === 200 || response.status === 201) {
+                    this.players = response.data.players;
+                    this.roomName = response.data.name;
+                    this.setupSocket(LOBBY_API_URL, response.data._id);
+                }
             } catch (error) {
                 console.error('Error joining room:', error);
             }
