@@ -30,6 +30,7 @@ export default {
         },
         openOptions() {
             console.log('Options clicked');
+            router.push('/options');
         },
         logout() {
             console.log('Logout clicked');

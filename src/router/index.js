@@ -7,6 +7,7 @@ import RoomList from '../components/RoomList.vue';
 import RoomContainer from '../components/RoomContainer.vue';
 import CreateRoom from '../components/CreateRoom.vue';
 import RegisterContainer from '../components/RegisterContainer.vue';
+import OptionsContainer from '../components/OptionsContainer.vue';
 import NotFound from '../pages/NotFound.vue';
 
 const routes = [
@@ -17,6 +18,7 @@ const routes = [
   { path: '/rooms', component: RoomList, name: 'RoomList' },
   { path: '/rooms/:id', component: RoomContainer, name: 'Room' },
   { path: '/rooms/create', component: CreateRoom, name: 'CreateRoom' },
+  { path: '/options', component: OptionsContainer, name: 'Options'},
   // Always at the end, match everything else
   { path: '/:pathMatch(.*)*', redirect: '/dashboard' }
 ];
