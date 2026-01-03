@@ -2,7 +2,8 @@
     <div class="room-list">
         <div v-for="room in rooms" :key="room.id" class="room-card">
             <h3>{{ room.name }}</h3>
-            <button class="join-btn" @click="joinRoom(room)">Join</button>
+            <button class="join-btn" @click="joinRoom(room)" v-if="room.status !== 'playing'">Join</button>
+            <button class="join-btn" disabled="true" v-else>Join</button>
         </div>
         <button @click="$router.push('/dashboard')">Return to dashboard</button>
     </div>
