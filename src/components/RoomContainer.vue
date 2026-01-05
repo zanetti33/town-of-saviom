@@ -1,7 +1,7 @@
 <template>
     <div class="lobby">
         <h2 v-if="roomName">{{ roomName }}</h2>
-        
+        <p v-if="roomCode">Room: {{ roomCode }}</p>
         <h3>Players:</h3>
         <ul>
             <li v-for="player in players" :key="player.id">
@@ -9,6 +9,7 @@
             </li>
         </ul>
         <button @click="onExitButtonClick">Exit</button>
+        <button v-if="isHost" @click="startGame">Start Game</button>
     </div>
 </template>
 
@@ -24,11 +25,14 @@ export default {
             players: [],
             socket: null,
             roomName: null,
-            roomId: null
+            roomId: null,
+            roomCode: null,
+            isHost: null
         };
     },
     mounted() {
         this.joinRoom();
+        this.checkHost();
     },
     beforeUnmount() {
         this.leaveRoom();
@@ -41,11 +45,23 @@ export default {
                 if (response.status === 200 || response.status === 201) {
                     this.players = response.data.players;
                     this.roomName = response.data.name;
+                    this.roomCode = response.data.code;
                     this.setupSocket();
                 }
             } catch (error) {
                 console.error('Error joining room:', error);
             }
+        },
+        async checkHost() {
+            const response = await lobbyApi.get(`/rooms/${this.roomId}`);
+            const authStore = useAuthStore();
+            for (let player of response.data.players) {
+                if (player.userId === authStore.user.id) {
+                    this.isHost = player.isHost;
+                    return;
+                }
+            }
+            this.isHost = false;
         },
         setupSocket() {
             const authStore = useAuthStore();
@@ -130,6 +146,9 @@ export default {
         },
         onExitButtonClick() {
             router.push("/rooms");
+        },
+        startGame(){
+            console.log("Start game clicked, not implemented yet");
         }
     }
 };
