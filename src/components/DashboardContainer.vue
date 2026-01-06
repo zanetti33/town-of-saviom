@@ -2,13 +2,21 @@
     <div>
         <div>
             <img src="../assets/img/default.png" alt="Player Icon" />
-            <p>Welcome, Player</p>
+            <p class="text-blue-700">Welcome, Player</p>
         </div>
 
-        <button @click="logout">Logout</button>
-        <button @click="createRoom">Create Room</button>
-        <button @click="joinRoom">Join Room</button>
-        <button @click="openOptions">Options</button>
+        <button class="flex border border-purple-500 text-purple-600 hover:border-transparent hover:bg-purple-600 hover:text-white" @click="logout">
+            Logout
+        </button>
+        <button class="flex border border-purple-500 text-purple-600 hover:border-transparent hover:bg-purple-600 hover:text-white" @click="createRoom">
+            Create Room
+        </button>
+        <button class="flex border border-purple-500 text-purple-600 hover:border-transparent hover:bg-purple-600 hover:text-white" @click="joinRoom">
+            Join Room
+        </button>
+        <button class="flex border border-purple-500 text-purple-600 hover:border-transparent hover:bg-purple-600 hover:text-white" @click="openOptions">
+            Options
+        </button>
     </div>
 </template>
 
