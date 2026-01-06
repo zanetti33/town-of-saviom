@@ -33,6 +33,16 @@
                         placeholder="Enter your password"
                     />
                 </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input
+                        id="confirmPassword"
+                        v-model="confirmPassword"
+                        type="password"
+                        required
+                        placeholder="Confirm your password"
+                    />
+                </div>
                 <button type="submit">Register</button>
             </form>
             <p v-if="error">{{ error }}</p>
@@ -49,17 +59,19 @@ export default {
             email: '',
             username: '',
             password: '',
+            confirmPassword: '',
             error: ''
         };
     },
     methods: {
         handleRegistration() {
-            if (this.email && this.username && this.password) {
-                console.log('Registration attempt:', { email: this.email, name: this.username, password: this.password });
+            if (this.email && this.username && this.password && this.confirmPassword && 
+                this.password === this.confirmPassword) {
+                console.log('Registration attempt:', { email: this.email, name: this.username, password: this.password, confirmPassword: this.confirmPassword });
                 register(this.email, this.username, this.password);
                 this.error = '';
             } else {
-                this.error = 'Please fill in all fields';
+                this.error = 'Please fill in all fields and ensure passwords match';
             }
         }
     }
