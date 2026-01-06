@@ -9,7 +9,6 @@
             </li>
         </ul>
         <button @click="onExitButtonClick">Exit</button>
-        <button v-if="isHost" @click="startGame">Start Game</button>
     </div>
 </template>
 
@@ -146,9 +145,6 @@ export default {
         },
         onExitButtonClick() {
             router.push("/rooms");
-        },
-        startGame(){
-            console.log("Start game clicked, not implemented yet");
         }
     }
 };
