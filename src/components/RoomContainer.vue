@@ -25,7 +25,8 @@ export default {
             players: [],
             socket: null,
             roomName: null,
-            roomId: null
+            roomId: null,
+            gameStarted: false
         };
     },
     mounted() {
@@ -42,6 +43,10 @@ export default {
                 if (response.status === 200 || response.status === 201) {
                     this.players = response.data.players;
                     this.roomName = response.data.name;
+                    this.gameStarted = response.data.status === "playing";
+                    if (this.gameStarted) {
+                        router.push(`/games/${gameData.gameId}`)
+                    }
                     this.setupSocket();
                 }
             } catch (error) {
@@ -59,16 +64,10 @@ export default {
                 reconnection: false
             });
 
-            // --- STANDARD EVENTS ---
-            
+            // --- STANDARD EVENTS --
             this.socket.on('connect', () => {
-                this.connectionStatus = 'Connected to lobby';
                 this.socket.emit("JOIN_LOBBY_ROOM", this.roomId);
                 console.log('Socket Connected:', this.socket.id);
-            });
-
-            this.socket.on('disconnect', () => {
-                this.connectionStatus = 'Disconnected';
             });
 
             this.socket.on('connect_error', async (err) => {
@@ -113,13 +112,17 @@ export default {
             this.socket.on('GAME_STARTED', (gameData) => {
                 // Navigate to game board or change view
                 console.log("Game started!", gameData);
+                this.gameStarted = true;
+                router.push(`/games/${gameData.gameId}`)
             });
         },
         async leaveRoom() {
             try {
-                const response = await lobbyApi.delete(`/rooms/${this.roomId}/players`);
-                if (response.status === 200) {
-                    console.log("Successfully removed");
+                if (!this.gameStarted) {
+                    const response = await lobbyApi.delete(`/rooms/${this.roomId}/players`);
+                    if (response.status === 200) {
+                        console.log("Successfully removed");
+                    }
                 }
                 if (this.socket) {
                     this.socket.disconnect();
@@ -135,10 +138,7 @@ export default {
         async onStartButtonClick() {
             try {
                 this.roomId = this.$route.params.id;
-                const response = await lobbyApi.post(`/rooms/${this.roomId}/start`);
-                if (response.status === 200 || response.status === 201) {
-                    router.push(`/games/${room._id}`)
-                }
+                await lobbyApi.post(`/rooms/${this.roomId}/start`);
             } catch (error) {
                 console.error('Error joining room:', error);
             }

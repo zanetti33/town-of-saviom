@@ -65,9 +65,8 @@ export function refreshAccessToken() {
     });
 }
 
-// --- UPDATED AXIOS SETUP ---
 export function setupAuthInterceptors(axiosInstance) {
-    // Request Interceptor (Unchanged)
+    // Request Interceptor
     axiosInstance.interceptors.request.use(
         (config) => {
             const authStore = useAuthStore();
@@ -79,7 +78,7 @@ export function setupAuthInterceptors(axiosInstance) {
         (error) => Promise.reject(error)
     );
 
-    // Response Interceptor (Updated to use the shared function)
+    // Response Interceptor
     axiosInstance.interceptors.response.use(
         (response) => response,
         async (error) => {
