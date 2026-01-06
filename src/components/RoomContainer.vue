@@ -9,6 +9,7 @@
             </li>
         </ul>
         <button @click="onExitButtonClick">Exit</button>
+        <button v-if="isHost" @click="onStartButtonClick">Start</button>
     </div>
 </template>
 
@@ -145,6 +146,19 @@ export default {
         },
         onExitButtonClick() {
             router.push("/rooms");
+        },
+        async onStartButtonClick() {
+            try {
+                if (this.isHost){
+                    this.roomId = this.$route.params.id;
+                    const response = await lobbyApi.post(`/rooms/${this.roomId}/start`);
+                    if (response.status === 200 || response.status === 201) {
+                        router.push(`/games/${this.roomId}`)
+                    }
+                }
+            } catch (error) {
+                console.error('Error joining room:', error);
+            }
         }
     }
 };
