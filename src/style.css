@@ -5,7 +5,7 @@
 }
 
 .main-container{
-    @apply w-full max-w-md bg-[#131B2E] border border-slate-700/50 rounded-2xl shadow-2xl p-8 backdrop-blur-sm;
+    @apply w-full max-w-fit bg-[#131B2E] border border-slate-700/50 rounded-2xl shadow-2xl p-8 m-10 backdrop-blur-sm;
 }
 
 .main-title {
@@ -22,6 +22,14 @@
 
 .submit-button {
     @apply w-full text-white bg-linear-to-r from-[#6366f1] to-[#a855f7] hover:from-[#5b5ee0] hover:to-[#9333ea] focus:ring-4 focus:outline-none focus:ring-purple-800 font-bold rounded-lg text-sm px-5 py-3.5 text-center transition-all shadow-lg shadow-purple-900/30 mt-2;
+}
+
+.main-button {
+    @apply text-white bg-linear-to-r from-[#6366f1] to-[#a855f7] hover:from-[#5b5ee0] hover:to-[#9333ea] focus:ring-4 focus:outline-none focus:ring-purple-800 font-bold rounded-lg text-sm px-10 py-10 text-center transition-all shadow-lg shadow-purple-900/30 m-5;
+}
+
+.no-button {
+    @apply text-white bg-linear-to-r from-[#f03a3a] to-[#e90909] hover:from-[#ca1818] hover:to-[#f04646] focus:ring-4 focus:outline-none focus:ring-red-800 font-bold rounded-lg text-sm px-10 py-10 text-center transition-all shadow-lg shadow-red-900/30 m-5;
 }
 
 .link-button {

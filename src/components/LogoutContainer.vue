@@ -1,10 +1,12 @@
 <template>
-    <div class="logout-container">
-        <div class="logout-box">
-            <h1>Logout</h1>
-            <p>Are you sure you want to logout?</p>
-            <button @click="handleLogout">Yes, log me out</button>
-            <button @click="$router.push('/dashboard')">Return to dashboard</button>
+    <div class="bg-container">
+        <div class="main-container">
+            <h2 class="section-title">Logout</h2>
+            <div class="center">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <button class="no-button" @click="handleLogout">Yes, log me out</button>
+            <button class="main-button" @click="$router.push('/dashboard')">Return to dashboard</button>
         </div>
     </div>
 </template>
