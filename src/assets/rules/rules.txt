@@ -1,0 +1,55 @@
+**Town of Saviom Rules**
+
+**Classic Mode:**
+
+* **Number of players:** min. 6, max. 12;
+* **Roles:** Wolf, Citizen;
+* **Goal of the game:**
+* **Wolf:** kill the Citizens;
+* **Citizen:** kill all the Wolves;
+
+
+* **Role assignment:**
+* At the start of the match, roles will be randomly assigned to each player;
+* Based on the number of players, roles will be distributed as follows:
+* 6 players: 2 Wolves, 4 Citizens;
+* 7 players: 2 Wolves, 5 Citizens;
+* 8 players: 2 Wolves, 5 Citizens;
+* 9 players: 2 Wolves, 7 Citizens;
+* 10 players: 3 Wolves, 7 Citizens;
+* 11 players: 3 Wolves, 8 Citizens;
+* 12 players: 3 Wolves, 9 Citizens;
+
+
+
+
+* **Game phases:**
+* Each phase is timed (Day 120s, Defense 30s, Night 60s).
+* **Day:** all players can discuss to reach an agreement and everyone can vote for a player they want to eliminate. The phase ends when time expires: if a player has more than half of the total votes, the game moves to the Defense phase; otherwise, it moves to the Night phase.
+* **Defense:** the player with the most votes in the previous phase has the chance to convince the others that they are not a Wolf. The other players cast another vote to save or eliminate the player (a majority of votes is not required to determine the outcome of this vote). After this phase, the game moves to the Night phase.
+* **Night:** the Citizens sleep. The Wolves can talk to each other and agree on which player to eliminate. When time expires, the player most voted by the Wolves will be eliminated; if a majority is not reached, no player is eliminated. The game returns to the Day phase.
+
+
+* **End of the game:**
+* The game ends with a Wolf victory when the number of living Wolves is greater than or equal to the number of other players;
+* The game ends with a Citizen victory when all Wolves have been eliminated.
+
+
+
+**Advanced Mode:**
+The advanced mode has the same basic mechanics as the classic mode with the addition of new roles (both win with the Citizens):
+
+* **Roles:** Wolf, Citizen, Protector, Seer;
+* **Protector:** during the Night, they choose a player to protect. If that player is chosen by the Wolves to be eliminated, they are saved and can continue playing;
+* **Seer:** during the Night, they choose a player and discover whether they are a Wolf or not;
+
+
+* **Role assignment:**
+* Based on the number of players, roles will be distributed as follows:
+* 6 players: 2 Wolves, 3 Citizens, 1 Seer;
+* 7 players: 2 Wolves, 4 Citizens, 1 Protector;
+* 8 players: 2 Wolves, 4 Citizens, 1 Protector, 1 Seer;
+* 9 players: 2 Wolves, 5 Citizens, 1 Protector, 1 Seer;
+* 10 players: 3 Wolves, 5 Citizens, 1 Protector, 1 Seer;
+* 11 players: 3 Wolves, 6 Citizens, 1 Protector, 1 Seer;
+* 12 players: 3 Wolves, 7 Citizens, 1 Protector, 1 Seer;
