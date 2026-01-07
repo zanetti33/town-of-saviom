@@ -2,14 +2,15 @@
     <div class="lobby">
         <h2 v-if="roomName">{{ roomName }}</h2>
         <p v-if="roomCode">Room: {{ roomCode }}</p>
-        <h3>Players:</h3>
+        <h3>Players {{ players.length }}/{{ roomCapacity }}:</h3>
         <ul>
             <li v-for="player in players" :key="player.id">
-                {{ player.name }}
+                {{ player.name }} <span v-if="player.isReady">Ready</span>
             </li>
         </ul>
         <button @click="onExitButtonClick">Exit</button>
         <button v-if="isHost" @click="onStartButtonClick">Start</button>
+        <button v-else @click="onReadyButtonClick">Ready</button>
     </div>
 </template>
 
@@ -27,6 +28,7 @@ export default {
             roomName: null,
             roomId: null,
             roomCode: null,
+            roomCapacity: null,
             isHost: null,
             gameStarted: false
         };
@@ -47,6 +49,7 @@ export default {
                     this.players = response.data.players;
                     this.roomName = response.data.name;
                     this.roomCode = response.data.code;
+                    this.roomCapacity = response.data.roomCapacity;
                     this.gameStarted = response.data.status === "playing";
                     if (this.gameStarted) {
                         router.push(`/games/${gameData.gameId}`)
@@ -161,6 +164,15 @@ export default {
                 }
             } catch (error) {
                 console.error('Error joining room:', error);
+            }
+        },
+        async onReadyButtonClick() {
+            try {
+                this.roomId = this.$route.params.id;
+                const response = await lobbyApi.put(`/rooms/${this.roomId}/players`);
+                this.players = response.data.players;
+            } catch (error) {
+                console.error('Error:', error);
             }
         }
     }
