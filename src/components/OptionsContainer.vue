@@ -6,8 +6,10 @@
         </div>
 
         <div class="options-password">
-            <h2>Change password</h2>
-            <form @submit.prevent="changePassword">
+            <button @click="showChangePasswordForm = !showChangePasswordForm" >
+                {{ showChangePasswordForm ? 'Hide' : 'Change Password' }}
+            </button>
+            <form v-if="showChangePasswordForm" @submit.prevent="changePassword">
                 <div class="form-group">
                     <label for="oldPassword">Old password:</label>
                     <input
@@ -61,6 +63,7 @@ export default {
     name: 'OptionsContainer',
     data() {
         return {
+            showChangePasswordForm: false,
             oldPassword: '',
             newPassword: '',
             confirmNewPassword: '',
