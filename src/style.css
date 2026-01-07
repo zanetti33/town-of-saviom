@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+.bg-container {
+    @apply bg-[#0B0F19] text-white p-4 font-sans min-h-screen flex flex-col items-center justify-center;
+}
+
+.main-container{
+    @apply w-full max-w-md bg-[#131B2E] border border-slate-700/50 rounded-2xl shadow-2xl p-8 backdrop-blur-sm;
+}
+
+.main-title {
+    @apply text-4xl md:text-5xl font-bold tracking-wider mb-2 font-serif text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)];
+}
+
+.section-title {
+    @apply text-2xl font-bold text-center text-white mb-6;
+}
+
+.form-field {
+    @apply w-full bg-[#1E293B] border border-slate-600 text-slate-200 placeholder-slate-500 text-sm rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 block p-3.5 transition-all outline-none;
+}
+
+.submit-button {
+    @apply w-full text-white bg-linear-to-r from-[#6366f1] to-[#a855f7] hover:from-[#5b5ee0] hover:to-[#9333ea] focus:ring-4 focus:outline-none focus:ring-purple-800 font-bold rounded-lg text-sm px-5 py-3.5 text-center transition-all shadow-lg shadow-purple-900/30 mt-2;
+}
+
+.link-button {
+    @apply text-purple-400 hover:text-purple-300 font-bold hover:underline ml-1 transition-colors;
+}
+
+.error-message{
+    @apply mt-4 p-3 bg-red-900/30 border border-red-800 text-red-300 rounded-lg text-sm text-center;
+}

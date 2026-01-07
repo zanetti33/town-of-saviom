@@ -1,52 +1,69 @@
 <template>
-    <div class="register-container">
-        <div class="register-box">
-            <h1>Register</h1>
-            <form @submit.prevent="handleRegistration">
+    <div class="bg-container">
+        <div class="text-center mb-8">
+            <h1 class="main-title">
+            TOWN OF SAVIOM
+            </h1>
+        </div>
+        <div class="main-container">
+            <h2 class="section-title">Register</h2>
+
+            <form @submit.prevent="handleRegistration" class="space-y-5">
+
                 <div class="form-group">
-                    <label for="email">Email:</label>
+                    <label for="email" class="sr-only">Email:</label>
                     <input
                         id="email"
                         v-model="email"
                         type="email"
                         required
-                        placeholder="Enter your email"
+                        placeholder="Email"
+                        class="form-field"
                     />
                 </div>
                 <div class="form-group">
-                    <label for="username">Username:</label>
+                    <label for="username" class="sr-only">Username:</label>
                     <input
                         id="username"
                         v-model="username"
                         type="text"
                         required
-                        placeholder="Enter your username"
+                        placeholder="Username"
+                        class="form-field"
                     />
                 </div>
                 <div class="form-group">
-                    <label for="password">Password:</label>
+                    <label for="password" class="sr-only">Password:</label>
                     <input
                         id="password"
                         v-model="password"
                         type="password"
                         required
-                        placeholder="Enter your password"
+                        placeholder="Password"
+                        class="form-field"
                     />
                 </div>
                 <div class="form-group">
-                    <label for="confirmPassword">Confirm Password:</label>
+                    <label for="confirmPassword" class="sr-only">Confirm Password:</label>
                     <input
                         id="confirmPassword"
                         v-model="confirmPassword"
                         type="password"
                         required
-                        placeholder="Confirm your password"
+                        placeholder="Confirm password"
+                        class="form-field"
                     />
                 </div>
-                <button type="submit">Register</button>
+                <div v-if="error" class="error-message">
+                    {{ error }}
+                </div>
+                <button type="submit" class="submit-button">Register</button>
             </form>
-            <p v-if="error">{{ error }}</p>
-            <button @click="$router.push('/login')">Back to login</button>
+            <div class="mt-8 text-center text-slate-400 text-sm">
+                <button @click="$router.push('/login')" class="link-button">
+                    Back to login
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -64,46 +81,42 @@ export default {
         };
     },
     methods: {
-        handleRegistration() {
-            if (this.email && this.username && this.password && this.confirmPassword && 
-                this.password === this.confirmPassword) {
-                console.log('Registration attempt:', { email: this.email, name: this.username, password: this.password, confirmPassword: this.confirmPassword });
-                register(this.email, this.username, this.password);
+        async handleRegistration() {
+            if (this.password === this.confirmPassword) {
                 this.error = '';
+                console.log('Registration attempt:', { email: this.email, name: this.username, password: this.password, confirmPassword: this.confirmPassword });
+                try {
+                    // Call Register
+                    await loginApi.post('/users', { email: this.email, name: this.username, password: this.password });
+
+                    // Call Login
+                    const res = await loginApi.post('/auth/login', { emailOrName: this.username, password: this.password });
+
+                    // Save Access Token to Memory
+                    const authStore = useAuthStore();
+                    authStore.setToken(res.data.accessToken);
+
+                    // Fetch User Info
+                    const userInfoRes = await loginApi.get('/users/me');
+                    authStore.setUser(userInfoRes.data); 
+
+                    console.log("Registration successful:", userInfoRes.data);
+                    console.log("Push on dashboard");
+                    router.push('/dashboard');
+                } catch (err) {
+                    console.error("Registration failed:", err);
+                    this.error = 'Email or Username already in use.';
+                }
             } else {
-                this.error = 'Please fill in all fields and ensure passwords match';
+                this.error = 'Please fill in all fields and ensure passwords match.';
             }
         }
     }
 };
+
 import { loginApi } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
 import router from '../router';
-
-const register = async (email, name, password) => {
-    try {
-        // Call Register
-        await loginApi.post('/users', { email, name, password });
-        
-        // Call Login
-        const res = await loginApi.post('/auth/login', { emailOrName: name, password });
-
-        // Save Access Token to Memory
-        const authStore = useAuthStore();
-        authStore.setToken(res.data.accessToken);
-
-        // Fetch User Info
-        const userInfoRes = await loginApi.get('/users/me');
-        authStore.setUser(userInfoRes.data); 
-
-        console.log("Registration successful:", userInfoRes.data);
-        console.log("Push on dashboard");
-        router.push('/dashboard');
-    } catch (err) {
-        console.error("Registration failed:", err);
-        alert("Registration failed");
-    }
-};
 </script>
 
 <style scoped>
