@@ -2,8 +2,8 @@
     <div class="bg-container">
         <div class="main-container">
             <div>
-                <img src="../assets/img/default.png" alt="Player Icon" />
-                <h1 class="main-title">Welcome, Player</h1>
+                <img :src="imageUrl" alt="Player Icon" class="profile-preview" />
+                <h1 class="main-title">Welcome, {{ username }}</h1>
             </div>
 
             <button class="main-button" @click="logout">
@@ -44,11 +44,31 @@ export default {
     name: 'DashboardContainer',
     data() {
         return {
+            username: 'Player',
+            imageUrl: new URL(`../assets/img/profile/default.png`, import.meta.url).href,
             showRules: false,
             rulesContent: rulesText
         }
     },
+    async mounted() {
+        await this.loadUserData();
+    },
     methods: {
+        async loadUserData() {
+            try {
+                const response = await loginApi.get(`/users/me`);
+                const userData = response.data; 
+
+                if (userData) {
+                    this.username = userData.name || 'Player';
+                    if (userData.imageUrl) {
+                        this.imageUrl = new URL(`../assets/img/profile/${userData.imageUrl}`, import.meta.url).href;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        },
         login() {
             console.log('Login clicked');
             router.push('/login');
@@ -78,6 +98,7 @@ export default {
 
 import router from '../router';
 import rulesText from '../assets/rules/rules.txt?raw';
+import { loginApi } from '../services/api';
 </script>
 
 <style scoped>
