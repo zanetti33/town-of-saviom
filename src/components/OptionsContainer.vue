@@ -1,55 +1,63 @@
 <template>
-    <div class="options-container">
-        <div class="options-image">
-            <img src="../assets/img/default.png" alt="Player Icon" />
-            <button @click="changeImage">Change profile picture</button>
-        </div>
+    <div class="bg-container">
+        <div class="main-container">
+            <h2 class="section-title">Options</h2>
+            <div class="options-image">
+                <img src="../assets/img/default.png" alt="Player Icon" />
+                <button @click="changeImage" class="main-button">Change profile picture</button>
+            </div>
 
-        <div class="options-password">
-            <button @click="showChangePasswordForm = !showChangePasswordForm" >
-                {{ showChangePasswordForm ? 'Hide' : 'Change Password' }}
-            </button>
-            <form v-if="showChangePasswordForm" @submit.prevent="changePassword">
-                <div class="form-group">
-                    <label for="oldPassword">Old password:</label>
-                    <input
-                        id="oldPassword"
-                        v-model="oldPassword"
-                        type="password"
-                        required
-                        placeholder="Enter your old password"
-                    />
-                </div>
-                <div class="form-group">
-                    <label for="newPassword">New password:</label>
-                    <input
-                        id="newPassword"
-                        v-model="newPassword"
-                        type="password"
-                        required
-                        placeholder="Enter your new password"
-                    />
-                </div>
-                <div class="form-group">
-                    <label for="confirmNewPassword">Confirm new password:</label>
-                    <input
-                        id="confirmNewPassword"
-                        v-model="confirmNewPassword"
-                        type="password"
-                        required
-                        placeholder="Confirm your new password"
-                    />
-                </div>
-                <button type="submit">Change Password</button>
-            </form>
-            <p v-if="newPassword !== confirmNewPassword">{{ error }}</p>
-        </div>
+            <div class="options-password">
+                <button @click="showChangePasswordForm = !showChangePasswordForm" class="main-button" >
+                    {{ showChangePasswordForm ? 'Hide' : 'Change Password' }}
+                </button>
+                <form v-if="showChangePasswordForm" @submit.prevent="changePassword">
+                    <div class="form-group">
+                        <label for="oldPassword" class="sr-only">Old password:</label>
+                        <input
+                            id="oldPassword"
+                            v-model="oldPassword"
+                            type="password"
+                            required
+                            placeholder="Enter your old password"
+                            class="form-field"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword" class="sr-only">New password:</label>
+                        <input
+                            id="newPassword"
+                            v-model="newPassword"
+                            type="password"
+                            required
+                            placeholder="Enter your new password"
+                            class="form-field"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmNewPassword" class="sr-only">Confirm new password:</label>
+                        <input
+                            id="confirmNewPassword"
+                            v-model="confirmNewPassword"
+                            type="password"
+                            required
+                            placeholder="Confirm your new password"
+                            class="form-field"
+                        />
+                    </div>
+                    <button type="submit" class="submit-button">Change Password</button>
+                    <div class="error-message" v-if="newPassword !== confirmNewPassword">
+                        <p>{{ error }}</p>
+                    </div>
+                </form> 
+            </div>
 
-        <div class="options-delete">
-            <button @click="deleteAccount" style="background-color: red;">Delete Account</button>
-        </div>
+            <div class="options-delete">
+                <button @click="deleteAccount" class="no-button">Delete Account</button>
+            </div>
 
-        <button @click="$router.push('/dashboard')">Back to dashboard</button>
+            <button @click="$router.push('/dashboard')" class="link-button">Back to dashboard</button>
+        </div>
     </div>
 </template>
 
@@ -91,7 +99,7 @@ export default {
             }
         },
         changeImage() {
-
+            console.log('Change profile picture clicked. Not implemented yet.');
         },
         async deleteAccount() {
             if(confirm('All your data will be lost forever. Do you want to delete your account?')){

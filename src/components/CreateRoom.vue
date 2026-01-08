@@ -1,16 +1,17 @@
 <template>
-    <div class="lobby-container">
-        <div class="lobby-box">
-            <h1>Create Room</h1>
+    <div class="bg-container">
+        <div class="main-container">
+            <h2 class="section-title">Create Room</h2>
             <form @submit.prevent="createRoom">
                 <div class="form-group">
-                    <label for="roomName">Room Name:</label>
+                    <label for="roomName" class="sr-only">Room Name:</label>
                     <input
                         id="roomName"
                         v-model="roomName"
                         type="text"
                         required
                         placeholder="Enter the room name"
+                        class="form-field"
                     />
                 </div>
                 <div class="form-group">
@@ -37,14 +38,17 @@
                         type="number"
                         required
                         placeholder="Enter max number of players"
+                        class="form-field"
                         min="6"
                         max="12"
                     />
                 </div>
-                <button type="submit">Create</button>
+                <button type="submit" class="submit-button">Create</button>
             </form>
-            <button @click="$router.push('/dashboard')">Return to dashboard</button>
-            <p v-if="error">{{ error }}</p>
+            <div class="error-message" v-if="error">
+                <p>{{ error }}</p>
+            </div>
+            <button @click="$router.push('/dashboard')" class="link-button">Return to dashboard</button>
         </div>
     </div>
 </template>

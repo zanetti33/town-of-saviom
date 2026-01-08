@@ -1,41 +1,44 @@
 <template>
-    <div class="room-list">
-        <div class="search-container">
+    <div class="bg-container">
+        <div class="main-container">
+            <h2 class="section-title">Join Room</h2>
             <input 
                 type="text" 
                 v-model="searchQuery" 
                 placeholder="Search by room name or code..."
-                class="search-input"
+                class="form-field m-4"
             />
             <div class="mode-filters">
                 <button 
-                    :class="['filter-btn', { active: this.selectedMode === 'classic' }]" 
+                    :class="['filter-btn main-button', { active: this.selectedMode === 'classic' }]" 
                     @click="setMode('classic')"
                 >
                     Classic
                 </button>
                 <button 
-                    :class="['filter-btn', { active: this.selectedMode === 'advanced' }]" 
+                    :class="['filter-btn main-button', { active: this.selectedMode === 'advanced' }]" 
                     @click="setMode('advanced')"
                 >
                     Advanced
                 </button>
-                <button v-if="this.selectedMode" class="reset-btn" @click="this.selectedMode = ''">
+                <button v-bind:disabled="!this.selectedMode" class="main-button" @click="this.selectedMode = null">
                     All
                 </button>
             </div>
-        </div>
-        <div v-for="room in filteredRooms" :key="room.id" class="room-card">
-            <div v-if="room.status !== 'playing'">
-                <h3>{{ room.name }} <span class="room-code">#{{ room.code }}</span></h3>
-                <span class="mode-badge">{{ room.gameMode }}</span>
-            <button class="join-btn" @click="joinRoom(room)">Join</button>
+            
+            <div v-for="room in filteredRooms" :key="room.id">
+                <div v-if="room.status !== 'playing'" class="border border-gray-700 rounded-md p-8">
+                    <h3>{{ room.name }}</h3>
+                    <p>{{ room.code }}</p>
+                    <p>{{ room.gameMode }}</p>
+                    <button class="main-button" @click="joinRoom(room)">Join</button>
+                </div>
             </div>
+            <div v-if="filteredRooms.length === 0">
+                No rooms found.
+            </div>
+            <button @click="$router.push('/dashboard')" class="link-button">Return to dashboard</button>
         </div>
-        <div v-if="filteredRooms.length === 0" class="no-results">
-            No rooms found.
-        </div>
-        <button @click="$router.push('/dashboard')">Return to dashboard</button>
     </div>
 </template>
 
@@ -48,7 +51,7 @@ export default {
         return {
             rooms: [],
             searchQuery: '',
-            selectedMode: ''
+            selectedMode: null
         };
     },
     mounted() {
@@ -62,7 +65,7 @@ export default {
                 const matchesSearch = room.name.toLowerCase().includes(query) || 
                                      (room.code && room.code.toLowerCase().includes(query));
                 
-                const matchesMode = this.selectedMode === '' || room.gameMode === this.selectedMode;
+                const matchesMode = this.selectedMode === null || room.gameMode === this.selectedMode;
 
                 return matchesSearch && matchesMode;
             });
@@ -78,7 +81,7 @@ export default {
             }
         },
         setMode(mode) {
-            this.selectedMode = this.selectedMode === mode ? '' : mode;
+            this.selectedMode = this.selectedMode === mode ? null : mode;
         },
         joinRoom(room) {
             router.push(`/rooms/${room._id}`);

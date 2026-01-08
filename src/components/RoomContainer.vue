@@ -1,16 +1,18 @@
 <template>
-    <div class="lobby">
-        <h2 v-if="roomName">{{ roomName }}</h2>
-        <p v-if="roomCode">Room: {{ roomCode }}</p>
-        <h3>Players {{ players.length }}/{{ roomCapacity }}:</h3>
-        <ul>
-            <li v-for="player in players" :key="player.id">
-                {{ player.name }} <span v-if="player.isReady">Ready</span>
-            </li>
-        </ul>
-        <button @click="onExitButtonClick">Exit</button>
-        <button v-if="isHost" @click="onStartButtonClick">Start</button>
-        <button v-else @click="onReadyButtonClick">Ready</button>
+    <div class="bg-container">
+        <div class="main-container">
+            <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
+            <p v-if="roomCode">Room: {{ roomCode }}</p>
+            <h3>Players {{ players.length }}/{{ roomCapacity }}:</h3>
+            <ul>
+                <li v-for="player in players" :key="player.id">
+                    {{ player.name }} <span v-if="player.isReady">Ready</span>
+                </li>
+            </ul>
+            <button @click="onExitButtonClick" class="no-button">Exit</button>
+            <button v-if="isHost" @click="onStartButtonClick" class="main-button">Start</button>
+            <button v-else @click="onReadyButtonClick" class="main-button">Ready</button>
+        </div>
     </div>
 </template>
 
