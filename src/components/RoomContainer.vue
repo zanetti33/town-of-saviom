@@ -1,7 +1,12 @@
 <template>
     <div class="lobby">
         <h2 v-if="roomName">{{ roomName }}</h2>
-        <p v-if="roomCode">Room: {{ roomCode }}</p>
+        <p v-if="roomCode">
+            Room: #{{ roomCode }} 
+            <button @click="copyRoomCode" class="copy-btn">
+                {{ copied ? 'Copied!' : 'Copy' }}
+            </button>
+        </p>
         <h3>Players {{ players.length }}/{{ roomCapacity }}:</h3>
         <ul>
             <li v-for="player in players" :key="player.id">
@@ -28,6 +33,7 @@ export default {
             roomName: null,
             roomId: null,
             roomCode: null,
+            copied: false,
             roomCapacity: null,
             isHost: null,
             gameStarted: false
@@ -41,6 +47,17 @@ export default {
         this.leaveRoom();
     },
     methods: {
+        async copyRoomCode() {
+            try {
+                await navigator.clipboard.writeText(this.roomCode);
+                this.copied = true;
+                setTimeout(() => {
+                    this.copied = false;
+                }, 2000);
+            } catch (err) {
+                console.error('Errore durante la copia:', err);
+            }
+        },
         async joinRoom() {
             try {
                 this.roomId = this.$route.params.id;
