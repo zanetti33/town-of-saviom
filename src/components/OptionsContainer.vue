@@ -2,9 +2,21 @@
     <div class="bg-container">
         <div class="main-container">
             <h2 class="section-title">Options</h2>
-            <div class="options-image">
-                <img src="../assets/img/default.png" alt="Player Icon" />
-                <button @click="changeImage" class="main-button">Change profile picture</button>
+            <button @click="showImagePicker = true">Change profile picture</button>
+
+            <div v-if="showImagePicker" class="modal-overlay" @click.self="showImagePicker = false">
+                <div class="modal-content">
+                    <h3>Select your Avatar</h3>
+                    <div class="image-grid">
+                        <img 
+                            v-for="img in availableImages" 
+                            :src="getAvatarUrl(img)" 
+                            @click="selectImage(img)"
+                            class="selectable-image"
+                        />
+                    </div>
+                    <button @click="showImagePicker = false">Cancel</button>
+                </div>
             </div>
 
             <div class="options-password">
@@ -71,6 +83,9 @@ export default {
     name: 'OptionsContainer',
     data() {
         return {
+            showImagePicker: false,
+            availableImages: ['default.png', 'jocker.png', 'king.png', 'princess.png', 'soldier.png'],
+            selectedImageName: 'default.png',
             showChangePasswordForm: false,
             oldPassword: '',
             newPassword: '',
@@ -78,7 +93,29 @@ export default {
             error: 'Please fill in all fields. New password and confirm new password must be the same.'
         };
     },
+    computed: {
+        currentProfilePic() {
+            return this.getAvatarUrl(this.selectedImageName);
+        }
+    },
     methods: {
+        getAvatarUrl(name) {
+            return new URL(`../assets/img/profile/${name}`, import.meta.url).href;
+        },
+        async selectImage(imgName) {
+            this.selectedImageName = imgName;
+            this.showImagePicker = false;
+            try {
+                    const res = await loginApi.put('/users/me/imageUrl', { imageUrl: imgName });
+                    if (res.status === 200){
+                        console.log('Profile picture updated successfully');
+                        alert('Profile picture updated successfully');
+                    }
+                } catch (err) {
+                    console.error('Error updating profile picture:', err);
+                    alert('Failed to update profile picture. Please try again.');
+                }
+        },
         async changePassword() {
             if (this.oldPassword && this.newPassword && this.confirmNewPassword && 
                 this.newPassword === this.confirmNewPassword) {
@@ -97,9 +134,6 @@ export default {
             } else {
                 this.error = 'Please fill in all fields. New password and confirm new password must be the same.';
             }
-        },
-        changeImage() {
-            console.log('Change profile picture clicked. Not implemented yet.');
         },
         async deleteAccount() {
             if(confirm('All your data will be lost forever. Do you want to delete your account?')){
