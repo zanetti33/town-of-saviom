@@ -1,18 +1,28 @@
 <template>
-    <div>
-        <h1>Players:</h1>
-        <ul>
-            <li v-for="player in players" :key="player.id">
-                <p>{{ player.name }}</p>
-                <button @click="votePlayer(player.id)">Vote</button>
-            </li>
-        </ul>
-        <h2>Chat</h2>
-        <div v-for="msg in messages">
-            {{msg}}
+    <div class="bg-container">
+        <div class="main-container">
+            <h1>Players:</h1>
+            <div class="flex flex-row gap-4 flex-wrap">
+                <div v-for="player in players" :key="player.id" class="flex items-center justify-center">
+                    <p class="max-w-fit">{{ player.name }}</p>
+                    <button @click="votePlayer(player.id)" class="main-button max-w-fit">Vote</button>
+                </div>
+            </div>
         </div>
-        <input v-model="newMessage" placeholder="Type here">
-        <button @click="onSend">Send</button>
+        <div class="main-container">
+            <label class="flex">Time Remaining: <progress :value="progressRate"></progress></label>
+            <div class="flex">{{ ((duration - elapsed) / 1000).toFixed(1) }}s</div>
+        </div>
+        <div class="main-container">
+            <h2>Chat</h2>
+            <div class="border border-gray-600 rounded-lg p-2">
+                <div v-for="msg in messages">
+                    {{msg}}
+                </div>
+            </div>
+            <input v-model="newMessage" placeholder="Type here" class="form-field">
+            <button @click="onSend" class="submit-button">Send</button>
+        </div>
     </div>
 </template>
 
@@ -28,11 +38,22 @@ export default {
             socket: null,
             gameId: null,
             newMessage: null,
-            messages: []
+            messages: [],
+            duration: 30 * 1000,
+            elapsed: 0
         };
     },
     mounted() {
         this.joinGame();
+        this.resetTimer();
+    },
+    unmounted() {
+        cancelAnimationFrame(this.handle);
+    },
+    computed: {
+        progressRate() {
+            return Math.min(this.elapsed / this.duration, 1);
+        }
     },
     methods: {
         async joinGame() {
@@ -121,6 +142,19 @@ export default {
         getPlayerName(playerId) {
             const specificPlayer = this.players.find(p => p.userId === playerId);
             return specificPlayer ? specificPlayer.name : "Unknown";
+        },
+        updateTimer() {
+            this.elapsed = performance.now() - this.lastTime
+            if (this.elapsed >= this.duration) {
+                cancelAnimationFrame(this.handle)
+            } else {
+                this.handle = requestAnimationFrame(this.updateTimer)
+            }
+        },
+        resetTimer() {
+            this.elapsed = 0
+            this.lastTime = performance.now()
+            this.updateTimer()
         }
     }
 };

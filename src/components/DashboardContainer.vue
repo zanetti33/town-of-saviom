@@ -10,7 +10,7 @@
                     games: {{ stats.totalGames }} | win: {{ stats.totalWins }} | 
                     loss: {{ stats.totalLosses }} | win percentage: {{ stats.winRate }}
                 </h2>
-                <button class="main-button !m-0 !py-1 !px-3 text-sm" @click="fetchHistory">
+                <button class="main-button m-0! py-1! px-3! text-sm" @click="fetchHistory">
                     History
                 </button>
             </div>
@@ -22,7 +22,7 @@
                         <table class="w-full text-left text-sm text-gray-200">
                             <thead class="text-purple-400 border-b border-gray-600">
                                 <tr>
-                                    <th class="p-2">Data</th>
+                                    <th class="p-2">Date</th>
                                     <th class="p-2">Mode</th>
                                     <th class="p-2">Players</th>
                                     <th class="p-2">Role</th>
@@ -96,8 +96,9 @@ export default {
             historyList: []
         }
     },
-    async mounted() {
-        await this.loadUserData();
+    mounted() {
+        this.loadUserData();
+        this.loadStats();
     },
     methods: {
         async loadUserData() {
@@ -111,14 +112,20 @@ export default {
                         this.imageUrl = new URL(`../assets/img/profile/${userData.imageUrl}`, import.meta.url).href;
                     }
                 }
-                const statsRes = await statsApi.get(`/stats`);
-                this.stats = statsRes.data;
             } catch (error) {
                 console.error('Error loading user data:', error);
             }
         },
+        async loadStats() {
+            try{
+                const statsRes = await statsApi.get(`/stats`);
+                this.stats = statsRes.data;
+            } catch (error){
+                console.error('Error loading stats:', error);
+            }
+        },
         async fetchHistory() {
-            this.showHistory =true;
+            this.showHistory = true;
             try {
                 const response = await statsApi.get(`/history`);
                 this.historyList = response.data;
