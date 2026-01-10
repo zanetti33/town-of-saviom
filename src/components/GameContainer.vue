@@ -3,9 +3,9 @@
         <div class="main-container">
             <h1>Players:</h1>
             <div class="flex flex-row gap-4 flex-wrap">
-                <div v-for="player in players" :key="player.id" class="flex items-center justify-center">
+                <div v-for="player in players" :key="player.userId" class="flex items-center justify-center">
                     <p class="max-w-fit">{{ player.name }}</p>
-                    <button @click="votePlayer(player.id)" class="main-button max-w-fit">Vote</button>
+                    <button @click="onVotePlayer(player.userId)" class="main-button max-w-fit">Vote</button>
                 </div>
             </div>
         </div>
@@ -39,19 +39,19 @@ export default {
             gameId: null,
             newMessage: null,
             messages: [],
-            duration: 30 * 1000,
+            duration: null,
             elapsed: 0
         };
     },
     mounted() {
         this.joinGame();
-        this.resetTimer();
     },
     unmounted() {
         cancelAnimationFrame(this.handle);
     },
     computed: {
         progressRate() {
+            this.duration = this.duration || 1; // prevent division by zero
             return Math.min(this.elapsed / this.duration, 1);
         }
     },
@@ -62,6 +62,8 @@ export default {
                 const response = await gameplayApi.get(`/games/${this.gameId}`);
                 if (response.status === 200 || response.status === 201) {
                     this.players = response.data.players;
+                    this.duration = response.data.phaseDuration * 1000;
+                    this.resetTimer();
                     this.setupSocket();
                 }
             } catch (error) {
@@ -115,14 +117,34 @@ export default {
             // --- GAMEPLAY EVENTS ---
 
             // Someone died :C
-            this.socket.on('PLAYER_DEATH', (data) => {
+            this.socket.on('PLAYER_ELIMINATED', (data) => {
                 console.log('Player death: ', data);
-                this.messages.push(`${this.getPlayerName(data.id)} ${data.cause}`);
+                this.messages.push(`${this.getPlayerName(data.userId)} ${data.cause}`);
             });
 
             // Message on chat
             this.socket.on('MESSAGE_SENT', (message) => {
                 this.messages.push(message);
+            });
+
+            // Phase change
+            this.socket.on('PHASE_CHANGE', (data) => {
+                console.log("Phase changed to: ", data.phase);
+                this.messages.push(
+                    `Phase changed to: ${data.phase}` + 
+                        (data.accused ? ` | Accused: ${this.getPlayerName(data.accused)}` : '')
+                );
+                this.duration = data.timeRemaining * 1000;
+                this.resetTimer();
+            });
+
+            // Sync time
+            this.socket.on('SYNC_TIME', (data) => {
+                console.log("Sync time: ", data.time);
+                const remainingMs = data.time * 1000;
+                const serverElapsedMs = this.duration - remainingMs;
+                this.lastTime = performance.now() - serverElapsedMs;
+                this.elapsed = serverElapsedMs;
             });
 
             // The game over handler
@@ -138,6 +160,13 @@ export default {
                 this.newMessage
             );
             this.newMessage = null;
+        },
+        onVotePlayer(playerId) {
+            console.log("Voting player: ", playerId);
+            this.socket.emit(
+                "VOTE", 
+                playerId
+            );
         },
         getPlayerName(playerId) {
             const specificPlayer = this.players.find(p => p.userId === playerId);
