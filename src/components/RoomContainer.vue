@@ -2,29 +2,37 @@
     <div class="bg-container">
         <div class="main-container">
             <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
-            <div>
-                <label v-if="roomCode" class="block text-slate-400 mb-2">Room Code: {{ roomCode }}</label>
-                <button @click="copyRoomCode" class="absolute right-2 p-2 rounded-md hover:bg-slate-700 transition-colors group">
-                    {{ copied ? 'Copied!' : 'Copy' }}
+            <div class="absolute right-0 top-0 m-4 items-center justify-center gap-2">
+                <label v-if="roomCode" class="text-slate-400 align-super">{{ roomCode }}</label>
+                <button @click="copyRoomCode" class="p-2 rounded-md hover:bg-slate-700 transition-colors">
+                    <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
                 </button>
             </div>
-            <h3>Players {{ players.length }}/{{ roomCapacity }}:</h3>
-            <div v-for="player in players" :key="player.id" class="player-card" :class="{ 'is-ready': player.isReady }">
-                <div>
-                    <img :src="getImageUrl(player.imageUrl)" alt="Player Icon" class="profile-preview" />
-                </div>
-
-                <div class="player-info">
-                    <div>
-                        <span>{{ player.name }}</span>
-                        <span v-if="player.isHost">👑</span>
+            <div class="mb-4 items-center justify-center">
+                <h3 class="text-center" :class="players.length === roomCapacity ? 'text-green-600' : ''">
+                    Players {{ players.length }}/{{ roomCapacity }}:
+                </h3>
+            </div>
+            <div class="grid gap-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mb-4">
+                <div v-for="player in players" :key="player.id" class="player-lobby-card">
+                    <div class="flex">
+                        <img :src="getImageUrl(player.imageUrl)" alt="Player Icon" :class="player.isReady ? 'avatar-image border-green-500!' : 'avatar-image'"/>
                     </div>
-                
-                    <div>
-                        <span v-if="player.isHost" class="host-label">Host</span>
-                        <div v-if="player.isReady" class="ready-status">
-                            <span class="ready-text">Ready</span>
-                            <span class="ready-check">✔️</span>
+
+                    <div class="p-4 mb-2 flex">
+                        <span class="mr-1">{{ player.name }}</span>
+                        <span v-if="player.isHost">👑 (Host)</span>
+                    </div>
+
+                    <div class="p-4 mb-2 flex">
+                        <div v-if="player.isReady">
+                            <span>Ready</span>
+                            <span>✔️</span>
                         </div>
                     </div>
                 </div>
@@ -65,7 +73,6 @@ export default {
     },
     methods: {
         getImageUrl(name) {
-            console.log(name);
             if(name)
                 return new URL(`../assets/img/profile/${name}`, import.meta.url).href;
             return new URL(`../assets/img/profile/default.png`, import.meta.url).href;

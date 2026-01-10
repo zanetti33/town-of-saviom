@@ -2,6 +2,11 @@
     <div class="bg-container">
         <div class="main-container">
             <h2 class="section-title">Options</h2>
+            
+            <div class="ok-message" v-if="message">
+                <p>{{ message }}</p>
+            </div>
+
             <button @click="showImagePicker = true" class="main-button">
                 {{ showImagePicker ? 'Hide' : 'Change profile picture' }}
             </button>
@@ -61,11 +66,11 @@
                             class="form-field"
                         />
                     </div>
-                    <button type="submit" class="submit-button">Change Password</button>
-                    <div class="error-message" v-if="newPassword !== confirmNewPassword">
+                    <button type="submit" class="submit-button">Change Password</button> 
+                    <div class="error-message" v-if="newPassword !== confirmNewPassword || error">
                         <p>{{ error }}</p>
                     </div>
-                </form> 
+                </form>
             </div>
 
             <div class="options-delete">
@@ -96,7 +101,8 @@ export default {
             oldPassword: '',
             newPassword: '',
             confirmNewPassword: '',
-            error: 'Please fill in all fields. New password and confirm new password must be the same.'
+            message: '',
+            error: 'New password and confirm new password must be the same.'
         };
     },
     computed: {
@@ -115,7 +121,7 @@ export default {
                     const res = await loginApi.put('/users/me/imageUrl', { imageUrl: imgName });
                     if (res.status === 200){
                         console.log('Profile picture updated successfully');
-                        alert('Profile picture updated successfully');
+                        this.message = 'Profile picture updated successfully.';
                     }
                 } catch (err) {
                     console.error('Error updating profile picture:', err);
@@ -123,22 +129,23 @@ export default {
                 }
         },
         async changePassword() {
-            if (this.oldPassword && this.newPassword && this.confirmNewPassword && 
-                this.newPassword === this.confirmNewPassword) {
+            if (this.newPassword === this.confirmNewPassword) {
                 console.log('Change Password attempt:', { oldPassword: this.oldPassword, newPassword: this.newPassword });
                 try {
                     const res = await loginApi.put('/users/me/password', 
                         { oldPassword: this.oldPassword, newPassword: this.newPassword });
                     if (res.status === 200){
                         console.log('Password updated successfully');
-                        alert('Password updated successfully');
+                        this.message = 'Password updated successfully.';
+                        this.showChangePasswordForm = false;
+                        this.error = '';
                     }
                 } catch (err) {
-                    alert('Old password incorrect');
+                    this.error = 'Old password incorrect.';
                     console.error('Error changing password:', err)
                 }
             } else {
-                this.error = 'Please fill in all fields. New password and confirm new password must be the same.';
+                this.error = 'New password and confirm new password must be the same.';
             }
         },
         async deleteAccount() {
