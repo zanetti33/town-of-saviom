@@ -2,20 +2,24 @@
     <div class="bg-container">
         <div class="main-container">
             <h2 class="section-title">Options</h2>
-            <button @click="showImagePicker = true">Change profile picture</button>
+            <button @click="showImagePicker = true" class="main-button">
+                {{ showImagePicker ? 'Hide' : 'Change profile picture' }}
+            </button>
 
-            <div v-if="showImagePicker" class="modal-overlay" @click.self="showImagePicker = false">
+            <div v-if="showImagePicker" @click.self="showImagePicker = false">
                 <div class="modal-content">
                     <h3>Select your Avatar</h3>
-                    <div class="image-grid">
-                        <img 
-                            v-for="img in availableImages" 
-                            :src="getAvatarUrl(img)" 
-                            @click="selectImage(img)"
-                            class="selectable-image"
-                        />
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div v-for="img in availableImages" class="relative">
+                            <img 
+                                :src="getAvatarUrl(img)" 
+                                @click="selectImage(img)"
+                                class="avatar-image hover:scale-110 cursor-pointer"
+                                :alt="'Avatar Image ' + img"
+                            />
+                        </div>
                     </div>
-                    <button @click="showImagePicker = false">Cancel</button>
+                    <button @click="showImagePicker = false" class="no-button">Cancel</button>
                 </div>
             </div>
 
@@ -68,7 +72,9 @@
                 <button @click="deleteAccount" class="no-button">Delete Account</button>
             </div>
 
-            <button @click="$router.push('/dashboard')" class="link-button">Back to dashboard</button>
+            <div class="mt-8 text-center">
+                <button @click="$router.push('/dashboard')" class="link-button">Back to dashboard</button>
+            </div>
         </div>
     </div>
 </template>

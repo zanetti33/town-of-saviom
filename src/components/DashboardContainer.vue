@@ -1,8 +1,8 @@
 <template>
     <div class="bg-container">
         <div class="main-container">
-            <div>
-                <img :src="imageUrl" alt="Player Icon" class="profile-preview" />
+            <div class="flex flex-row items-center justify-center gap-4 mb-4">
+                <img :src="imageUrl" alt="Player Icon" class="avatar-image" />
                 <h1 class="main-title">Welcome, {{ username }}</h1>
             </div>
             <div class="flex items-center justify-center gap-4 mb-4">

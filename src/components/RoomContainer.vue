@@ -3,8 +3,8 @@
         <div class="main-container">
             <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
             <div>
-                <p v-if="roomCode">Room: #{{ roomCode }}</p>
-                <button @click="copyRoomCode" class="copy-btn">
+                <label v-if="roomCode" class="block text-slate-400 mb-2">Room Code: {{ roomCode }}</label>
+                <button @click="copyRoomCode" class="absolute right-2 p-2 rounded-md hover:bg-slate-700 transition-colors group">
                     {{ copied ? 'Copied!' : 'Copy' }}
                 </button>
             </div>

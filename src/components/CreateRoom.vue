@@ -14,41 +14,55 @@
                         class="form-field"
                     />
                 </div>
-                <div class="form-group">
-                    <input
-                        id="classic"
-                        value="classic"
-                        v-model="gameMode"
-                        type="radio"
-                    />
-                    <label for="classic">Classic</label>
-                    <input
-                        id="advanced"
-                        value="advanced"
-                        v-model="gameMode"
-                        type="radio"
-                    />
-                    <label for="advanced">Advanced</label>
+                <div class="flex items-center justify-center gap-4 m-4">
+                    <div class="p-1 rounded-lg inline-flex border border-slate-700 m-4">
+                        <label for="classic" class="cursor-pointer">
+                            <input
+                            id="classic"
+                            value="classic"
+                            v-model="gameMode"
+                            type="radio"
+                            class="peer sr-only"
+                            checked/>
+                            <span class="item-selector">
+                                Classic
+                            </span>
+                        </label>
+                        <label for="advanced" class="cursor-pointer">
+                            <input
+                            id="advanced"
+                            value="advanced"
+                            v-model="gameMode"
+                            type="radio"
+                            class="peer sr-only"/>
+                            <span class="item-selector">
+                                Advanced
+                            </span>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-center gap-4 m-4 max-w-fit">
+                        <label for="maxPlayers" class="w-fit max-w-fit">Max Players:</label>
+                        <input
+                            id="maxPlayers"
+                            v-model="maxPlayers"
+                            type="number"
+                            required
+                            placeholder="Enter max number of players"
+                            class="form-field"
+                            min="6"
+                            max="12"
+                        />
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="maxPlayers">Max Players:</label>
-                    <input
-                        id="maxPlayers"
-                        v-model="maxPlayers"
-                        type="number"
-                        required
-                        placeholder="Enter max number of players"
-                        class="form-field"
-                        min="6"
-                        max="12"
-                    />
-                </div>
+        
                 <button type="submit" class="submit-button">Create</button>
             </form>
             <div class="error-message" v-if="error">
                 <p>{{ error }}</p>
             </div>
-            <button @click="$router.push('/dashboard')" class="link-button">Return to dashboard</button>
+            <div class="mt-8 text-center">
+                <button @click="$router.push('/dashboard')" class="link-button">Return to dashboard</button>
+            </div>
         </div>
     </div>
 </template>
