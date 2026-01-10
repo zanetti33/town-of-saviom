@@ -9,11 +9,26 @@
                 </button>
             </div>
             <h3>Players {{ players.length }}/{{ roomCapacity }}:</h3>
-            <ul>
-                <li v-for="player in players" :key="player.id">
-                    {{ player.name }} <span v-if="player.isReady">Ready</span>
-                </li>
-            </ul>
+            <div v-for="player in players" :key="player.id" class="player-card" :class="{ 'is-ready': player.isReady }">
+                <div>
+                    <img :src="getImageUrl(player.imageUrl)" alt="Player Icon" class="profile-preview" />
+                </div>
+
+                <div class="player-info">
+                    <div>
+                        <span>{{ player.name }}</span>
+                        <span v-if="player.isHost">👑</span>
+                    </div>
+                
+                    <div>
+                        <span v-if="player.isHost" class="host-label">Host</span>
+                        <div v-if="player.isReady" class="ready-status">
+                            <span class="ready-text">Ready</span>
+                            <span class="ready-check">✔️</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <button @click="onExitButtonClick" class="no-button">Exit</button>
             <button v-if="isHost" @click="onStartButtonClick" class="main-button">Start</button>
             <button v-else @click="onReadyButtonClick" class="main-button">Ready</button>
@@ -43,12 +58,18 @@ export default {
     },
     mounted() {
         this.joinRoom();
-        this.checkHost();
+        this.checkPlayers();
     },
     beforeUnmount() {
         this.leaveRoom();
     },
     methods: {
+        getImageUrl(name) {
+            console.log(name);
+            if(name)
+                return new URL(`../assets/img/profile/${name}`, import.meta.url).href;
+            return new URL(`../assets/img/profile/default.png`, import.meta.url).href;
+        },
         async copyRoomCode() {
             try {
                 await navigator.clipboard.writeText(this.roomCode);
@@ -79,9 +100,10 @@ export default {
                 console.error('Error joining room:', error);
             }
         },
-        async checkHost() {
+        async checkPlayers() {
             const response = await lobbyApi.get(`/rooms/${this.roomId}`);
             const authStore = useAuthStore();
+            this.players = response.data.players;
             for (let player of response.data.players) {
                 if (player.userId === authStore.user.id) {
                     this.isHost = player.isHost;
