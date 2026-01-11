@@ -5,6 +5,8 @@ services:
     # This container stays internal; Nginx will talk to it
     ports:
       - "80:80"
+    networks:
+      - town-of-saviom-shared-net
 
 networks:
   town-of-saviom-shared-net:
