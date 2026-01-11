@@ -1,11 +1,10 @@
 import axios from 'axios';
 import { setupAuthInterceptors } from './authInterceptor';
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const LOGIN_API_URL = BASE_URL ? `${BASE_URL}/api/login` : 'http://localhost:3000';
-const LOBBY_API_URL = BASE_URL ? `${BASE_URL}/api/lobby` : 'http://localhost:3001';
-const GAMEPLAY_API_URL = BASE_URL ? `${BASE_URL}/api/gameplay` : 'http://localhost:3002';
-const STATS_API_URL = BASE_URL ? `${BASE_URL}/api/stats` : 'http://localhost:3003';
-
+const isProd = import.meta.env.PROD;
+const LOGIN_API_URL = isProd ? '/api/login' : 'http://localhost:3000';
+const LOBBY_API_URL = isProd ? '/api/lobby' : 'http://localhost:3001';
+const GAMEPLAY_API_URL = isProd ? '/api/gameplay' : 'http://localhost:3002';
+const STATS_API_URL = isProd ? '/api/stats' : 'http://localhost:3003';
 const createInstance = (url) => {
     const instance = axios.create({
         baseURL: url,
