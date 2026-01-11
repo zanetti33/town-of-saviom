@@ -1,8 +1,6 @@
 services:
   town-of-saviom-frontend:
     build: .
-    environment:
-      - VITE_API_BASE_URL=${VITE_API_BASE_URL}
     restart: always
     # This container stays internal; Nginx will talk to it
     ports:
