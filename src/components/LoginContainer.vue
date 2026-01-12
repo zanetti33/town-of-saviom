@@ -17,47 +17,39 @@
       <!-- <p class="text-slate-400 text-sm tracking-widest uppercase">Survival is a choice.</p> -->
     </div>
 
-    <div class="main-container">
+    <div class="login-container">
       <h2 class="section-title">Login</h2>
-      
-      <form @submit.prevent="handleLogin" class="space-y-5">
-        
-        <div class="form-group">
-          <label for="emailOrName" class="sr-only">Email or Username</label>
-          <input
-            id="emailOrName"
-            v-model="emailOrName"
-            type="text"
-            required
-            class="form-field"
-            placeholder="Username"
-          />
-        </div>
+        <form @submit.prevent="handleLogin" class="space-y-5 w-full">
+          <div>
+            <label for="emailOrName" class="sr-only">Email or Username</label>
+            <input
+              id="emailOrName"
+              v-model="emailOrName"
+              type="text"
+              required
+              class="form-field"
+              placeholder="Username"
+            />
+          </div>
 
-        <div class="form-group">
-          <label for="password" class="sr-only">Password</label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            required
-            class="form-field"
-            placeholder="Password"
-          />
-        </div>
+          <div>
+            <label for="password" class="sr-only">Password</label>
+            <input
+              id="password"
+              v-model="password"
+              type="password"
+              required
+              class="form-field"
+              placeholder="Password"
+            />
+          </div>
 
-        <div v-if="error" class="error-message">
-        {{ error }}
-        </div>
+          <div v-if="error" class="error-message">
+          {{ error }}
+          </div>
 
-        <button 
-          type="submit"
-          class="submit-button"
-        >
-          Enter the Town
-        </button>
-      </form>
-
+          <button type="submit" class="submit-button">Enter the Town</button>
+        </form>
     </div>
 
     <div class="mt-8 text-center text-slate-400 text-sm">

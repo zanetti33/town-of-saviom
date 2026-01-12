@@ -5,7 +5,11 @@
 }
 
 .main-container{
-    @apply w-full bg-[#131B2E] border border-slate-700/50 rounded-2xl shadow-2xl p-8 m-10 backdrop-blur-sm;
+    @apply bg-[#131B2E] border border-slate-700/50 rounded-2xl shadow-2xl p-8 m-10 backdrop-blur-sm;
+}
+
+.login-container{
+    @apply w-full max-w-md mx-auto bg-[#131B2E] border border-slate-700/50 rounded-2xl shadow-2xl p-8 m-10 backdrop-blur-sm;
 }
 
 .main-title {
@@ -26,6 +30,10 @@
 
 .main-button {
     @apply text-white bg-linear-to-r from-[#6366f1] to-[#a855f7] hover:from-[#5b5ee0] hover:to-[#9333ea] focus:ring-4 focus:outline-none focus:ring-purple-800 font-bold rounded-lg text-sm px-10 py-10 text-center transition-all shadow-lg shadow-purple-900/30 m-5;
+}
+
+.transparent-button {
+    @apply bg-transparent border border-slate-600 hover:bg-slate-800 text-slate-400 hover:text-white font-bold rounded-lg py-3 flex items-center justify-center gap-2 transition-all text-sm
 }
 
 .no-button {
@@ -54,6 +62,10 @@
 
 .player-lobby-card {
     @apply flex max-w-md items-center border border-slate-500 rounded-lg p-4 mb-4 transition-all;
+}
+
+.username-info-top-right {
+    @apply flex items-center gap-3 bg-[#0B0F19]/50 px-3 py-1.5 rounded-full border border-slate-700/50 backdrop-blur-sm;
 }
 
 /* Contenitore della scrollbar (la "pista") */
