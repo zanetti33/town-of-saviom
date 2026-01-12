@@ -10,49 +10,36 @@
                         v-model="roomName"
                         type="text"
                         required
-                        placeholder="Enter the room name"
+                        placeholder="Enter the room name... e.g. Dark Forest"
                         class="form-field"
                     />
                 </div>
-                <div class="flex items-center justify-center gap-4 m-4">
-                    <div class="p-1 rounded-lg inline-flex border border-slate-700 m-4">
-                        <label for="classic" class="cursor-pointer">
-                            <input
-                            id="classic"
-                            value="classic"
-                            v-model="gameMode"
-                            type="radio"
-                            class="peer sr-only"
-                            checked/>
-                            <span class="item-selector">
-                                Classic
-                            </span>
-                        </label>
-                        <label for="advanced" class="cursor-pointer">
-                            <input
-                            id="advanced"
-                            value="advanced"
-                            v-model="gameMode"
-                            type="radio"
-                            class="peer sr-only"/>
-                            <span class="item-selector">
-                                Advanced
-                            </span>
-                        </label>
+                <div class="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-12 my-6">
+                    <div class="flex items-center justify-center gap-4">
+                        <label class="text-slate-500 whitespace-nowrap">Game Mode:</label>
+                        <div class="p-1 rounded-lg inline-flex border border-slate-700">
+                            <label for="classic" class="cursor-pointer">
+                                <input id="classic" value="classic" v-model="gameMode" type="radio" class="peer sr-only" checked/>
+                                <span class="item-selector">Classic</span>
+                            </label>
+                            <label for="advanced" class="cursor-pointer">
+                                <input id="advanced" value="advanced" v-model="gameMode" type="radio" class="peer sr-only"/>
+                                <span class="item-selector">Advanced</span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="flex items-center justify-center gap-4 m-4 max-w-fit">
-                        <label for="maxPlayers" class="w-fit max-w-fit">Max Players:</label>
-                        <input
-                            id="maxPlayers"
-                            v-model="maxPlayers"
-                            type="number"
-                            required
-                            placeholder="Enter max number of players"
-                            class="form-field"
-                            min="6"
-                            max="12"
-                        />
+
+                    <div class="flex items-center justify-center gap-4">
+                        <label class="text-slate-500 whitespace-nowrap">Max Players:</label>
+                        <div class="flex items-center border border-slate-700 rounded-lg overflow-hidden bg-gray-900">
+                            <button type="button" @click="decrementPlayers" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors">-</button>
+                            <div class="w-12 text-center font-bold text-purple-400">
+                                {{ maxPlayers }}
+                            </div>
+                            <button type="button" @click="incrementPlayers" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors">+</button>
+                        </div>
                     </div>
+
                 </div>
         
                 <button type="submit" class="submit-button">Create</button>
@@ -81,6 +68,16 @@ export default {
         };
     },
     methods: {
+        incrementPlayers() {
+            if (this.maxPlayers < 12) {
+                this.maxPlayers++;
+            }
+        },
+        decrementPlayers() {
+            if (this.maxPlayers > 6) {
+                this.maxPlayers--;
+            }
+        },
         createRoom() {
             if (this.roomName && this.gameMode && this.maxPlayers) {
                 console.log('Create room attempt:', { name: this.roomName, mode: this.gameMode, maxPlayers: this.maxPlayers });
