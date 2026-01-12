@@ -95,8 +95,8 @@ export default {
     data() {
         return {
             showImagePicker: false,
-            availableImages: ['default.png', 'jocker.png', 'king.png', 'princess.png', 'soldier.png'],
-            selectedImageName: 'default.png',
+            availableImages: ['default.svg', 'jocker.svg', 'king.svg', 'princess.svg', 'soldier.svg'],
+            selectedImageName: 'default.svg',
             showChangePasswordForm: false,
             oldPassword: '',
             newPassword: '',

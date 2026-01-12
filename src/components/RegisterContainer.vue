@@ -5,10 +5,10 @@
             TOWN OF SAVIOM
             </h1>
         </div>
-        <div class="main-container">
+        <div class="login-container">
             <h2 class="section-title">Register</h2>
 
-            <form @submit.prevent="handleRegistration" class="space-y-5">
+            <form @submit.prevent="handleRegistration" class="space-y-4 w-full">
 
                 <div class="form-group">
                     <label for="email" class="sr-only">Email:</label>
