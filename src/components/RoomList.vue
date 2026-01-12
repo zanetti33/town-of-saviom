@@ -6,24 +6,24 @@
                 type="text" 
                 v-model="searchQuery" 
                 placeholder="Search by room name or code..."
-                class="form-field m-4"
+                class="form-field"
             />
-            <div class="mode-filters">
-                <button 
-                    :class="['filter-btn main-button', { active: this.selectedMode === 'classic' }]" 
-                    @click="setMode('classic')"
-                >
-                    Classic
-                </button>
-                <button 
-                    :class="['filter-btn main-button', { active: this.selectedMode === 'advanced' }]" 
-                    @click="setMode('advanced')"
-                >
-                    Advanced
-                </button>
-                <button v-bind:disabled="!this.selectedMode" class="main-button" @click="this.selectedMode = null">
-                    All
-                </button>
+            <div class="mode-filters m-6 justify-center flex items-center gap-4">
+                <label class="text-slate-500 whitespace-nowrap">Game Mode:</label>
+                <div class="p-1 rounded-lg inline-flex border border-slate-700">
+                    <label for="all" class="cursor-pointer">
+                        <input id="all" value="all" v-model="selectedMode" type="radio" class="peer sr-only" checked/>
+                        <span class="item-selector">All</span>
+                    </label>
+                    <label for="classic" class="cursor-pointer">
+                        <input id="classic" value="classic" v-model="selectedMode" type="radio" class="peer sr-only"/>
+                        <span class="item-selector">Classic</span>
+                    </label>
+                    <label for="advanced" class="cursor-pointer">
+                        <input id="advanced" value="advanced" v-model="selectedMode" type="radio" class="peer sr-only"/>
+                        <span class="item-selector">Advanced</span>
+                    </label>
+                </div>
             </div>
             
             <div v-for="room in filteredRooms" :key="room.id">
@@ -51,7 +51,7 @@ export default {
         return {
             rooms: [],
             searchQuery: '',
-            selectedMode: null
+            selectedMode: "all"
         };
     },
     mounted() {
@@ -65,7 +65,7 @@ export default {
                 const matchesSearch = room.name.toLowerCase().includes(query) || 
                                      (room.code && room.code.toLowerCase().includes(query));
                 
-                const matchesMode = this.selectedMode === null || room.gameMode === this.selectedMode;
+                const matchesMode = this.selectedMode === "all" || room.gameMode === this.selectedMode;
 
                 return matchesSearch && matchesMode;
             });
