@@ -55,3 +55,33 @@
 .player-lobby-card {
     @apply flex max-w-md items-center border border-slate-500 rounded-lg p-4 mb-4 transition-all;
 }
+
+/* Contenitore della scrollbar (la "pista") */
+.max-h-96::-webkit-scrollbar {
+    width: 8px;               /* Larghezza della barra verticale */
+    height: 8px;              /* Altezza della barra orizzontale */
+}
+
+/* Sfondo della scrollbar */
+.max-h-96::-webkit-scrollbar-track {
+    background: #1f2937;      /* Corrisponde a gray-800 */
+    border-radius: 10px;
+}
+
+/* La parte scorrevole (il "cursore") */
+.max-h-96::-webkit-scrollbar-thumb {
+    background: #7c3aed;      /* Un viola vivido tipo purple-600 */
+    border-radius: 10px;
+    border: 2px solid #1f2937; /* Crea un effetto di distacco dalla pista */
+}
+
+/* Colore del cursore quando ci passi sopra con il mouse */
+.max-h-96::-webkit-scrollbar-thumb:hover {
+    background: #a78bfa;      /* Viola più chiaro purple-400 */
+}
+
+/* Supporto per Firefox (più limitato) */
+.max-h-96 {
+    scrollbar-width: thin;
+    scrollbar-color: #7c3aed #1f2937;
+}

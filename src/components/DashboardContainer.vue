@@ -68,7 +68,7 @@
                     <h2 class="text-2xl font-bold mb-4 text-purple-400 underline">Game Rules</h2>
                     
                     <div class="max-h-96 overflow-y-auto mb-4 text-sm leading-relaxed">
-                        <pre class="font-sans whitespace-pre-wrap text-gray-200">{{ rulesContent }}</pre>
+                        <div v-html="rulesContent"></div>
                     </div>
                     <button class="no-button" @click="showRules = false">X</button>
                 </div>
@@ -86,7 +86,7 @@ export default {
             imageUrl: new URL(`../assets/img/profile/default.png`, import.meta.url).href,
             showRules: false,
             showHistory: false,
-            rulesContent: rulesText,
+            rulesContent: rules,
             stats: {
                 totalGames: 0,
                 totalWins: 0,
@@ -162,7 +162,7 @@ export default {
 };
 
 import router from '../router';
-import rulesText from '../assets/rules/rules.txt?raw';
+import rules from '../assets/rules/rules.html?raw';
 import { loginApi, statsApi } from '../services/api';
 </script>
 
