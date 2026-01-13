@@ -3,11 +3,8 @@
     <div class="text-center mb-8">
       <div class="flex justify-center mb-4">
         <div class="relative">
-          <div class="absolute inset-0 bg-purple-600 blur-xl opacity-50 rounded-full"></div>
-          <img src="../assets/img/castle.png" alt="Castle" class="relative w-16 h-16 object-contain" />
-          <!-- <svg xmlns="http://www.w3.org/2000/svg" class="relative w-16 h-16 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-          </svg> -->
+          <div class=" absolute inset-0 bg-purple-600 blur-xl opacity-50 rounded-full"></div>
+          <component :is="loadIcon('battle')" class="w-30 h-30"/>
         </div>
       </div>
       
@@ -63,6 +60,12 @@
 </template>
 
 <script>
+import { loginApi } from '../services/api';
+import { useAuthStore } from '../stores/authStore';
+import router from '../router';
+import { defineAsyncComponent } from 'vue'
+const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
+
 export default {
     name: 'LoginContainer',
     data() {
@@ -95,13 +98,14 @@ export default {
                 console.error("Login failed:", error);
                 this.error = 'Wrong username or password.';
             }
+        },
+        loadIcon(name) {
+            const key = '../assets/img/' + name + '.svg';
+            return defineAsyncComponent(icons[key]);
         }
     }
 };
 
-import { loginApi } from '../services/api';
-import { useAuthStore } from '../stores/authStore';
-import router from '../router';
 </script>
 
 <style scoped>
