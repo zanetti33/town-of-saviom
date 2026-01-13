@@ -86,8 +86,8 @@
             </div>
 
             <div class="space-y-4 grow">
-                <button @click="createRoom" class="main-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
-                    <component :is="loadIcon('potion.svg')" class="w-8 h-8 text-3xl"/>
+                <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
+                    <component :is="loadIcon('potion')" class="w-8 h-8 text-3xl"/>
                     Create Room
                 </button>
 
@@ -109,7 +109,7 @@
             </div>
 
             <div class="mt-8 text-center pb-2">
-                <button @click="logout" class="link-button text-slate-500! hover:text-red-400!">
+                <button @click="logout" class="link-button">
                     Log Out
                 </button>
             </div>
