@@ -1,9 +1,18 @@
 <template>
     <div class="bg-container">
         <div class="text-center mb-8">
+            <div class="flex justify-center mb-4">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-purple-600 blur-xl opacity-50 rounded-full">
+                        <component :is="loadIcon('battle')" class="w-16 h-16"/>
+                    </div>
+                </div>
+            </div>
+            
             <h1 class="main-title">
-            TOWN OF SAVIOM
+                TOWN OF SAVIOM
             </h1>
+        <!-- <p class="text-slate-400 text-sm tracking-widest uppercase">Survival is a choice.</p> -->
         </div>
         <div class="login-container">
             <h2 class="section-title">Register</h2>
@@ -69,6 +78,12 @@
 </template>
 
 <script>
+import { loginApi } from '../services/api';
+import { useAuthStore } from '../stores/authStore';
+import router from '../router';
+import { defineAsyncComponent } from 'vue'
+const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
+
 export default {
     name: 'RegisterContainer',
     data() {
@@ -110,13 +125,14 @@ export default {
             } else {
                 this.error = 'Please fill in all fields and ensure passwords match.';
             }
+        },
+        loadIcon(name) {
+            const key = '../assets/img/' + name + '.svg';
+            return defineAsyncComponent(icons[key]);
         }
     }
 };
 
-import { loginApi } from '../services/api';
-import { useAuthStore } from '../stores/authStore';
-import router from '../router';
 </script>
 
 <style scoped>

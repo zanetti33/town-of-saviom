@@ -8,11 +8,7 @@
                 
                 <div class="username-info-top-right">
                     <span class="text-white font-bold text-sm tracking-wide">{{ username }}</span>
-                    <img 
-                        :src="imageUrl" 
-                        alt="Profile" 
-                        class="w-12 h-12 rounded-full border-2 border-purple-500 object-cover" 
-                    />
+                    <component :is="loadAvatar(imageUrl)" class="w-12 h-12 rounded-full border-2 border-purple-500 object-cover"/>
                 </div>
             </div>
             
@@ -96,17 +92,17 @@
                 </button>
 
                 <button  @click="joinRoom" class="w-full bg-[#1E293B] hover:bg-[#2D3F59] border border-slate-600 text-slate-200 font-bold rounded-lg px-5 py-4 flex items-center justify-center gap-3 transition-all shadow-lg">
-                    <component :is="loadIcon('battle')" class="w-8 h-8"/>
+                    <component :is="loadIcon('battle.svg')" class="w-8 h-8"/>
                     Join Room
                 </button>
 
                 <div class="grid grid-cols-2 gap-4">
                     <button @click="showRules = true" class="transparent-button">
-                        <component :is="loadIcon('rules')" class="w-8 h-8"/>
+                        <component :is="loadIcon('rules.svg')" class="w-8 h-8"/>
                         Rules
                     </button>
                     <button @click="openOptions" class="transparent-button">
-                        <component :is="loadIcon('options')" class="w-8 h-8"/>
+                        <component :is="loadIcon('options.svg')" class="w-8 h-8"/>
                         Options
                     </button>
                 </div>
@@ -138,13 +134,15 @@ import rules from '../assets/rules/rules.html?raw';
 import { loginApi, statsApi } from '../services/api';
 import { defineAsyncComponent } from 'vue'
 const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
+const avatars = import.meta.glob('../assets/img/profile/*.svg', { query: '?component' });
+const roles = import.meta.glob('../assets/img/characters/*.svg', { query: '?component' });
 
 export default {
     name: 'DashboardContainer',
     data() {
         return {
             username: 'Player',
-            imageUrl: new URL(`../assets/img/profile/default.png`, import.meta.url).href,
+            imageUrl: 'default.svg',
             showRules: false,
             showHistory: false,
             rulesContent: rules,
@@ -220,8 +218,16 @@ export default {
             router.push('/register');
         },
         loadIcon(name) {
-            const key = '../assets/img/' + name + '.svg';
+            const key = '../assets/img/' + name;
             return defineAsyncComponent(icons[key]);
+        },
+        loadAvatar(name) {
+            const key = '../assets/img/profile/' + name;
+            return defineAsyncComponent(avatars[key]);
+        },
+        loadRole(name) {
+            const key = '../assets/img/characters/' + name;
+            return defineAsyncComponent(roles[key]);
         }
     }
 };
