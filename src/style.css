@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&display=swap');
 @import "tailwindcss";
 
 @theme {
+  --font-display: "Pirata One";
   --color-dark-primary: #4F46E5;
   --color-light-primary: #9333EA;
   --color-background-1: #020617;
@@ -28,7 +30,7 @@
 }
 
 .main-title {
-    @apply text-4xl md:text-5xl font-bold tracking-wider mb-2 font-serif text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)];
+    @apply font-display text-4xl md:text-6xl font-bold tracking-widest mb-2 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)];
 }
 
 .section-title {
