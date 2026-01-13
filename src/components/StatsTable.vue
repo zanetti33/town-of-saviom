@@ -11,9 +11,10 @@
                 class="flex items-center gap-1 text-sm uppercase font-bold cursor-pointer text-purple-400 hover:text-white bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 px-2 py-1 rounded transition-all"
             >
                 <span>History</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <component 
+                    :is="getIconComponent('clock.svg')"
+                    class="w-4 h-4"
+                    :aria-label="'Icon history'"/>
             </button>
         </div>
 
@@ -74,6 +75,9 @@
 </template>
 <script>
 import { statsApi } from '../services/api';
+import { defineAsyncComponent } from 'vue'
+const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
+const iconsCache = new Map();
     
 export default {
     data() {
@@ -108,7 +112,22 @@ export default {
             } catch (error) {
                 console.error('Error loading history:', error);
             }
-        }
+        },
+        getIconComponent(imgName) {
+            const path = `../assets/img/${imgName}`;
+            
+            if (iconsCache.has(path)) {
+                return iconsCache.get(path);
+            }
+            if (!icons[path]) {
+                console.warn(`Icon not found: ${path}`);
+                return null;
+            }
+
+            const comp = defineAsyncComponent(icons[path]);
+            iconsCache.set(path, comp);
+            return comp;
+        },
     }
 }
 </script>

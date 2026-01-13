@@ -17,54 +17,42 @@
             </div>
 
             <StatsTable />
-
+            
             <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
-                <component :is="loadIcon('potion.svg')" class="w-8 h-8 text-3xl"/>
+                <component 
+                    :is="getIconComponent('potion.svg')"
+                    class="w-8 h-8"
+                    :aria-label="'Icon potion'"
+                />
                 Create Room
             </button>
 
             <button  @click="joinRoom" class="w-full bg-background-3 hover:bg-[#2D3F59] border border-slate-600 text-slate-200 font-bold rounded-lg px-5 py-4 flex items-center justify-center gap-3 transition-all shadow-lg">
-                <component :is="loadIcon('battle.svg')" class="w-8 h-8"/>
+                <component 
+                    :is="getIconComponent('battle.svg')"
+                    class="w-8 h-8"
+                    :aria-label="'Icon battle'"
+                />
                 Join Room
             </button>
 
-            <div class="space-y-4 grow">
-                <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
+            <div class="grid grid-cols-2 gap-4">
+                <button @click="showRules = true" class="transparent-button">
                     <component 
-                        :is="getIconComponent('potion.svg')"
+                        :is="getIconComponent('rules.svg')"
                         class="w-8 h-8"
-                        :aria-label="'Icon potion'"
+                        :aria-label="'Icon rules'"
                     />
-                    Create Room
+                    Rules
                 </button>
-
-                <button  @click="joinRoom" class="w-full bg-background-3 hover:bg-[#2D3F59] border border-slate-600 text-slate-200 font-bold rounded-lg px-5 py-4 flex items-center justify-center gap-3 transition-all shadow-lg">
+                <button @click="openOptions" class="transparent-button">
                     <component 
-                        :is="getIconComponent('battle.svg')"
+                        :is="getIconComponent('options.svg')"
                         class="w-8 h-8"
-                        :aria-label="'Icon battle'"
+                        :aria-label="'Icon options'"
                     />
-                    Join Room
+                    Options
                 </button>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <button @click="showRules = true" class="transparent-button">
-                        <component 
-                            :is="getIconComponent('rules.svg')"
-                            class="w-8 h-8"
-                            :aria-label="'Icon rules'"
-                        />
-                        Rules
-                    </button>
-                    <button @click="openOptions" class="transparent-button">
-                        <component 
-                            :is="getIconComponent('options.svg')"
-                            class="w-8 h-8"
-                            :aria-label="'Icon options'"
-                        />
-                        Options
-                    </button>
-                </div>
             </div>
 
             <div class="text-center pb-2">
@@ -94,11 +82,9 @@
                 
                 <div class="username-info-top-right">
                     <span class="text-white font-bold text-sm tracking-wide">{{ username }}</span>
-                    <img 
-                        :src="imageUrl" 
-                        alt="Profile" 
-                        class="w-12 h-12 rounded-full border-2 border-purple-500 object-cover" 
-                    />
+                    <component 
+                        :is="getAvatarComponent(imageUrl)"
+                        class="w-12 h-12 rounded-full border-2 border-purple-500 object-cover"/>
                 </div>
             </div>
             <div class="flex justify-between">
@@ -106,17 +92,29 @@
                     <StatsTable />
 
                     <button @click="createRoom" class="submit-button w-full flex items-center justify-center text-base" >
-                        <component :is="loadIcon('potion.svg')" class="w-8 h-8 text-3xl"/>
+                        <component 
+                            :is="getIconComponent('potion.svg')"
+                            class="w-8 h-8"
+                            :aria-label="'Icon potion'"
+                        />
                         Create Room
                     </button>
 
                     <div class="grid grid-cols-2 gap-4">
                         <button @click="showRules = true" class="transparent-button">
-                            <component :is="loadIcon('rules.svg')" class="w-8 h-8"/>
+                            <component 
+                                :is="getIconComponent('rules.svg')"
+                                class="w-8 h-8"
+                                :aria-label="'Icon rules'"
+                            />
                             Rules
                         </button>
                         <button @click="openOptions" class="transparent-button">
-                            <component :is="loadIcon('options.svg')" class="w-8 h-8"/>
+                            <component 
+                                :is="getIconComponent('options.svg')"
+                                class="w-8 h-8"
+                                :aria-label="'Icon options'"
+                            />
                             Options
                         </button>
                     </div>
