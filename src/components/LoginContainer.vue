@@ -14,7 +14,7 @@
       <h1 class="main-title">
         TOWN OF SAVIOM
       </h1>
-      <!-- <p class="text-slate-400 text-sm tracking-widest uppercase">Survival is a choice.</p> -->
+      <p class="text-background-5 text-sm tracking-widest uppercase">Survival is a choice.</p>
     </div>
 
     <div class="login-container">
@@ -48,7 +48,7 @@
           {{ error }}
           </div>
 
-          <button type="submit" class="submit-button">Enter the Town</button>
+          <button type="submit" class="submit-button mt-2">Enter the Town</button>
         </form>
     </div>
 
