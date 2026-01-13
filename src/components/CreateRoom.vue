@@ -47,7 +47,7 @@
             <div class="error-message" v-if="error">
                 <p>{{ error }}</p>
             </div>
-            <div class="mt-8 text-center">
+            <div class="text-center">
                 <button @click="$router.push('/dashboard')" class="link-button">Return to dashboard</button>
             </div>
         </div>
