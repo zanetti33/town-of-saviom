@@ -4,7 +4,7 @@
       <div class="flex justify-center mb-4">
         <div class="relative">
           <div class=" absolute inset-0 bg-purple-600 blur-xl opacity-50 rounded-full"></div>
-          <component :is="loadIcon('battle')" class="w-30 h-30"/>
+          <CastleIcon class="w-25 h-25"/>
         </div>
       </div>
       
@@ -68,6 +68,9 @@ const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
 
 export default {
     name: 'LoginContainer',
+    components: {
+        CastleIcon: defineAsyncComponent(icons['../assets/img/castle.svg'])
+    },
     data() {
         return {
             emailOrName: '',
@@ -98,10 +101,6 @@ export default {
                 console.error("Login failed:", error);
                 this.error = 'Wrong username or password.';
             }
-        },
-        loadIcon(name) {
-            const key = '../assets/img/' + name + '.svg';
-            return defineAsyncComponent(icons[key]);
         }
     }
 };

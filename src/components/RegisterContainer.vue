@@ -4,7 +4,7 @@
             <div class="flex justify-center mb-4">
                 <div class="relative">
                     <div class="absolute inset-0 bg-purple-600 blur-xl opacity-50 rounded-full">
-                        <component :is="loadIcon('battle')" class="w-16 h-16"/>
+                        <CastleIcon class="w-25 h-25"/>
                     </div>
                 </div>
             </div>
@@ -86,6 +86,9 @@ const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
 
 export default {
     name: 'RegisterContainer',
+    components: {
+        CastleIcon: defineAsyncComponent(icons['../assets/img/castle.svg'])
+    },
     data() {
         return {
             email: '',
@@ -125,10 +128,6 @@ export default {
             } else {
                 this.error = 'Please fill in all fields and ensure passwords match.';
             }
-        },
-        loadIcon(name) {
-            const key = '../assets/img/' + name + '.svg';
-            return defineAsyncComponent(icons[key]);
         }
     }
 };

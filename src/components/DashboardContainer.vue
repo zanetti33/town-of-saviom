@@ -8,7 +8,9 @@
                 
                 <div class="username-info-top-right">
                     <span class="text-white font-bold text-sm tracking-wide">{{ username }}</span>
-                    <component :is="loadAvatar(imageUrl)" class="w-12 h-12 rounded-full border-2 border-purple-500 object-cover"/>
+                    <component 
+                        :is="getAvatarComponent(imageUrl)"
+                        class="w-12 h-12 rounded-full border-2 border-purple-500 object-cover"/>
                 </div>
             </div>
             
@@ -24,9 +26,10 @@
                         class="flex items-center gap-1 text-sm uppercase font-bold cursor-pointer text-purple-400 hover:text-white bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 px-2 py-1 rounded transition-all"
                     >
                         <span>History</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                        <component 
+                            :is="getIconComponent('clock.svg')"
+                            class="w-4 h-4"
+                            :aria-label="'Icon history'"/>
                     </button>
                 </div>
 
@@ -87,22 +90,38 @@
 
             <div class="space-y-4 grow">
                 <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
-                    <component :is="loadIcon('potion')" class="w-8 h-8 text-3xl"/>
+                    <component 
+                        :is="getIconComponent('potion.svg')"
+                        class="w-8 h-8"
+                        :aria-label="'Icon potion'"
+                    />
                     Create Room
                 </button>
 
-                <button  @click="joinRoom" class="w-full bg-[#1E293B] hover:bg-[#2D3F59] border border-slate-600 text-slate-200 font-bold rounded-lg px-5 py-4 flex items-center justify-center gap-3 transition-all shadow-lg">
-                    <component :is="loadIcon('battle.svg')" class="w-8 h-8"/>
+                <button  @click="joinRoom" class="w-full bg-background-3 hover:bg-[#2D3F59] border border-slate-600 text-slate-200 font-bold rounded-lg px-5 py-4 flex items-center justify-center gap-3 transition-all shadow-lg">
+                    <component 
+                        :is="getIconComponent('battle.svg')"
+                        class="w-8 h-8"
+                        :aria-label="'Icon battle'"
+                    />
                     Join Room
                 </button>
 
                 <div class="grid grid-cols-2 gap-4">
                     <button @click="showRules = true" class="transparent-button">
-                        <component :is="loadIcon('rules.svg')" class="w-8 h-8"/>
+                        <component 
+                            :is="getIconComponent('rules.svg')"
+                            class="w-8 h-8"
+                            :aria-label="'Icon rules'"
+                        />
                         Rules
                     </button>
                     <button @click="openOptions" class="transparent-button">
-                        <component :is="loadIcon('options.svg')" class="w-8 h-8"/>
+                        <component 
+                            :is="getIconComponent('options.svg')"
+                            class="w-8 h-8"
+                            :aria-label="'Icon options'"
+                        />
                         Options
                     </button>
                 </div>
@@ -134,8 +153,9 @@ import rules from '../assets/rules/rules.html?raw';
 import { loginApi, statsApi } from '../services/api';
 import { defineAsyncComponent } from 'vue'
 const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
+const iconsCache = new Map();
 const avatars = import.meta.glob('../assets/img/profile/*.svg', { query: '?component' });
-const roles = import.meta.glob('../assets/img/characters/*.svg', { query: '?component' });
+const avatarsCache = new Map();
 
 export default {
     name: 'DashboardContainer',
@@ -168,7 +188,7 @@ export default {
                 if (userData) {
                     this.username = userData.name || 'Player';
                     if (userData.imageUrl) {
-                        this.imageUrl = new URL(`../assets/img/profile/${userData.imageUrl}`, import.meta.url).href;
+                        this.imageUrl = userData.imageUrl;
                     }
                 }
             } catch (error) {
@@ -213,21 +233,35 @@ export default {
             console.log('Logout clicked');
             router.push('/logout');
         },
-        register() {
-            console.log('Register clicked');
-            router.push('/register');
+        getIconComponent(imgName) {
+            const path = `../assets/img/${imgName}`;
+            
+            if (iconsCache.has(path)) {
+                return iconsCache.get(path);
+            }
+            if (!icons[path]) {
+                console.warn(`Icon not found: ${path}`);
+                return null;
+            }
+
+            const comp = defineAsyncComponent(icons[path]);
+            iconsCache.set(path, comp);
+            return comp;
         },
-        loadIcon(name) {
-            const key = '../assets/img/' + name;
-            return defineAsyncComponent(icons[key]);
-        },
-        loadAvatar(name) {
-            const key = '../assets/img/profile/' + name;
-            return defineAsyncComponent(avatars[key]);
-        },
-        loadRole(name) {
-            const key = '../assets/img/characters/' + name;
-            return defineAsyncComponent(roles[key]);
+        getAvatarComponent(imgName) {
+            const path = `../assets/img/profile/${imgName}`;
+            
+            if (avatarsCache.has(path)) {
+                return avatarsCache.get(path);
+            }
+            if (!avatars[path]) {
+                console.warn(`Avatar not found: ${path}`);
+                return null;
+            }
+
+            const comp = defineAsyncComponent(avatars[path]);
+            avatarsCache.set(path, comp);
+            return comp;
         }
     }
 };

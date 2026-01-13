@@ -16,11 +16,11 @@
                     <h3>Select your Avatar</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div v-for="img in availableImages" class="relative">
-                            <img 
-                                :src="getAvatarUrl(img)" 
+                            <component 
+                                :is="getAvatarComponent(img)"
                                 @click="selectImage(img)"
-                                class="avatar-image hover:scale-110 cursor-pointer"
-                                :alt="'Avatar Image ' + img"
+                                class="avatar-image hover:scale-110 cursor-pointer transition-transform duration-200"
+                                :aria-label="'Avatar ' + img"
                             />
                         </div>
                     </div>
@@ -87,8 +87,11 @@
 <script>
 
 import { loginApi } from '../services/api';
-import { useAuthStore } from '../stores/authStore';
 import router from '../router';
+import { defineAsyncComponent} from 'vue';
+
+const avatarModules = import.meta.glob('../assets/img/profile/*.svg', { query: '?component' });
+const avatarCache = new Map();
 
 export default {
     name: 'OptionsContainer',
@@ -105,14 +108,21 @@ export default {
             error: 'New password and confirm new password must be the same.'
         };
     },
-    computed: {
-        currentProfilePic() {
-            return this.getAvatarUrl(this.selectedImageName);
-        }
-    },
     methods: {
-        getAvatarUrl(name) {
-            return new URL(`../assets/img/profile/${name}`, import.meta.url).href;
+        getAvatarComponent(imgName) {
+            const path = `../assets/img/profile/${imgName}`;
+            
+            if (avatarCache.has(path)) {
+                return avatarCache.get(path);
+            }
+            if (!avatarModules[path]) {
+                console.warn(`Avatar not found: ${path}`);
+                return null;
+            }
+
+            const comp = defineAsyncComponent(avatarModules[path]);
+            avatarCache.set(path, comp);
+            return comp;
         },
         async selectImage(imgName) {
             this.selectedImageName = imgName;
