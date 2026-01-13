@@ -1,12 +1,11 @@
 <template>
     <div class="bg-container">
         <div class="main-container">
-            <h2 class="section-title">Logout</h2>
-            <div class="center">
-                <p>Are you sure you want to logout?</p>
+            <h2 class="section-title">Are you sure you want to logout?</h2>
+            <div class="flex gap-4 justify-center mt-6">
+                <button class="no-button" @click="handleLogout">Yes, log me out</button>
+                <button class="main-button" @click="$router.push('/dashboard')">No, return to dashboard</button>
             </div>
-            <button class="no-button" @click="handleLogout">Yes, log me out</button>
-            <button class="main-button" @click="$router.push('/dashboard')">Return to dashboard</button>
         </div>
     </div>
 </template>

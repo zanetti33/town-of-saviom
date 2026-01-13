@@ -8,8 +8,8 @@
         </div>
       </div>
       
-      <h1 class="main-title">
-        TOWN OF SAVIOM
+      <h1 class="main-title mb-2">
+        Town of Saviom
       </h1>
       <p class="text-background-5 text-sm tracking-widest uppercase">Survival is a choice.</p>
     </div>
