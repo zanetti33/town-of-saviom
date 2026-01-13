@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&display=swap');
 @import "tailwindcss";
 
 @theme {
+  --font-display: "Pirata One";
   --color-dark-primary: #4F46E5;
   --color-light-primary: #9333EA;
   --color-background-1: #020617;
@@ -10,8 +12,8 @@
   --color-background-5: #64748b;
   --color-light-red: #EF4444;
   --color-dark-red: #7F1D1D;
-  --color-dark-yellow: #EAB308;
-  --color-light-yellow: #EA580C;
+  --color-light-yellow: #EAB308;
+  --color-dark-yellow: #EA580C;
   --color-light-blue: #93c5fd;
 }
 
@@ -20,15 +22,19 @@
 }
 
 .main-container {
-    @apply bg-background-2 border border-background-4/50 rounded-2xl shadow-2xl p-8 m-10 backdrop-blur-sm;
+    @apply w-full max-w-2xl mx-auto flex flex-col gap-6 bg-background-2 border border-background-5/50 rounded-2xl shadow-2xl p-8 m-10 backdrop-blur-sm;
 }
 
-.login-container {
-    @apply w-full max-w-md mx-auto bg-background-2 border border-background-4/50 rounded-2xl shadow-2xl p-8 m-10 backdrop-blur-sm;
+.invisible-main-container {
+    @apply w-full max-w-2xl flex flex-col gap-6 mx-auto bg-transparent rounded-2xl p-8 m-10;
+}
+
+.wide-container {
+     @apply w-full max-w-11/12 bg-background-2/50 border border-background-4/50 rounded-2xl shadow-2xl p-8 backdrop-blur-sm;
 }
 
 .main-title {
-    @apply text-4xl md:text-5xl font-bold tracking-wider mb-2 font-serif text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)];
+    @apply font-display text-4xl md:text-6xl font-bold tracking-widest mb-2 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)];
 }
 
 .section-title {
@@ -40,11 +46,11 @@
 }
 
 .submit-button {
-    @apply w-full text-white bg-linear-to-r from-dark-primary to-light-primary hover:from-dark-primary/80 hover:to-light-primary/80 cursor-pointer focus:outline-none font-bold rounded-lg text-sm px-5 py-3.5 text-center transition-all shadow-lg shadow-dark-primary/20;
+    @apply w-full text-white bg-linear-to-r from-dark-primary to-light-primary hover:from-dark-primary/80 hover:to-light-primary/80 cursor-pointer focus:outline-none font-bold rounded-lg text-sm px-5 py-3 text-center transition-all shadow-lg shadow-dark-primary/20;
 }
 
 .transparent-button {
-    @apply bg-transparent border border-slate-600 hover:bg-slate-800 text-slate-400 hover:text-white font-bold rounded-lg py-3 flex items-center justify-center gap-2 transition-all text-sm
+    @apply bg-transparent border border-slate-600 hover:bg-slate-800 text-slate-400 hover:text-white font-bold rounded-lg py-3 flex items-center justify-center transition-all text-sm
 }
 
 .no-button {
@@ -81,6 +87,18 @@
 
 .username-info-top-right {
     @apply flex items-center gap-3 bg-background-3 px-3 py-1.5 rounded-full border border-background-4 backdrop-blur-sm;
+}
+
+progress {
+    @apply w-full h-2 rounded-lg overflow-hidden;
+}
+
+.desktop-only { display: none; }
+.mobile-only { display: flex; }
+
+@media (min-width: 1024px) {
+  .desktop-only { display: block; }
+  .mobile-only { display: none; }
 }
 
 /* Contenitore della scrollbar (la "pista") */

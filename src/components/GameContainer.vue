@@ -10,18 +10,20 @@
             </div>
         </div>
         <div class="main-container">
-            <label class="flex">Time Remaining: <progress :value="progressRate"></progress></label>
-            <div class="flex">{{ ((duration - elapsed) / 1000).toFixed(1) }}s</div>
+            <label class="flex">Time Remaining: {{ ((duration - elapsed) / 1000).toFixed(0) }}s</label>
+            <progress :value="progressRate" label="Phase Progress" :class="progressBarClass"></progress>
         </div>
         <div class="main-container">
             <h2>Chat</h2>
-            <div class="border border-gray-600 rounded-lg p-2">
+            <div class="login-container">
                 <div v-for="msg in messages">
                     {{msg}}
                 </div>
             </div>
-            <input v-model="newMessage" placeholder="Type here" class="form-field">
-            <button @click="onSend" class="submit-button">Send</button>
+            <form @submit.prevent="onSend">
+                <input v-model="newMessage" placeholder="Discuss..." class="form-field">
+                <input type="submit" hidden />
+            </form>
         </div>
     </div>
 </template>
@@ -40,6 +42,7 @@ export default {
             newMessage: null,
             messages: [],
             duration: null,
+            phase: null,
             elapsed: 0
         };
     },
@@ -52,7 +55,13 @@ export default {
     computed: {
         progressRate() {
             this.duration = this.duration || 1; // prevent division by zero
-            return Math.min(this.elapsed / this.duration, 1);
+            return Math.min(1 - this.elapsed / this.duration, 1);
+        },
+        progressBarClass() {
+            return {
+                'day-progress-bar': this.isDay(),
+                'night-progress-bar': this.isNight()
+            }
         }
     },
     methods: {
@@ -63,6 +72,7 @@ export default {
                 if (response.status === 200 || response.status === 201) {
                     this.players = response.data.players;
                     this.duration = response.data.phaseDuration * 1000;
+                    this.phase = response.data.currentPhase;
                     this.resetTimer();
                     this.setupSocket();
                 }
@@ -134,6 +144,7 @@ export default {
                     `Phase changed to: ${data.phase}` + 
                         (data.accused ? ` | Accused: ${this.getPlayerName(data.accused)}` : '')
                 );
+                this.phase = data.phase;
                 this.duration = data.timeRemaining * 1000;
                 this.resetTimer();
             });
@@ -155,6 +166,9 @@ export default {
             });
         },
         onSend() {
+            if (this.newMessage == null || this.newMessage.trim() === "") {
+                return;
+            }
             this.socket.emit(
                 "MESSAGE", 
                 this.newMessage
@@ -184,10 +198,34 @@ export default {
             this.elapsed = 0
             this.lastTime = performance.now()
             this.updateTimer()
-        }
+        },
+        isDay() {
+            return !this.isNight();
+        },
+        isNight() {
+            return this.phase == 'NIGHT';
+        }  
     }
 };
 </script>
 
 <style scoped>
+    .day-progress-bar::-moz-progress-bar {
+        background-color: var(--color-dark-yellow);
+    }
+    .day-progress-bar::-webkit-progress-value {
+        background-color: var(--color-dark-yellow);
+    }
+    .day-progress-bar {
+        color: var(--color-dark-yellow);
+    }
+    .night-progress-bar::-moz-progress-bar {
+        background-color: var(--color-dark-red);
+    }
+    .night-progress-bar::-webkit-progress-value {
+        background-color: var(--color-dark-red);
+    }
+    .night-progress-bar {
+        color: var(--color-dark-red);
+    }
 </style>
