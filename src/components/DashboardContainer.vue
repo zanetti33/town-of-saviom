@@ -17,7 +17,7 @@
             <StatsTable />
 
             <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
-                <component :is="loadIcon('potion')" class="w-8 h-8 text-3xl"/>
+                <component :is="loadIcon('potion.svg')" class="w-8 h-8 text-3xl"/>
                 Create Room
             </button>
 
@@ -26,16 +26,15 @@
                 Join Room
             </button>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <button @click="showRules = true" class="transparent-button">
-                        <component :is="loadIcon('rules.svg')" class="w-8 h-8"/>
-                        Rules
-                    </button>
-                    <button @click="openOptions" class="transparent-button">
-                        <component :is="loadIcon('options.svg')" class="w-8 h-8"/>
-                        Options
-                    </button>
-                </div>
+            <div class="grid grid-cols-2 gap-4">
+                <button @click="showRules = true" class="transparent-button">
+                    <component :is="loadIcon('rules.svg')" class="w-8 h-8"/>
+                    Rules
+                </button>
+                <button @click="openOptions" class="transparent-button">
+                    <component :is="loadIcon('options.svg')" class="w-8 h-8"/>
+                    Options
+                </button>
             </div>
 
             <div class="text-center pb-2">
@@ -77,17 +76,17 @@
                     <StatsTable />
 
                     <button @click="createRoom" class="submit-button w-full flex items-center justify-center text-base" >
-                        <component :is="loadIcon('potion')" class="w-8 h-8 text-3xl"/>
+                        <component :is="loadIcon('potion.svg')" class="w-8 h-8 text-3xl"/>
                         Create Room
                     </button>
 
                     <div class="grid grid-cols-2 gap-4">
                         <button @click="showRules = true" class="transparent-button">
-                            <component :is="loadIcon('rules')" class="w-8 h-8"/>
+                            <component :is="loadIcon('rules.svg')" class="w-8 h-8"/>
                             Rules
                         </button>
                         <button @click="openOptions" class="transparent-button">
-                            <component :is="loadIcon('options')" class="w-8 h-8"/>
+                            <component :is="loadIcon('options.svg')" class="w-8 h-8"/>
                             Options
                         </button>
                     </div>

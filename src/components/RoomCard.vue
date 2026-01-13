@@ -1,8 +1,8 @@
 <template>
-    <div v-if="room.status !== 'playing'" class="border border-gray-700 rounded-md p-8">
-        <h3>{{ room.name }}</h3>
-        <p>{{ room.code }}</p>
-        <p>{{ room.gameMode }}</p>
+    <div v-if="room.status !== 'playing'" class="relative bg-background-3 border border-background-4 rounded-md p-4 mb-4">
+        <h3 class="font-bold">{{ room.name }}</h3>
+        <p>#{{ room.code }}</p>
+        <p class="text-background-5">{{ room.gameMode }}</p>
         <button class="submit-button" @click="joinRoom(room)">Join</button>
     </div>
 </template>
