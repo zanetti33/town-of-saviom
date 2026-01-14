@@ -217,16 +217,16 @@ export default {
                 this.players = this.players.filter(p => p.id !== userInfo.id);
             });
 
-            //DA CONTROLLARE:
-
-            //A player is ready
+            // A player is ready to start the game
             this.socket.on('PLAYER_READY', (userInfo) => {
                 console.log('Player: ' + userInfo.userId + ' isReady: ' + userInfo.isReady);
-                this.players = this.players.filter(p => {                
-                    if (p.userId === userInfo.userId){
-                        p.isReady = userInfo.isReady;
-                    }
-                });
+                const playerIndex = this.players.findIndex(p => String(p.userId) === String(userInfo.userId));
+
+                if (playerIndex !== -1) {
+                    this.players[playerIndex].isReady = userInfo.isReady;
+                } else {
+                    console.warn("Player not found via Socket update:", userInfo.userId);
+                }
             });
 
             // The game started
@@ -273,32 +273,36 @@ export default {
             try {
                 this.roomId = this.$route.params.id;
                 const authStore = useAuthStore();
-                let isThisPlayerReady = null;
                 const response = await lobbyApi.put(`/rooms/${this.roomId}/players`);
 
-                // Aggiornamento solo delle info che cambiano, mantiene stabili le immagini nel DOM
-                const newPlayersData = response.data.players;
+                const myReadyStatus = this.safeUpdatePlayers(response.data.players);
 
-                newPlayersData.forEach(newP => {
-                    const existingP = this.players.find(p => p.userId === newP.userId);
-                    if (existingP && existingP.userId === authStore.user.id) {
-                        console.log(`Aggiorno giocatore: ${existingP.name}. Ready: ${existingP.isReady} -> ${newP.isReady}`);
-                        existingP.isReady = newP.isReady;
-                        isThisPlayerReady = newP.isReady;
-                    }
-                });
-
-                this.players = this.players.filter(p => 
-                    newPlayersData.some(newP => newP.userId === p.userId)
-                );
-
-                // Per ora non va
                 if (this.socket) {
-                    this.socket.emit('PLAYER_READY', {userId: authStore.user.id, isReady: isThisPlayerReady});
+                    this.socket.emit('PLAYER_READY', {
+                        userId: authStore.user.id, 
+                        isReady: myReadyStatus
+                    });
                 }
             } catch (error) {
                 console.error('Error:', error);
             }
+        },
+        safeUpdatePlayers(newPlayersData) {
+            //Mantiene fissi nel DOM gli oggetti che non cambiano (cioè gli avatar degli altri utenti)
+            const authStore = useAuthStore();
+            let isThisPlayerReady = null;
+
+            newPlayersData.forEach(newP => {
+                const existingP = this.players.find(p => String(p.userId) === String(newP.userId));
+                if (existingP) {
+                    existingP.isReady = newP.isReady;
+                    if (String(existingP.userId) === String(authStore.user.id)) {
+                        isThisPlayerReady = newP.isReady;
+                    }
+                }
+            });
+            
+            return isThisPlayerReady;
         }
     }
 };
