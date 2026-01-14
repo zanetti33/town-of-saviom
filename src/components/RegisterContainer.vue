@@ -11,9 +11,9 @@
             <h1 class="main-title">
                 TOWN OF SAVIOM
             </h1>
-        <!-- <p class="text-slate-400 text-sm tracking-widest uppercase">Survival is a choice.</p> -->
+            <p class="subtitle tracking-widest">Survival is a choice.</p>
         </div>
-        <div class="login-container">
+        <div class="main-container">
             <h2 class="section-title">Register</h2>
 
             <form @submit.prevent="handleRegistration" class="space-y-4 w-full">
@@ -65,14 +65,15 @@
                 <div v-if="error" class="error-message">
                     {{ error }}
                 </div>
-                <button type="submit" class="submit-button">Register</button>
+                <button type="submit" class="submit-button py-4 mt-4">Register Citizen</button>
             </form>
-            <div class="mt-8 text-center text-slate-400 text-sm">
+        </div>
+        <div class="mt-2 text-center text-slate-400 text-sm">
+                Already have an account?
                 <button @click="$router.push('/login')" class="link-button">
                     Back to login
                 </button>
-            </div>
-        </div>
+         </div>
     </div>
 </template>
 

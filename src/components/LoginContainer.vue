@@ -11,7 +11,7 @@
       <h1 class="main-title mb-2">
         Town of Saviom
       </h1>
-      <p class="text-background-5 text-sm tracking-widest uppercase">Survival is a choice.</p>
+      <p class="subtitle tracking-widest">Survival is a choice.</p>
     </div>
 
     <div class="main-container">
@@ -25,7 +25,7 @@
               type="text"
               required
               class="form-field"
-              placeholder="Username"
+              placeholder="Username or Email"
             />
           </div>
 
@@ -45,11 +45,11 @@
           {{ error }}
           </div>
 
-          <button type="submit" class="submit-button mt-2">Enter the Town</button>
+          <button type="submit" class="submit-button py-4 mt-4">Enter the Town</button>
         </form>
     </div>
 
-    <div class="mt-8 text-center text-slate-400 text-sm">
+    <div class="mt-2 text-center text-slate-400 text-sm">
       Don't have an account? 
       <button @click="$router.push('/register')" class="link-button">
         Create Account
