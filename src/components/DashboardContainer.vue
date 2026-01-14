@@ -56,7 +56,7 @@
             </div>
 
             <div class="text-center pb-2">
-                <button @click="logout" class="link-button">
+                <button @click="logout" class="no-link-button">
                     Log Out
                 </button>
             </div>
@@ -80,7 +80,7 @@
                     </h1>
                 </div>
                 
-                <div class="username-info-top-right">
+                <div class="username-info-top-right mb-6">
                     <span class="text-white font-bold text-sm tracking-wide">{{ username }}</span>
                     <component 
                         :is="getAvatarComponent(imageUrl)"
@@ -91,7 +91,7 @@
                 <div class="invisible-main-container">
                     <StatsTable />
 
-                    <button @click="createRoom" class="submit-button w-full flex items-center justify-center text-base" >
+                    <button @click="createRoom" class="submit-button w-full flex items-center justify-center text-base py-4" >
                         <component 
                             :is="getIconComponent('potion.svg')"
                             class="w-8 h-8"
@@ -120,14 +120,14 @@
                     </div>
 
                     <div class="text-center pb-2">
-                        <button @click="logout" class="link-button">
+                        <button @click="logout" class="no-link-button">
                             Log Out
                         </button>
                     </div>
 
-                    <div v-if="showRules" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-                        <div class="bg-gray-800 border-2 border-purple-600 p-6 rounded-lg max-w-3xl w-full shadow-2xl">
-                            <h2 class="text-2xl font-bold mb-4 text-purple-400 underline">Game Rules</h2>
+                    <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 flex justify-center items-center z-50">
+                        <div class="bg-gray-800 border-2 border-dark-primary p-6 rounded-lg max-w-3xl w-full shadow-2xl">
+                            <h2 class="text-2xl font-bold mb-4 text-light-primary underline">Game Rules</h2>
                             
                             <div class="max-h-96 overflow-y-auto mb-4 text-sm leading-relaxed">
                                 <div v-html="rulesContent"></div>
