@@ -74,7 +74,7 @@
 }
 
 .avatar-image {
-    @apply w-30 h-30 object-cover rounded-full border-2 border-light-primary shadow-md
+    @apply w-25 h-25 object-cover rounded-full border-2 border-light-primary shadow-md
 }
 
 .item-selector {
@@ -82,7 +82,7 @@
 }
 
 .player-lobby-card {
-    @apply flex max-w-md items-center border border-slate-500 rounded-lg p-4 mb-4 transition-all;
+    @apply flex max-w-md items-center border border-background-5 rounded-lg transition-all;
 }
 
 .username-info-top-right {

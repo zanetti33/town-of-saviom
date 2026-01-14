@@ -2,9 +2,11 @@
     <div class="bg-container">
         <div class="main-container">
             <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
+
+            <!-- Pulsante Copia -->
             <div class="absolute right-0 top-0 m-4 items-center justify-center gap-2">
                 <label v-if="roomCode" class="text-slate-400 align-super">{{ roomCode }}</label>
-                <button @click="copyRoomCode" class="p-2 rounded-md hover:bg-slate-700 transition-colors">
+                <button @click="copyRoomCode" class="p-2 rounded-md hover:bg-slate-700 transition-colors cursor-pointer">
                     <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
@@ -13,33 +15,40 @@
                     </svg>
                 </button>
             </div>
+
             <div class="mb-4 items-center justify-center">
-                <h3 class="text-center" :class="players.length === roomCapacity ? 'text-green-600' : ''">
+                <h3 class="text-center text-lg font-bold" :class="players.length === roomCapacity ? 'text-light-blue' : ''">
                     Players {{ players.length }}/{{ roomCapacity }}:
                 </h3>
             </div>
-            <div class="grid gap-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mb-4">
-                <div v-for="player in players" :key="player.id" class="player-lobby-card">
-                    <div class="flex">
-                        <img :src="getImageUrl(player.imageUrl)" alt="Player Icon" :class="player.isReady ? 'avatar-image border-green-500!' : 'avatar-image'"/>
-                    </div>
+            <div class="grid gap-3 md:grid-cols-2 w-full mb-4 justify-center">
+                <div v-for="player in players" :key="player.id" class="player-lobby-card p-4 mb-4">
+                    <div class="grid grid-cols-2 w-full items-center justify-center">
+                        <div class="relative w-25 h-25"> 
+                            <!-- Mi serve questo div per non far "sfarfallare" tutte le immagini una volta che si clicca ready-->
+                            <div 
+                                class="absolute inset-0 rounded-full border-2 transition-colors duration-100 pointer-events-none"
+                                :class="player.isReady ? 'border-light-blue' : 'border-transparent'"
+                            ></div>
 
-                    <div class="p-4 mb-2 flex">
-                        <span class="mr-1">{{ player.name }}</span>
-                        <span v-if="player.isHost">👑 (Host)</span>
-                    </div>
+                            <component 
+                                :is="getAvatarComponent(player.imageUrl)"
+                                class="avatar-image" 
+                                :aria-label="'Player Icon'"
+                            />
+                        </div>
 
-                    <div class="p-4 mb-2 flex">
-                        <div v-if="player.isReady">
-                            <span>Ready</span>
-                            <span>✔️</span>
+                        <div class="grid grid-cols-1 gap-2 justify-center items-center">
+                            <span class="text-lg font-bold">{{ player.name }}</span>
+                            <span v-if="player.isHost" class="text-sm text-background-5">Host</span>
+                            <span v-if="player.isReady" class="text-light-blue">Ready</span>
                         </div>
                     </div>
                 </div>
             </div>
             <button @click="onExitButtonClick" class="no-button">Exit</button>
-            <button v-if="isHost" @click="onStartButtonClick" class="main-button">Start</button>
-            <button v-else @click="onReadyButtonClick" class="main-button">Ready</button>
+            <button v-if="isHost" @click="onStartButtonClick" class="submit-button">Start</button>
+            <button v-else @click="onReadyButtonClick" class="submit-button">Ready</button>
         </div>
     </div>
 </template>
@@ -49,6 +58,11 @@ import { lobbyApi, LOBBY_API_URL } from '../services/api';
 import { io } from 'socket.io-client';
 import { useAuthStore } from '../stores/authStore';
 import router from '../router';
+import { defineAsyncComponent } from 'vue'
+const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
+const iconsCache = new Map();
+const avatars = import.meta.glob('../assets/img/profile/*.svg', { query: '?component' });
+const avatarsCache = new Map();
 
 export default {
     data() {
@@ -72,10 +86,39 @@ export default {
         this.leaveRoom();
     },
     methods: {
-        getImageUrl(name) {
-            if(name)
-                return new URL(`../assets/img/profile/${name}`, import.meta.url).href;
-            return new URL(`../assets/img/profile/default.png`, import.meta.url).href;
+        getIconComponent(imgName) {
+            const path = `../assets/img/${imgName}`;
+            
+            if (iconsCache.has(path)) {
+                return iconsCache.get(path);
+            }
+            if (!icons[path]) {
+                console.warn(`Icon not found: ${path}`);
+                return null;
+            }
+
+            const comp = defineAsyncComponent(icons[path]);
+            iconsCache.set(path, comp);
+            return comp;
+        },
+        getAvatarComponent(imgName) {
+            if (!imgName) {
+                return defineAsyncComponent(avatars['../assets/img/profile/default.svg']);
+            } else {
+                const path = `../assets/img/profile/${imgName}`;
+            
+            if (avatarsCache.has(path)) {
+                return avatarsCache.get(path);
+            }
+            if (!avatars[path]) {
+                console.warn(`Avatar not found: ${path}`);
+                return null;
+            }
+
+            const comp = defineAsyncComponent(avatars[path]);
+            avatarsCache.set(path, comp);
+            return comp;
+            }
         },
         async copyRoomCode() {
             try {
@@ -174,6 +217,18 @@ export default {
                 this.players = this.players.filter(p => p.id !== userInfo.id);
             });
 
+            //DA CONTROLLARE:
+
+            //A player is ready
+            this.socket.on('PLAYER_READY', (userInfo) => {
+                console.log('Player: ' + userInfo.userId + ' isReady: ' + userInfo.isReady);
+                this.players = this.players.filter(p => {                
+                    if (p.userId === userInfo.userId){
+                        p.isReady = userInfo.isReady;
+                    }
+                });
+            });
+
             // The game started
             this.socket.on('GAME_STARTED', (gameData) => {
                 // Navigate to game board or change view
@@ -217,8 +272,30 @@ export default {
         async onReadyButtonClick() {
             try {
                 this.roomId = this.$route.params.id;
+                const authStore = useAuthStore();
+                let isThisPlayerReady = null;
                 const response = await lobbyApi.put(`/rooms/${this.roomId}/players`);
-                this.players = response.data.players;
+
+                // Aggiornamento solo delle info che cambiano, mantiene stabili le immagini nel DOM
+                const newPlayersData = response.data.players;
+
+                newPlayersData.forEach(newP => {
+                    const existingP = this.players.find(p => p.userId === newP.userId);
+                    if (existingP && existingP.userId === authStore.user.id) {
+                        console.log(`Aggiorno giocatore: ${existingP.name}. Ready: ${existingP.isReady} -> ${newP.isReady}`);
+                        existingP.isReady = newP.isReady;
+                        isThisPlayerReady = newP.isReady;
+                    }
+                });
+
+                this.players = this.players.filter(p => 
+                    newPlayersData.some(newP => newP.userId === p.userId)
+                );
+
+                // Per ora non va
+                if (this.socket) {
+                    this.socket.emit('PLAYER_READY', {userId: authStore.user.id, isReady: isThisPlayerReady});
+                }
             } catch (error) {
                 console.error('Error:', error);
             }
