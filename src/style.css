@@ -22,7 +22,7 @@
 }
 
 .main-container {
-    @apply w-full max-w-2xl mx-auto flex flex-col gap-6 bg-background-2 border border-background-5/50 rounded-2xl shadow-2xl p-8 m-10 backdrop-blur-sm;
+    @apply w-full max-w-2xl mx-auto flex flex-col gap-6 bg-background-2 border border-background-5/50 rounded-2xl shadow-2xl p-8 backdrop-blur-sm;
 }
 
 .invisible-main-container {
@@ -41,12 +41,16 @@
     @apply text-2xl font-bold text-center text-white mb-6;
 }
 
+.subtitle {
+    @apply text-background-5 text-sm uppercase;
+}
+
 .form-field {
     @apply w-full bg-background-3 border border-background-4 text-white placeholder-background-5 text-sm rounded-lg focus:ring-2 focus:ring-light-primary focus:border-light-primary block p-3.5 transition-all outline-none;
 }
 
 .submit-button {
-    @apply w-full text-white bg-linear-to-r from-dark-primary to-light-primary hover:from-dark-primary/80 hover:to-light-primary/80 cursor-pointer focus:outline-none font-bold rounded-lg text-sm px-5 py-3 text-center transition-all shadow-lg shadow-dark-primary/20;
+    @apply w-full text-white bg-linear-to-r from-dark-primary to-light-primary hover:from-dark-primary/80 hover:to-light-primary/80 cursor-pointer focus:outline-none font-bold rounded-lg text-sm text-center transition-all shadow-lg shadow-dark-primary/20;
 }
 
 .transparent-button {
@@ -54,7 +58,7 @@
 }
 
 .no-button {
-    @apply text-white bg-linear-to-r cursor-pointer from-dark-red to-light-red/80 hover:from-dark-red/80 hover:to-light-red/80 focus:outline-none font-bold rounded-lg text-sm px-10 py-10 text-center transition-all shadow-lg shadow-dark-red/20 m-5;
+    @apply text-white bg-linear-to-r cursor-pointer from-dark-red to-light-red/80 hover:from-dark-red/80 hover:to-light-red/80 focus:outline-none font-bold rounded-lg text-sm text-center transition-all shadow-lg shadow-dark-red/20;
 }
 
 .link-button {
