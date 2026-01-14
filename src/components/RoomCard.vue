@@ -1,5 +1,5 @@
 <template>
-    <div v-if="room.status !== 'playing'" class="relative bg-background-3 border border-background-4 rounded-md p-4 mb-4">
+    <div class="relative bg-background-3 border border-background-4 rounded-md p-4">
         <h3 class="font-bold">{{ room.name }}</h3>
         <p>#{{ room.code }}</p>
         <p class="text-background-5">{{ room.gameMode }}</p>
