@@ -23,9 +23,7 @@
             </label>
         </div>
     </div>
-    <div v-if="filteredRooms.length === 0">
-        No rooms found.
-    </div>
+    <p v-if="filteredRooms.length === 0">No rooms found.</p>
     <div v-else v-for="room in filteredRooms" :key="room.id">
         <RoomCard :room="room" />
     </div>
@@ -59,8 +57,8 @@ export default {
                                      (room.code && room.code.toLowerCase().includes(query));
                 
                 const matchesMode = this.selectedMode === "all" || room.gameMode === this.selectedMode;
-
-                return matchesSearch && matchesMode;
+                const status = room.status !== 'playing';
+                return matchesSearch && matchesMode && status;
             });
         }
     },

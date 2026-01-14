@@ -61,14 +61,17 @@
                 </button>
             </div>
 
-            <div v-if="showRules" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-                <div class="bg-gray-800 border-2 border-purple-600 p-6 rounded-lg max-w-3xl w-full shadow-2xl">
-                    <h2 class="text-2xl font-bold mb-4 text-purple-400 underline">Game Rules</h2>
-                    
-                    <div class="max-h-96 overflow-y-auto mb-4 text-sm leading-relaxed">
+            <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 flex justify-center items-center z-50">
+                <div class="main-container">  
+                    <h1 class="section-title">Town of Saviom Rules</h1>                          
+                    <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed">
                         <div v-html="rulesContent"></div>
                     </div>
-                    <button class="no-button" @click="showRules = false">X</button>
+                    <div class="text-center pb-2">
+                        <button @click="showRules = false" class="link-button">
+                            Close Rules
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -124,18 +127,19 @@
                             Log Out
                         </button>
                     </div>
-
                     <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 flex justify-center items-center z-50">
-                        <div class="bg-gray-800 border-2 border-dark-primary p-6 rounded-lg max-w-3xl w-full shadow-2xl">
-                            <h2 class="text-2xl font-bold mb-4 text-light-primary underline">Game Rules</h2>
-                            
-                            <div class="max-h-96 overflow-y-auto mb-4 text-sm leading-relaxed">
+                        <div class="main-container">  
+                            <h1 class="section-title">Town of Saviom Rules</h1>                          
+                            <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed">
                                 <div v-html="rulesContent"></div>
                             </div>
-                            <button class="no-button" @click="showRules = false">X</button>
+                            <div class="text-center pb-2">
+                                <button @click="showRules = false" class="link-button">
+                                    Close Rules
+                                </button>
+                            </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="main-container">
                     <RoomList />
@@ -199,11 +203,6 @@ export default {
             } catch (error) {
                 console.error('Error loading user data:', error);
             }
-        },
-        formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         },
         createRoom() {
             console.log('Create room clicked');
