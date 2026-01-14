@@ -3,7 +3,7 @@
         <h3 class="font-bold">{{ room.name }}</h3>
         <p>#{{ room.code }}</p>
         <p class="text-background-5">{{ room.gameMode }}</p>
-        <button class="submit-button" @click="joinRoom(room)">Join</button>
+        <button class="submit-button w-30! absolute bottom-4 right-4" @click="joinRoom(room)">Join</button>
     </div>
 </template>
 

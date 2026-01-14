@@ -6,7 +6,7 @@
         placeholder="Search by room name or code..."
         class="form-field"
     />
-    <div class="mode-filters m-6 justify-center flex items-center gap-4">
+    <div class="mode-filters justify-center flex items-center gap-4">
         <label class="text-background-5">Game Mode:</label>
         <div class="p-1 rounded-lg inline-flex border border-background-4">
             <label for="all" class="cursor-pointer">
@@ -23,17 +23,11 @@
             </label>
         </div>
     </div>
-    
-    <div v-for="room in filteredRooms" :key="room.id">
-        <RoomCard :room="room" />
-    </div>
     <div v-if="filteredRooms.length === 0">
         No rooms found.
     </div>
-    <div class="mt-8 text-center pb-2">
-        <button @click="$router.push('/dashboard')" class="link-button">
-            Return to dashboard
-        </button>
+    <div v-else v-for="room in filteredRooms" :key="room.id">
+        <RoomCard :room="room" />
     </div>
 </template>
 

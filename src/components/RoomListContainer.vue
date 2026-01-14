@@ -2,6 +2,11 @@
     <div class="bg-container">
         <div class="main-container">
             <RoomList />
+            <div class="text-center">
+                <button @click="$router.push('/dashboard')" class="link-button">
+                    Return to dashboard
+                </button>
+            </div>
         </div>
     </div>
 </template>
