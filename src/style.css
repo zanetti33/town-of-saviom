@@ -78,7 +78,7 @@
 }
 
 .avatar-image {
-    @apply w-25 h-25 object-cover rounded-full border-2 border-light-primary shadow-md
+    @apply object-cover rounded-full border-2 border-light-primary shadow-md
 }
 
 .item-selector {
