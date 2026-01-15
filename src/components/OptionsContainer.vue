@@ -6,16 +6,19 @@
             <div class="ok-message" v-if="message">
                 <p>{{ message }}</p>
             </div>
-
-            <button @click="showImagePicker = true" class="main-button">
-                {{ showImagePicker ? 'Hide' : 'Change profile picture' }}
+            <button 
+                v-if="!showImagePicker" 
+                @click="showImagePicker = true, showChangePasswordForm=false" 
+                class="submit-button w-full py-4"
+            >
+                Change profile picture
             </button>
-
-            <div v-if="showImagePicker" @click.self="showImagePicker = false">
-                <div class="modal-content">
-                    <h3>Select your Avatar</h3>
+            <div v-if="showImagePicker" class="image-picker-container">
+                <div class="modal-content relative border border-background-5/50 rounded-2xl shadow-2xl p-4">
+                    <h3 class="mb-4 text-center">Select your Avatar</h3>
+                    
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div v-for="img in availableImages" class="relative">
+                        <div v-for="img in availableImages" :key="img" class="relative justify-center items-center flex">
                             <component 
                                 :is="getAvatarComponent(img)"
                                 @click="selectImage(img)"
@@ -24,16 +27,27 @@
                             />
                         </div>
                     </div>
-                    <button @click="showImagePicker = false" class="no-button">Cancel</button>
+
+                    <button 
+                        @click="showImagePicker = false" 
+                        class="no-button w-30! mt-6 block mx-auto"
+                    >
+                        Cancel
+                    </button>
                 </div>
             </div>
 
             <div class="options-password">
-                <button @click="showChangePasswordForm = !showChangePasswordForm" class="main-button" >
-                    {{ showChangePasswordForm ? 'Hide' : 'Change Password' }}
+                <button 
+                    v-if="!showChangePasswordForm" 
+                    @click="showChangePasswordForm = true, showImagePicker=false" 
+                    class="submit-button w-full py-4"
+                >
+                    Change Password
                 </button>
-                <form v-if="showChangePasswordForm" @submit.prevent="changePassword">
-                    <div class="form-group">
+
+                <form v-if="showChangePasswordForm" @submit.prevent="changePassword" class="border border-background-5/50 rounded-2xl shadow-2xl p-4 mt-4">
+                    <div class="form-group mb-4">
                         <label for="oldPassword" class="sr-only">Old password:</label>
                         <input
                             id="oldPassword"
@@ -44,7 +58,7 @@
                             class="form-field"
                         />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-4">
                         <label for="newPassword" class="sr-only">New password:</label>
                         <input
                             id="newPassword"
@@ -55,7 +69,7 @@
                             class="form-field"
                         />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-4">
                         <label for="confirmNewPassword" class="sr-only">Confirm new password:</label>
                         <input
                             id="confirmNewPassword"
@@ -66,19 +80,33 @@
                             class="form-field"
                         />
                     </div>
-                    <button type="submit" class="submit-button">Change Password</button> 
-                    <div class="error-message" v-if="newPassword !== confirmNewPassword || error">
-                        <p>{{ error }}</p>
+
+                    <div v-if="error" class="error-message mb-4">
+                    {{ error }}
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <button type="submit" class="submit-button w-full py-4">
+                            Update Password
+                        </button> 
+                        
+                        <button 
+                            type="button" 
+                            @click="showChangePasswordForm = false" 
+                            class="no-button w-30! mt-6 block mx-auto"
+                        >
+                            Cancel
+                        </button>
                     </div>
                 </form>
             </div>
 
             <div class="options-delete">
-                <button @click="deleteAccount" class="no-button">Delete Account</button>
+                <button @click="deleteAccount" class="no-button w-full py-4">Delete Account</button>
             </div>
 
-            <div class="mt-8 text-center">
-                <button @click="$router.push('/dashboard')" class="link-button">Back to dashboard</button>
+            <div class="text-center">
+                <button @click="$router.push('/dashboard')" class="link-button">Close Options</button>
             </div>
         </div>
     </div>
@@ -105,7 +133,7 @@ export default {
             newPassword: '',
             confirmNewPassword: '',
             message: '',
-            error: 'New password and confirm new password must be the same.'
+            error: ''
         };
     },
     methods: {
@@ -139,6 +167,7 @@ export default {
                 }
         },
         async changePassword() {
+            this.error = '';
             if (this.newPassword === this.confirmNewPassword) {
                 console.log('Change Password attempt:', { oldPassword: this.oldPassword, newPassword: this.newPassword });
                 try {
