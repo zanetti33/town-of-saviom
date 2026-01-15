@@ -61,7 +61,7 @@
                 </button>
             </div>
 
-            <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 flex justify-center items-center z-50">
+            <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
                 <div class="main-container">  
                     <h1 class="section-title">Town of Saviom Rules</h1>                          
                     <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed">
@@ -94,7 +94,7 @@
                 <div class="invisible-main-container">
                     <StatsTable />
 
-                    <button @click="createRoom" class="submit-button w-full flex items-center justify-center text-base py-4" >
+                    <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
                         <component 
                             :is="getIconComponent('potion.svg')"
                             class="w-8 h-8"
@@ -127,13 +127,13 @@
                             Log Out
                         </button>
                     </div>
-                    <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 flex justify-center items-center z-50">
+                    <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
                         <div class="main-container">  
                             <h1 class="section-title">Town of Saviom Rules</h1>                          
                             <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed">
                                 <div v-html="rulesContent"></div>
                             </div>
-                            <div class="text-center pb-2">
+                            <div class="text-center">
                                 <button @click="showRules = false" class="link-button">
                                     Close Rules
                                 </button>
