@@ -9,7 +9,7 @@
             </div>
             
             <h1 class="main-title">
-                TOWN OF SAVIOM
+                Town of Saviom
             </h1>
             <p class="subtitle tracking-widest">Survival is a choice.</p>
         </div>
@@ -30,24 +30,26 @@
                     />
                 </div>
                 <div class="form-group">
-                    <label for="username" class="sr-only">Username:</label>
+                    <label for="username" class="sr-only">Username:(max 16 characters)</label>
                     <input
                         id="username"
                         v-model="username"
                         type="text"
                         required
-                        placeholder="Username"
+                        maxlength="16"
+                        placeholder="Username (max 16 characters)"
                         class="form-field"
                     />
                 </div>
                 <div class="form-group">
-                    <label for="password" class="sr-only">Password:</label>
+                    <label for="password" class="sr-only">Password: (max 16 characters)</label>
                     <input
                         id="password"
                         v-model="password"
                         type="password"
                         required
-                        placeholder="Password"
+                        maxlength="16"
+                        placeholder="Password (max 16 characters)"
                         class="form-field"
                     />
                 </div>

@@ -22,7 +22,7 @@
                             <component 
                                 :is="getAvatarComponent(img)"
                                 @click="selectImage(img)"
-                                class="avatar-image hover:scale-110 cursor-pointer transition-transform duration-200"
+                                class="avatar-image w-24 h-24 hover:scale-110 cursor-pointer transition-transform duration-200"
                                 :aria-label="'Avatar ' + img"
                             />
                         </div>
@@ -59,13 +59,14 @@
                         />
                     </div>
                     <div class="form-group mb-4">
-                        <label for="newPassword" class="sr-only">New password:</label>
+                        <label for="newPassword" class="sr-only">New password: (max 16 characters)</label>
                         <input
                             id="newPassword"
                             v-model="newPassword"
                             type="password"
                             required
-                            placeholder="Enter your new password"
+                            maxlength="16"
+                            placeholder="Enter your new password (max 16 characters)"
                             class="form-field"
                         />
                     </div>

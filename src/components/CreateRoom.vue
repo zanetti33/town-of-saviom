@@ -4,12 +4,13 @@
             <h2 class="section-title">Create Room</h2>
             <form @submit.prevent="createRoom">
                 <div class="form-group">
-                    <label for="roomName" class="sr-only">Room Name:</label>
+                    <label for="roomName" class="sr-only">Room Name:(max 30 characters)</label>
                     <input
                         id="roomName"
                         v-model="roomName"
                         type="text"
                         required
+                        maxlength="30"
                         placeholder="Enter the room name... e.g. Dark Forest"
                         class="form-field"
                     />
