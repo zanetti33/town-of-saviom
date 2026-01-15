@@ -12,13 +12,23 @@
         <div class="main-container">
             <label class="flex">Time Remaining: {{ ((duration - elapsed) / 1000).toFixed(0) }}s</label>
             <progress :value="progressRate" label="Phase Progress" :class="progressBarClass"></progress>
+            <p>{{ this.phase }}</p>
+            <div>
+                <DayIcon 
+                    v-if="this.phase == 'DAY' || this.phase == 'STARTUP'"
+                    class="w-15 h-15"/>
+                <DefenseIcon 
+                    v-if="this.phase == 'DEFENSE'"
+                    class="w-15 h-15"/>
+                <NightIcon 
+                    v-if="this.phase == 'NIGHT'"
+                    class="w-15 h-15"/>
+            </div>
         </div>
         <div class="main-container">
             <h2>Chat</h2>
-            <div class="login-container">
-                <div v-for="msg in messages">
-                    {{msg}}
-                </div>
+            <div class="wide-container overflow-y-auto scroll-auto">
+                <p v-for="msg in messages">{{msg}}</p>
             </div>
             <form @submit.prevent="onSend">
                 <input v-model="newMessage" placeholder="Discuss..." class="form-field">
@@ -32,8 +42,16 @@
 import { gameplayApi, GAMEPLAY_API_URL } from '../services/api';
 import { io } from 'socket.io-client';
 import { useAuthStore } from '../stores/authStore';
+import { defineAsyncComponent } from 'vue'
+const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
 
 export default {
+    name: 'GameContainer',
+    components: {
+        DayIcon: defineAsyncComponent(icons['../assets/img/day.svg']),
+        DefenseIcon: defineAsyncComponent(icons['../assets/img/defense.svg']),
+        NightIcon: defineAsyncComponent(icons['../assets/img/night.svg'])
+    },
     data() {
         return {
             players: [],
@@ -42,7 +60,7 @@ export default {
             newMessage: null,
             messages: [],
             duration: null,
-            phase: null,
+            phase: 'STARTUP',
             elapsed: 0
         };
     },

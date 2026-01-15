@@ -3,11 +3,7 @@
 
         <div class="flex items-center justify-between mb-4 border-b border-background-4 pb-2">
             <div class="flex items-center gap-2">
-                <component 
-                    :is="getIconComponent('stats.svg')"
-                    class="w-8 h-8"
-                    :aria-label="'Icon stats'"
-                />
+                <RecordIcon class="w-8 h-8" :aria-label="'Icon stats'"/>
                 <span class="section-title tracking-wider">Record</span>
             </div>
 
@@ -15,10 +11,7 @@
                 @click="fetchHistory" 
                 class="flex items-center gap-1 text-sm uppercase font-bold cursor-pointer text-light-primary hover:text-white bg-dark-primary/10 hover:bg-dark-primary/20 border border-dark-primary/30 px-2 py-1 rounded transition-all"
             >
-                <component 
-                    :is="getIconComponent('clock.svg')"
-                    class="w-4 h-4"
-                    :aria-label="'Icon history'"/>
+                <HistoryIcon class="w-4 h-4" :aria-label="'Icon history'"/>
                 <span>History</span>
             </button>
         </div>
@@ -101,9 +94,12 @@
 import { statsApi } from '../services/api';
 import { defineAsyncComponent } from 'vue'
 const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
-const iconsCache = new Map();
     
 export default {
+    components: {
+        HistoryIcon: defineAsyncComponent(icons['../assets/img/clock.svg']),
+        RecordIcon: defineAsyncComponent(icons['../assets/img/stats.svg'])
+    },
     data() {
         return {
             showHistory: false,
@@ -141,22 +137,7 @@ export default {
             if (!dateString) return '-';
             const date = new Date(dateString);
             return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        },
-        getIconComponent(imgName) {
-            const path = `../assets/img/${imgName}`;
-            
-            if (iconsCache.has(path)) {
-                return iconsCache.get(path);
-            }
-            if (!icons[path]) {
-                console.warn(`Icon not found: ${path}`);
-                return null;
-            }
-
-            const comp = defineAsyncComponent(icons[path]);
-            iconsCache.set(path, comp);
-            return comp;
-        },
+        }
     }
 }
 </script>

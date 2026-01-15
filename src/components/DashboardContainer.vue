@@ -19,38 +19,26 @@
             <StatsTable />
             
             <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
-                <component 
-                    :is="getIconComponent('potion.svg')"
-                    class="w-8 h-8"
-                    :aria-label="'Icon potion'"
-                />
+                <CreateIcon class="w-8 h-8"
+                                :aria-label="'Icon create'"/>
                 Create Room
             </button>
 
             <button  @click="joinRoom" class="w-full bg-background-3 hover:bg-[#2D3F59] border border-slate-600 text-slate-200 font-bold rounded-lg px-5 py-4 flex items-center justify-center gap-3 transition-all shadow-lg">
-                <component 
-                    :is="getIconComponent('battle.svg')"
-                    class="w-8 h-8"
-                    :aria-label="'Icon battle'"
-                />
+                <JoinIcon class="w-8 h-8"
+                                :aria-label="'Icon join room'"/>
                 Join Room
             </button>
 
             <div class="grid grid-cols-2 gap-4">
                 <button @click="showRules = true" class="transparent-button">
-                    <component 
-                        :is="getIconComponent('rules.svg')"
-                        class="w-8 h-8"
-                        :aria-label="'Icon rules'"
-                    />
+                    <RulesIcon class="w-8 h-8"
+                                :aria-label="'Icon rules'"/>
                     Rules
                 </button>
                 <button @click="openOptions" class="transparent-button">
-                    <component 
-                        :is="getIconComponent('options.svg')"
-                        class="w-8 h-8"
-                        :aria-label="'Icon options'"
-                    />
+                    <OptionsIcon class="w-8 h-8"
+                                :aria-label="'Icon options'"/>
                     Options
                 </button>
             </div>
@@ -95,29 +83,20 @@
                     <StatsTable />
 
                     <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
-                        <component 
-                            :is="getIconComponent('potion.svg')"
-                            class="w-8 h-8"
-                            :aria-label="'Icon potion'"
-                        />
+                        <CreateIcon class="w-8 h-8"
+                                :aria-label="'Icon create'"/>
                         Create Room
                     </button>
 
                     <div class="grid grid-cols-2 gap-4">
                         <button @click="showRules = true" class="transparent-button">
-                            <component 
-                                :is="getIconComponent('rules.svg')"
-                                class="w-8 h-8"
-                                :aria-label="'Icon rules'"
-                            />
+                            <RulesIcon class="w-8 h-8"
+                                :aria-label="'Icon rules'"/>
                             Rules
                         </button>
                         <button @click="openOptions" class="transparent-button">
-                            <component 
-                                :is="getIconComponent('options.svg')"
-                                class="w-8 h-8"
-                                :aria-label="'Icon options'"
-                            />
+                            <OptionsIcon class="w-8 h-8"
+                                :aria-label="'Icon options'"/>
                             Options
                         </button>
                     </div>
@@ -157,7 +136,6 @@ import { loginApi } from '../services/api';
 import { defineAsyncComponent } from 'vue'
 import StatsTable from './StatsTable.vue';
 const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
-const iconsCache = new Map();
 const avatars = import.meta.glob('../assets/img/profile/*.svg', { query: '?component' });
 const avatarsCache = new Map();
 
@@ -165,7 +143,11 @@ export default {
     name: 'DashboardContainer',
     components: {
         RoomList,
-        StatsTable
+        StatsTable,
+        CreateIcon: defineAsyncComponent(icons['../assets/img/potion.svg']),
+        JoinIcon: defineAsyncComponent(icons['../assets/img/battle.svg']),
+        RulesIcon: defineAsyncComponent(icons['../assets/img/rules.svg']),
+        OptionsIcon: defineAsyncComponent(icons['../assets/img/options.svg'])
     },
     data() {
         return {
@@ -215,21 +197,6 @@ export default {
         logout() {
             console.log('Logout clicked');
             router.push('/logout');
-        },
-        getIconComponent(imgName) {
-            const path = `../assets/img/${imgName}`;
-            
-            if (iconsCache.has(path)) {
-                return iconsCache.get(path);
-            }
-            if (!icons[path]) {
-                console.warn(`Icon not found: ${path}`);
-                return null;
-            }
-
-            const comp = defineAsyncComponent(icons[path]);
-            iconsCache.set(path, comp);
-            return comp;
         },
         getAvatarComponent(imgName) {
             const path = `../assets/img/profile/${imgName}`;
