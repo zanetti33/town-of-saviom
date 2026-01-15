@@ -1,30 +1,35 @@
 <template>
     <div class="bg-container">
         <div class="main-container">
-            <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
+            <div class="flex flex-col items-center">
+                <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
 
-            <!-- Pulsante Copia -->
-            <div class="absolute right-0 top-0 m-4 items-center justify-center gap-2">
-                <label v-if="roomCode" class="text-slate-400 align-super">{{ roomCode }}</label>
-                <button @click="copyRoomCode" class="p-2 rounded-md hover:bg-slate-700 transition-colors cursor-pointer">
-                    <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                </button>
+                <!-- Pulsante Copia -->
+                <div class="subtitle flex mt-2 gap-2">
+                    <label v-if="roomCode" class="text-background-5 border border-background-4 rounded-xl shadow-2xl p-2 align-super">Code: {{ roomCode }}</label>
+                    <button @click="copyRoomCode" class="rounded-md hover:bg-background-4 transition-colors cursor-pointer">
+                        <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-background-5 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-light-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            <div class="mb-4 items-center justify-center">
-                <h3 class="text-center text-lg font-bold" :class="players.length === roomCapacity ? 'text-light-blue' : ''">
-                    Players {{ players.length }}/{{ roomCapacity }}:
+            <div class="flex items-center justify-center text-center text-lg font-bold">
+                <h3 v-if="players.length<roomCapacity" class="max-w-fit text-background-5 border border-light-primary rounded-xl shadow-2xl p-2">
+                    Waiting for Players... {{ players.length }}/{{ roomCapacity }}:
+                </h3>
+                <h3 v-else class="max-w-fit text-light-blue border border-dark-primary rounded-xl shadow-2xl p-2">
+                    Room is Full! {{ players.length }}/{{ roomCapacity }}:
                 </h3>
             </div>
-            <div class="grid gap-3 md:grid-cols-2 w-full mb-4 justify-center">
-                <div v-for="player in players" :key="player.id" class="player-lobby-card p-4 mb-4">
-                    <div class="grid grid-cols-2 w-full items-center justify-center">
-                        <div class="relative w-25 h-25"> 
+            <div class="grid gap-3 md:grid-cols-2 w-full justify-center">
+                <div v-for="player in players" :key="player.id" class="player-lobby-card p-4">
+                    <div class="flex items-center justify-left gap-4">
+                        <div class="relative w-20 h-20"> 
                             <!-- Mi serve questo div per non far "sfarfallare" tutte le immagini una volta che si clicca ready-->
                             <div 
                                 class="absolute inset-0 rounded-full border-2 transition-colors duration-100 pointer-events-none"
@@ -33,7 +38,7 @@
 
                             <component 
                                 :is="getAvatarComponent(player.imageUrl)"
-                                class="avatar-image" 
+                                class="avatar-image w-20 h-20 " 
                                 :aria-label="'Player Icon'"
                             />
                         </div>
@@ -46,16 +51,21 @@
                     </div>
                 </div>
             </div>
-            <button @click="onExitButtonClick" class="no-button">Exit</button>
-            <button 
-                v-if="isHost" 
-                @click="onStartButtonClick" 
-                :disabled="!canStartGame"
-                class="submit-button transition-all duration-200"
-                :class="{ 'opacity-50 cursor-not-allowed! grayscale': !canStartGame }">
-                Start
-            </button>
-            <button v-else @click="onReadyButtonClick" class="submit-button">Ready</button>
+            <div class="flex flex-col md:flex-row gap-4">
+                <button @click="onExitButtonClick" class="no-button flex-1 py-4">Exit</button>
+                <button 
+                    v-if="isHost" 
+                    @click="onStartButtonClick" 
+                    :disabled="!canStartGame"
+                    class="submit-button flex-1 py-4 transition-all duration-200"
+                    :class="{ 'opacity-50 cursor-not-allowed! grayscale': !canStartGame }">
+                    Start
+                </button>
+                <button v-else @click="onReadyButtonClick" class="submit-button flex-1 py-4">
+                    {{ isReady ? 'Not Ready' : 'Ready' }}
+                </button>
+                
+            </div>
         </div>
     </div>
 </template>
@@ -82,6 +92,7 @@ export default {
             copied: false,
             roomCapacity: null,
             isHost: null,
+            isReady: null,
             gameStarted: false,
             isMobileDevice: false
         };
@@ -177,10 +188,12 @@ export default {
             for (let player of response.data.players) {
                 if (player.userId === authStore.user.id) {
                     this.isHost = player.isHost;
+                    this.isReady = player.isReady;
                     return;
                 }
             }
             this.isHost = false;
+            this.isReady = false;
         },
         setupSocket() {
             const authStore = useAuthStore();
@@ -300,12 +313,12 @@ export default {
                 const authStore = useAuthStore();
                 const response = await lobbyApi.put(`/rooms/${this.roomId}/players`);
 
-                const myReadyStatus = this.safeUpdatePlayers(response.data.players);
+                this.isReady = this.safeUpdatePlayers(response.data.players);
 
                 if (this.socket) {
                     this.socket.emit('PLAYER_READY', {
                         userId: authStore.user.id, 
-                        isReady: myReadyStatus
+                        isReady: this.isReady
                     });
                 }
             } catch (error) {
