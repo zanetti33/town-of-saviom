@@ -61,7 +61,7 @@
                 </button>
             </div>
 
-            <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 flex justify-center items-center z-50">
+            <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
                 <div class="main-container">  
                     <h1 class="section-title">Town of Saviom Rules</h1>                          
                     <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed">
@@ -127,13 +127,13 @@
                             Log Out
                         </button>
                     </div>
-                    <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 flex justify-center items-center z-50">
+                    <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
                         <div class="main-container">  
                             <h1 class="section-title">Town of Saviom Rules</h1>                          
                             <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed">
                                 <div v-html="rulesContent"></div>
                             </div>
-                            <div class="text-center pb-2">
+                            <div class="text-center">
                                 <button @click="showRules = false" class="link-button">
                                     Close Rules
                                 </button>

@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    <div v-if="showHistory" class="fixed inset-0 bg-background-1 bg-opacity-70 flex justify-center items-center z-50">
+    <div v-if="showHistory" class="fixed inset-0 bg-background-1 bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
         <div class="bg-gray-800 border-2 border-dark-primary p-6 rounded-lg max-w-4xl w-full shadow-2xl">
             <h2 class="section-title">History</h2>
             
