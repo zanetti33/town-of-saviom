@@ -41,8 +41,7 @@
                     </div>
 
                 </div>
-        
-                <button type="submit" class="submit-button">Create</button>
+                <button type="submit" class="submit-button w-full py-4 mt-4">Create</button>
             </form>
             <div class="error-message" v-if="error">
                 <p>{{ error }}</p>

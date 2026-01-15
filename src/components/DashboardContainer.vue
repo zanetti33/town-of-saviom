@@ -94,7 +94,7 @@
                 <div class="invisible-main-container">
                     <StatsTable />
 
-                    <button @click="createRoom" class="submit-button w-full flex items-center justify-center text-base py-4" >
+                    <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
                         <component 
                             :is="getIconComponent('potion.svg')"
                             class="w-8 h-8"
