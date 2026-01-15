@@ -47,7 +47,14 @@
                 </div>
             </div>
             <button @click="onExitButtonClick" class="no-button">Exit</button>
-            <button v-if="isHost" @click="onStartButtonClick" class="submit-button">Start</button>
+            <button 
+                v-if="isHost" 
+                @click="onStartButtonClick" 
+                :disabled="!canStartGame"
+                class="submit-button transition-all duration-200"
+                :class="{ 'opacity-50 cursor-not-allowed! grayscale': !canStartGame }">
+                Start
+            </button>
             <button v-else @click="onReadyButtonClick" class="submit-button">Ready</button>
         </div>
     </div>
@@ -75,17 +82,30 @@ export default {
             copied: false,
             roomCapacity: null,
             isHost: null,
-            gameStarted: false
+            gameStarted: false,
+            isMobileDevice: false
         };
+    },
+    computed: {
+        canStartGame() {
+            const minPlayersReached = this.players.length >= 6;
+            const allReady = this.players.every(p => p.isReady || p.isHost);
+            return minPlayersReached && allReady;
+        }
     },
     mounted() {
         this.joinRoom();
         this.checkPlayers();
+        this.isMobileDevice = this.isMobile();
     },
     beforeUnmount() {
         this.leaveRoom();
     },
     methods: {
+        isMobile() {
+            console.log(screen.width);
+            return screen.width <= 760;            
+        },
         getIconComponent(imgName) {
             const path = `../assets/img/${imgName}`;
             
@@ -214,7 +234,8 @@ export default {
 
             // A player left
             this.socket.on('PLAYER_LEFT', (userInfo) => {
-                this.players = this.players.filter(p => p.id !== userInfo.id);
+                console.log('Player: ' + userInfo.userId + ' left.');
+                this.players = this.players.filter(p => String(p.userId) !== String(userInfo.userId));
             });
 
             // A player is ready to start the game
@@ -234,7 +255,7 @@ export default {
                 // Navigate to game board or change view
                 console.log("Game started!", gameData);
                 this.gameStarted = true;
-                router.push(`/games/${gameData.gameId}`)
+                router.push(`/games/${gameData.gameId}`);
             });
         },
         async leaveRoom() {
@@ -254,7 +275,11 @@ export default {
             }
         },
         onExitButtonClick() {
-            router.push("/rooms");
+            if (this.isMobileDevice) {
+                router.push("/rooms");
+            } else {
+                router.push("/dashboard");
+            }
         },
         async onStartButtonClick() {
             try {

@@ -183,11 +183,7 @@ export default {
     methods: {
         isMobile() {
             console.log(screen.width);
-            if (screen.width <= 760) {
-                return true
-            } else {
-                return false
-            }
+            return screen.width <= 760;            
         },
         async loadUserData() {
             try {
