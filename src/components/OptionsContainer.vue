@@ -1,6 +1,6 @@
 <template>
     <div class="bg-container">
-        <div class="main-container">
+        <div class="main-container max-w-2xl">
             <h2 class="section-title">Options</h2>
             
             <div class="ok-message" v-if="message">

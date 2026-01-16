@@ -1,31 +1,29 @@
 <template>
     <div class="bg-container">
-        <div class="main-container">
+        <div class="main-container max-w-2xl">
             <h1>Players:</h1>
-            <div class="flex flex-row gap-4 flex-wrap">
-                <div v-for="player in players" :key="player.userId" class="flex items-center justify-center">
-                    <p class="max-w-fit">{{ player.name }}</p>
-                    <button @click="onVotePlayer(player.userId)" class="main-button max-w-fit">Vote</button>
-                </div>
-            </div>
+            <PlayerCardList :players="players" />
         </div>
-        <div class="main-container">
+        <div class="main-container max-w-2xl">
             <label class="flex">Time Remaining: {{ ((duration - elapsed) / 1000).toFixed(0) }}s</label>
             <progress :value="progressRate" label="Phase Progress" :class="progressBarClass"></progress>
             <p>{{ this.phase }}</p>
             <div>
                 <DayIcon 
                     v-if="this.phase == 'DAY' || this.phase == 'STARTUP'"
+                    key="day-icon"
                     class="w-15 h-15"/>
                 <DefenseIcon 
                     v-if="this.phase == 'DEFENSE'"
+                    key="defence-icon"
                     class="w-15 h-15"/>
                 <NightIcon 
                     v-if="this.phase == 'NIGHT'"
+                    key="night-icon"
                     class="w-15 h-15"/>
             </div>
         </div>
-        <div class="main-container">
+        <div class="main-container max-w-2xl">
             <h2>Chat</h2>
             <div class="wide-container overflow-y-auto scroll-auto">
                 <p v-for="msg in messages">{{msg}}</p>
@@ -43,6 +41,7 @@ import { gameplayApi, GAMEPLAY_API_URL } from '../services/api';
 import { io } from 'socket.io-client';
 import { useAuthStore } from '../stores/authStore';
 import { defineAsyncComponent } from 'vue'
+import PlayerCardList from './PlayerCardList.vue';
 const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
 
 export default {
@@ -50,7 +49,8 @@ export default {
     components: {
         DayIcon: defineAsyncComponent(icons['../assets/img/day.svg']),
         DefenseIcon: defineAsyncComponent(icons['../assets/img/defense.svg']),
-        NightIcon: defineAsyncComponent(icons['../assets/img/night.svg'])
+        NightIcon: defineAsyncComponent(icons['../assets/img/night.svg']),
+        PlayerCardList
     },
     data() {
         return {

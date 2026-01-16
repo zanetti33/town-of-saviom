@@ -2,27 +2,31 @@
 @import "tailwindcss";
 
 @theme {
+    /* 
+    NUOVO UPDATE COLORI:
+        Primary: Indigo-300
+        Secondary: Blue-300
+        Background: Invariato, se possibile non scendere troppo di tonalità
+        Accent: Yellow-400
+        No: red-500 // invariato
+    */
   --font-display: "Pirata One";
-  --color-dark-primary: #4F46E5;
-  --color-light-primary: #9333EA;
-  --color-background-1: #020617;
-  --color-background-2: #0F172A;
-  --color-background-3: #1E293B;
-  --color-background-4: #334155;
-  --color-background-5: #64748b;
-  --color-light-red: #EF4444;
-  --color-dark-red: #7F1D1D;
-  --color-light-yellow: #EAB308;
-  --color-dark-yellow: #EA580C;
-  --color-light-blue: #93c5fd;
+  --color-primary: var(--color-indigo-300);
+  --color-secondary: var(--color-purple-300);
+  --color-background: var(--color-slate-950);
+  --color-section-background: #090F21; /* Halfway between slate-950 and slate-900 */
+  --color-card-background: var(--color-slate-800);
+  --color-border-background: var(--color-slate-700);
+  --color-bad: var(--color-red-500);
+  --color-highlight: var(--color-yellow-400);
 }
 
 .bg-container {
-    @apply bg-background-1 text-white p-4 font-sans min-h-screen flex flex-col items-center justify-center;
+    @apply bg-background text-white p-4 font-sans min-h-screen flex flex-col items-center justify-center;
 }
 
 .main-container {
-    @apply w-full max-w-2xl mx-auto flex flex-col gap-6 bg-background-2 border border-background-5/50 rounded-2xl shadow-2xl p-8 backdrop-blur-sm;
+    @apply w-full mx-auto flex flex-col gap-6 bg-section-background border border-border-background rounded-2xl p-8 backdrop-blur-sm;
 }
 
 .invisible-main-container {
@@ -30,7 +34,7 @@
 }
 
 .wide-container {
-     @apply w-full max-w-11/12 bg-background-2/50 border border-background-4/50 rounded-2xl shadow-2xl p-8 backdrop-blur-sm;
+     @apply w-full max-w-11/12 bg-section-background border border-border-background rounded-2xl p-8 backdrop-blur-sm;
 }
 
 .main-title {
@@ -42,55 +46,51 @@
 }
 
 .subtitle {
-    @apply text-background-5 text-sm uppercase;
+    @apply text-primary text-sm uppercase;
 }
 
 .form-field {
-    @apply w-full bg-background-3 border border-background-4 text-white placeholder-background-5 text-sm rounded-lg focus:ring-2 focus:ring-light-primary focus:border-light-primary block p-3.5 transition-all outline-none;
+    @apply w-full bg-card-background border border-border-background text-white placeholder-primary text-sm rounded-lg focus:ring-2 focus:ring-primary focus:border-primary block p-3.5 transition-all outline-none;
 }
 
 .submit-button {
-    @apply w-full text-white bg-linear-to-r from-dark-primary to-light-primary hover:from-dark-primary/80 hover:to-light-primary/80 cursor-pointer focus:outline-none font-bold rounded-lg text-sm text-center transition-all shadow-lg shadow-dark-primary/20;
+    @apply w-full text-background bg-primary cursor-pointer focus:outline-none font-bold rounded-lg text-sm text-center transition-all;
 }
 
-.transparent-button {
-    @apply bg-transparent border border-slate-600 hover:bg-slate-800 text-slate-400 hover:text-white font-bold rounded-lg py-3 flex items-center justify-center transition-all text-sm
+.secondary-button {
+    @apply w-full text-background bg-secondary cursor-pointer focus:outline-none font-bold rounded-lg text-sm text-center transition-all;
 }
 
 .no-button {
-    @apply text-white bg-linear-to-r cursor-pointer from-dark-red to-light-red/80 hover:from-dark-red/80 hover:to-light-red/80 focus:outline-none font-bold rounded-lg text-sm text-center transition-all shadow-lg shadow-dark-red/20;
+    @apply text-background bg-bad cursor-pointer focus:outline-none font-bold rounded-lg text-sm text-center transition-all;
 }
 
 .link-button {
-    @apply text-background-5 cursor-pointer hover:text-dark-primary font-bold hover:underline ml-1;
+    @apply text-primary cursor-pointer hover:text-secondary font-bold hover:underline ml-1;
 }
 
 .no-link-button {
-    @apply text-background-5 cursor-pointer hover:text-light-red font-bold hover:underline ml-1 transition-colors;
+    @apply text-bad cursor-pointer hover:text-highlight font-bold hover:underline ml-1 transition-colors;
 }
 
 .error-message {
-    @apply mt-4 p-3 bg-dark-red/30 border border-light-red text-light-red rounded-lg text-sm text-center;
+    @apply mt-4 p-3 bg-bad rounded-lg text-sm text-center;
 }
 
 .ok-message {
-    @apply mt-4 p-3 bg-light-blue/30 border border-light-blue text-light-blue rounded-lg text-sm text-center;
+    @apply mt-4 p-3 bg-primary border rounded-lg text-sm text-center;
 }
 
 .avatar-image {
-    @apply object-cover rounded-full border-2 border-light-primary shadow-md
+    @apply object-cover rounded-full border-2 border-primary;
 }
 
 .item-selector {
-    @apply px-4 py-2 rounded-md text-sm text-background-5 transition-all peer-checked:bg-dark-primary peer-checked:text-white peer-checked:shadow-lg block
-}
-
-.player-lobby-card {
-    @apply flex max-w-md items-center border border-background-5 rounded-lg transition-all;
+    @apply px-4 py-2 rounded-md text-sm text-white transition-all peer-checked:bg-primary peer-checked:text-black block
 }
 
 .username-info-top-right {
-    @apply flex items-center gap-3 bg-background-3 px-3 py-1.5 rounded-full border border-background-4 backdrop-blur-sm;
+    @apply flex items-center gap-3 bg-card-background px-3 py-1.5 rounded-full border border-primary backdrop-blur-sm;
 }
 
 progress {

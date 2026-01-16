@@ -14,7 +14,7 @@
       <p class="subtitle tracking-widest">Survival is a choice.</p>
     </div>
 
-    <div class="main-container">
+    <div class="main-container max-w-2xl">
       <h2 class="section-title">Login</h2>
         <form @submit.prevent="handleLogin" class="space-y-5 w-full">
           <div>

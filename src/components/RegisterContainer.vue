@@ -13,7 +13,7 @@
             </h1>
             <p class="subtitle tracking-widest">Survival is a choice.</p>
         </div>
-        <div class="main-container">
+        <div class="main-container max-w-2xl">
             <h2 class="section-title">Register</h2>
 
             <form @submit.prevent="handleRegistration" class="space-y-4 w-full">

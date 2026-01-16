@@ -1,6 +1,6 @@
 <template>
     <div class="bg-container">
-        <div class="main-container">
+        <div class="main-container max-w-2xl">
             <RoomList />
             <div class="text-center">
                 <button @click="$router.push('/dashboard')" class="link-button">

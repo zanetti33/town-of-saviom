@@ -1,6 +1,6 @@
 <template>
     <div class="bg-container">
-        <div class="main-container">
+        <div class="main-container max-w-2xl">
             <h2 class="section-title">Create Room</h2>
             <form @submit.prevent="createRoom">
                 <div class="form-group">

@@ -1,6 +1,6 @@
 <template>
     <div class="bg-container">
-        <div class="main-container">
+        <div class="main-container max-w-2xl md:max-w-4xl">
             <div class="flex flex-col items-center">
                 <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
 
@@ -26,31 +26,7 @@
                     Room is Full! {{ players.length }}/{{ roomCapacity }}:
                 </h3>
             </div>
-            <div class="grid gap-3 md:grid-cols-2 w-full justify-center">
-                <div v-for="player in players" :key="player.id" class="player-lobby-card p-4">
-                    <div class="flex items-center justify-left gap-4">
-                        <div class="relative w-20 h-20"> 
-                            <!-- Mi serve questo div per non far "sfarfallare" tutte le immagini una volta che si clicca ready-->
-                            <div 
-                                class="absolute inset-0 rounded-full border-2 transition-colors duration-100 pointer-events-none"
-                                :class="player.isReady ? 'border-light-blue' : 'border-transparent'"
-                            ></div>
-
-                            <component 
-                                :is="getAvatarComponent(player.imageUrl)"
-                                class="avatar-image w-20 h-20 " 
-                                :aria-label="'Player Icon'"
-                            />
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-2 justify-center items-center">
-                            <span class="text-lg font-bold">{{ player.name }}</span>
-                            <span v-if="player.isHost" class="text-sm text-background-5">Host</span>
-                            <span v-if="player.isReady" class="text-light-blue">Ready</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <PlayerCardList :players="players" />
             <div class="flex flex-col md:flex-row gap-4">
                 <button @click="onExitButtonClick" class="no-button flex-1 py-4">Exit</button>
                 <button 
@@ -75,11 +51,7 @@ import { lobbyApi, LOBBY_API_URL } from '../services/api';
 import { io } from 'socket.io-client';
 import { useAuthStore } from '../stores/authStore';
 import router from '../router';
-import { defineAsyncComponent } from 'vue'
-const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
-const iconsCache = new Map();
-const avatars = import.meta.glob('../assets/img/profile/*.svg', { query: '?component' });
-const avatarsCache = new Map();
+import PlayerCardList from './PlayerCardList.vue';
 
 export default {
     data() {
@@ -96,6 +68,9 @@ export default {
             gameStarted: false,
             isMobileDevice: false
         };
+    },
+    components: {
+        PlayerCardList
     },
     computed: {
         canStartGame() {
@@ -116,40 +91,6 @@ export default {
         isMobile() {
             console.log(screen.width);
             return screen.width <= 760;            
-        },
-        getIconComponent(imgName) {
-            const path = `../assets/img/${imgName}`;
-            
-            if (iconsCache.has(path)) {
-                return iconsCache.get(path);
-            }
-            if (!icons[path]) {
-                console.warn(`Icon not found: ${path}`);
-                return null;
-            }
-
-            const comp = defineAsyncComponent(icons[path]);
-            iconsCache.set(path, comp);
-            return comp;
-        },
-        getAvatarComponent(imgName) {
-            if (!imgName) {
-                return defineAsyncComponent(avatars['../assets/img/profile/default.svg']);
-            } else {
-                const path = `../assets/img/profile/${imgName}`;
-            
-            if (avatarsCache.has(path)) {
-                return avatarsCache.get(path);
-            }
-            if (!avatars[path]) {
-                console.warn(`Avatar not found: ${path}`);
-                return null;
-            }
-
-            const comp = defineAsyncComponent(avatars[path]);
-            avatarsCache.set(path, comp);
-            return comp;
-            }
         },
         async copyRoomCode() {
             try {

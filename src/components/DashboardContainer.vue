@@ -1,6 +1,6 @@
 <template>
     <div class="bg-container">
-        <div class="mobile-only main-container">
+        <div class="mobile-only main-container max-w-2xl">
             <div class="flex justify-between">
                 <div style="align-items: center;">
                     <h1 class="section-title text-4xl!">
@@ -18,25 +18,25 @@
 
             <StatsTable />
             
-            <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
-                <CreateIcon class="w-8 h-8"
+            <button @click="createRoom" class="submit-button w-full flex items-center text-background justify-center gap-3 py-4 text-base m-0!" >
+                <CreateIcon class="w-8 h-8 text-background"
                                 :aria-label="'Icon create'"/>
-                Create Room
+                <p class="text-background" >Create Room</p>
             </button>
 
-            <button  @click="joinRoom" class="w-full bg-background-3 hover:bg-[#2D3F59] border border-slate-600 text-slate-200 font-bold rounded-lg px-5 py-4 flex items-center justify-center gap-3 transition-all shadow-lg">
+            <button  @click="joinRoom" class="w-full bg-card-background hover:bg-[#2D3F59] border border-slate-600 text-slate-200 font-bold rounded-lg px-5 py-4 flex items-center justify-center gap-3 transition-all shadow-lg">
                 <JoinIcon class="w-8 h-8"
                                 :aria-label="'Icon join room'"/>
                 Join Room
             </button>
 
             <div class="grid grid-cols-2 gap-4">
-                <button @click="showRules = true" class="transparent-button">
+                <button @click="showRules = true" class="secondary-button">
                     <RulesIcon class="w-8 h-8"
                                 :aria-label="'Icon rules'"/>
                     Rules
                 </button>
-                <button @click="openOptions" class="transparent-button">
+                <button @click="openOptions" class="secondary-button">
                     <OptionsIcon class="w-8 h-8"
                                 :aria-label="'Icon options'"/>
                     Options
@@ -49,8 +49,8 @@
                 </button>
             </div>
 
-            <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
-                <div class="main-container">  
+            <div v-if="showRules" class="fixed inset-0 bg-background bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
+                <div class="main-container max-w-2xl md:max-w-4xl">  
                     <h1 class="section-title">Town of Saviom Rules</h1>                          
                     <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed">
                         <div v-html="rulesContent"></div>
@@ -89,12 +89,12 @@
                     </button>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <button @click="showRules = true" class="transparent-button">
+                        <button @click="showRules = true" class="secondary-button">
                             <RulesIcon class="w-8 h-8"
                                 :aria-label="'Icon rules'"/>
                             Rules
                         </button>
-                        <button @click="openOptions" class="transparent-button">
+                        <button @click="openOptions" class="secondary-button">
                             <OptionsIcon class="w-8 h-8"
                                 :aria-label="'Icon options'"/>
                             Options
@@ -106,8 +106,8 @@
                             Log Out
                         </button>
                     </div>
-                    <div v-if="showRules" class="fixed inset-0 bg-background-1 bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
-                        <div class="main-container">  
+                    <div v-if="showRules" class="fixed inset-0 bg-background bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
+                        <div class="main-container max-w-2xl">  
                             <h1 class="section-title">Town of Saviom Rules</h1>                          
                             <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed">
                                 <div v-html="rulesContent"></div>
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="main-container">
+                <div class="invisible-main-container max-w-2xl">
                     <RoomList />
                 </div>
             </div>
