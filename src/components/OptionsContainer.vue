@@ -118,6 +118,7 @@
 import { loginApi } from '../services/api';
 import router from '../router';
 import { defineAsyncComponent} from 'vue';
+import Swal from 'sweetalert2';
 
 const avatarModules = import.meta.glob('../assets/img/profile/*.svg', { query: '?component' });
 const avatarCache = new Map();
@@ -188,16 +189,32 @@ export default {
                 this.error = 'New password and confirm new password must be the same.';
             }
         },
-        async deleteAccount() {
-            if(confirm('All your data will be lost forever. Do you want to delete your account?')){
-                try {
-                    await loginApi.delete('/users/me/delete');
-                    console.log('Account deleted. Return to login.');
-                    router.push('/login');
-                } catch (err){
-                    console.error('Error in deleting account:', err);
-                }
-            }
+        deleteAccount() {
+            Swal.fire({
+                title: "Do you want to delete your account?",
+                text: "All your data will be lost forever.",
+                icon: "warning",
+                showCancelButton: true,
+                //background: "#000000",
+                //confirmButtonColor: "#3085d6",
+                //cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            await loginApi.delete('/users/me/delete');
+                            console.log('Account deleted. Return to login.');
+                            Swal.fire({
+                            title: "Deleted!",
+                            text: "Your account has been deleted.",
+                            icon: "success"
+                            });
+                            router.push('/login');
+                        } catch (err){
+                            console.error('Error in deleting account:', err);
+                        }
+                    }
+            });
         }
     }
 };

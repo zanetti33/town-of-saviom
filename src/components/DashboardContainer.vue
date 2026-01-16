@@ -52,7 +52,7 @@
             <div v-if="showRules" class="fixed inset-0 bg-background bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
                 <div class="main-container max-w-2xl md:max-w-4xl">  
                     <h1 class="section-title">Town of Saviom Rules</h1>                          
-                    <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed">
+                    <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed thin-scrollbar">
                         <div v-html="rulesContent"></div>
                     </div>
                     <div class="text-center pb-2">
@@ -109,7 +109,7 @@
                     <div v-if="showRules" class="fixed inset-0 bg-background bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
                         <div class="main-container max-w-2xl">  
                             <h1 class="section-title">Town of Saviom Rules</h1>                          
-                            <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed">
+                            <div class="max-h-96 overflow-y-auto mt-4 text-sm leading-relaxed thin-scrollbar">
                                 <div v-html="rulesContent"></div>
                             </div>
                             <div class="text-center">

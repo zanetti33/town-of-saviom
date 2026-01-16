@@ -18,13 +18,15 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-center text-center text-lg font-bold">
-                <h3 v-if="players.length<roomCapacity" class="max-w-fit text-background-5 border border-light-primary rounded-xl shadow-2xl p-2">
-                    Waiting for Players... {{ players.length }}/{{ roomCapacity }}:
-                </h3>
-                <h3 v-else class="max-w-fit text-light-blue border border-dark-primary rounded-xl shadow-2xl p-2">
-                    Room is Full! {{ players.length }}/{{ roomCapacity }}:
-                </h3>
+            <div class="flex items-center justify-center text-center text-lg font-bold pointer-events-none">
+                <div v-if="players.length<roomCapacity" class="backdrop-blur max-w-fit bg-light-primary border border-light-primary rounded-full shadow-2xl p-3 flex items-center gap-3">
+                    <span class="w-3 h-3 rounded-full animate-ping"></span>
+                    <span class="text-light-primary">Waiting for Players... ({{ players.length }}/{{ roomCapacity }})</span>
+                </div>
+                <div v-else class="backdrop-blur max-w-fit bg-light-blue border border-dark-primary rounded-full shadow-2xl p-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full animate-none"></span>
+                    <span class="text-light-blue">Room is Full! ({{ players.length }}/{{ roomCapacity }})</span>
+                </div>
             </div>
             <PlayerCardList :players="players" />
             <div class="flex flex-col md:flex-row gap-4">

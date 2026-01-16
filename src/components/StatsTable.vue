@@ -3,7 +3,7 @@
 
         <div class="flex items-center justify-between mb-4 border-b border-background-4 pb-2">
             <div class="flex items-center gap-2">
-                <RecordIcon class="w-8 h-8" :aria-label="'Icon stats'"/>
+                <RecordIcon class="w-8 h-8 text-light-yellow" :aria-label="'Icon stats'"/>
                 <span class="section-title tracking-wider">Record</span>
             </div>
 
@@ -40,7 +40,7 @@
         <div class="bg-gray-800 border-2 border-dark-primary p-6 rounded-lg max-w-4xl w-full shadow-2xl">
             <h2 class="section-title">History</h2>
             
-            <div class="max-h-96 overflow-y-auto mb-4">
+            <div class="thin-scrollbar overflow-y-auto mb-4">
                 <table class="w-full table-fixed text-sm mt-4">
                     <thead class="text-light-primary border-b border-background-4">
                         <tr>
