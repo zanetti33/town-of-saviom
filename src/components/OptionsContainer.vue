@@ -1,12 +1,11 @@
 <template>
     <div class="bg-container">
         <div class="main-container max-w-2xl">
-            <h2 class="section-title capitalize">{{ username }}</h2>
-            <component 
+            <h2 class="section-title">{{ username }}</h2>
+            <div class="flex items-center justify-center">
+                <component 
                         :is="getAvatarComponent(imageUrl)"
-                        class="w-30 h-30 rounded-full border-2 border-primary object-cover"/>
-            <div class="ok-message" v-if="message">
-                <p>{{ message }}</p>
+                        class="w-35 h-35 rounded-full border-2 border-primary object-cover"/>
             </div>
             <button 
                 v-if="!showImagePicker" 
@@ -186,7 +185,16 @@ export default {
                     const res = await loginApi.put('/users/me/imageUrl', { imageUrl: imgName });
                     if (res.status === 200){
                         console.log('Profile picture updated successfully');
-                        this.message = 'Profile picture updated successfully.';
+                        Swal.fire({
+                            title: "Good job!",
+                            text: "Profile picture updated successfully!",
+                            icon: "success",
+                            timer: 1500,
+                            showConfirmButton: false,
+                            color: "var(--color-primary)",
+                            iconColor: "var(--color-secondary)",
+                            background: "var(--color-section-background)",
+                            });
                     }
                 } catch (err) {
                     console.error('Error updating profile picture:', err);
@@ -202,7 +210,16 @@ export default {
                         { oldPassword: this.oldPassword, newPassword: this.newPassword });
                     if (res.status === 200){
                         console.log('Password updated successfully');
-                        this.message = 'Password updated successfully.';
+                        Swal.fire({
+                            title: "Good job!",
+                            text: "Password updated successfully!",
+                            icon: "success",
+                            timer: 1500,
+                            showConfirmButton: false,
+                            color: "var(--color-primary)",
+                            iconColor: "var(--color-secondary)",
+                            background: "var(--color-section-background)",
+                            });
                         this.showChangePasswordForm = false;
                         this.error = '';
                     }

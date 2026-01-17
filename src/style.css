@@ -69,7 +69,7 @@
 }
 
 /* selectables */
-.submit-button, .secondary-button, .form-button, .item-selector {
+.submit-button, .secondary-button, .form-button, .item-selector, .no-button {
     @apply font-bold text-sm text-center
     rounded-lg 
     cursor-pointer 
