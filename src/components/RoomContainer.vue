@@ -1,48 +1,42 @@
 <template>
     <div class="bg-container">
-        <div class="main-container max-w-2xl md:max-w-4xl">
-            <div class="flex flex-col items-center">
-                <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
+        <div class="main-container items-center">
+            <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
 
-                <!-- Pulsante Copia -->
-                <div class="subtitle flex mt-2 gap-2">
-                    <label v-if="roomCode" class="text-background-5 border border-background-4 rounded-xl shadow-2xl p-2 align-super">Code: {{ roomCode }}</label>
-                    <button @click="copyRoomCode" class="rounded-md hover:bg-background-4 transition-colors cursor-pointer">
-                        <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-background-5 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                        <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-light-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </button>
-                </div>
+            <!-- Pulsante Copia -->
+            <div class="subtitle flex mt-2 gap-2">
+                <label v-if="roomCode" class="form-label">Code: {{ roomCode }}</label>
+                <button @click="copyRoomCode" class="icon-button">
+                    <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-background-5 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-light-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </button>
             </div>
-
-            <div class="flex items-center justify-center text-center text-lg font-bold pointer-events-none">
-                <div v-if="players.length<roomCapacity" class="backdrop-blur max-w-fit bg-light-primary border border-light-primary rounded-full shadow-2xl p-3 flex items-center gap-3">
-                    <span class="w-3 h-3 rounded-full animate-ping"></span>
-                    <span class="text-light-primary">Waiting for Players... ({{ players.length }}/{{ roomCapacity }})</span>
-                </div>
-                <div v-else class="backdrop-blur max-w-fit bg-light-blue border border-dark-primary rounded-full shadow-2xl p-3 flex items-center gap-2">
-                    <span class="w-4 h-4 rounded-full animate-none"></span>
-                    <span class="text-light-blue">Room is Full! ({{ players.length }}/{{ roomCapacity }})</span>
-                </div>
+            <div v-if="players.length<roomCapacity" class="backdrop-blur max-w-fit bg-light-primary border border-light-primary rounded-full shadow-2xl p-3 flex items-center gap-3">
+                <span class="w-3 h-3 rounded-full animate-ping"></span>
+                <span class="text-primary">Waiting for Players... ({{ players.length }}/{{ roomCapacity }})</span>
+            </div>
+            <div v-else class="backdrop-blur max-w-fit bg-light-blue border border-dark-primary rounded-full shadow-2xl p-3 flex items-center gap-2">
+                <span class="w-4 h-4 rounded-full animate-none"></span>
+                <span class="text-primary">Room is Full! ({{ players.length }}/{{ roomCapacity }})</span>
             </div>
             <PlayerCardList :players="players" />
             <div class="flex flex-col md:flex-row gap-4">
-                <button @click="onExitButtonClick" class="no-button flex-1 py-4">Exit</button>
+                <button @click="onExitButtonClick" class="no-button">Exit</button>
                 <button 
                     v-if="isHost" 
                     @click="onStartButtonClick" 
                     :disabled="!canStartGame"
-                    class="submit-button flex-1 py-4 transition-all duration-200"
+                    class="submit-button"
                     :class="{ 'opacity-50 cursor-not-allowed! grayscale': !canStartGame }">
                     Start
                 </button>
-                <button v-else @click="onReadyButtonClick" class="submit-button flex-1 py-4">
+                <button v-else @click="onReadyButtonClick" class="submit-button">
                     {{ isReady ? 'Not Ready' : 'Ready' }}
                 </button>
-                
             </div>
         </div>
     </div>
