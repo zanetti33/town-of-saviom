@@ -1,6 +1,8 @@
 <template>
-    <div class="w-full flex flex-col items-center gap-1 rounded-lg transition-all p-1" 
-        :class="isHighlighted() ? 'border-primary border-2' : 'border-highlight border'">
+    <div 
+        @click="player.isSelected = !player.isSelected" 
+        class="w-full flex flex-col items-center gap-1 rounded-lg transition-all p-1" 
+        :class="isHighlighted() ? 'border-highlight border-2' : 'border-primary border'">
         <!-- If extraInfo we display image on the left and info on the right -->
         <div v-if="extraInfo()" class="grid grid-cols-2 gap-8 justify-center items-center pt-2">
             <component 
@@ -71,7 +73,7 @@ export default {
         },
         extraInfo() {
             console.log(this.player);
-            return this.player.isHost || this.player.isReady || this.player.isSelected;
+            return this.player.isHost || this.player.isReady || this.player.role;
         },
         isHighlighted() {
             return this.player.isSelected || this.player.isReady;

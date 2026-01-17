@@ -7,7 +7,7 @@
                 <div class="icon-wrapper mb-4">
                     <DayIcon v-if="isDay" class="w-16 h-16 text-highlight" />
                     <NightIcon v-if="isNight" class="w-16 h-16 text-bad" />
-                    <DefenseIcon v-if="phase === 'DEFENSE'" class="w-16 h-16 text-secondary" />
+                    <DefenseIcon v-if="phase === 'DEFENCE'" class="w-16 h-16 text-secondary" />
                 </div>
                 <h1 class="text-3xl font-bold tracking-wide">{{ phaseTitle }}</h1>
                 <p class="text-sm mt-1">{{ phaseSubtitle }}</p>
@@ -19,7 +19,6 @@
 
             <div v-if="votedPlayerId" class="absolute bottom-32 left-0 right-0 flex justify-center pointer-events-none">
                 <div class="bg-bad backdrop-blur px-8 py-3 rounded-full shadow-2xl border border-bad flex items-center gap-3">
-                    <span class="w-3 h-3 bg-bad rounded-full animate-ping"></span>
                     <span class="font-bold text-lg tracking-wider">TARGET: {{ getPlayerName(votedPlayerId).toUpperCase() }}</span>
                 </div>
             </div>
@@ -38,46 +37,45 @@
                     </div>
                 </div>
 
-                <div class="role-card bg-slate-800/80 backdrop-blur-md rounded-xl p-4 border-l-4 border-red-500 flex items-center gap-4 shadow-xl min-w-50">
-                    <div class="p-2 bg-slate-700 rounded-lg">
-                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <div class="bg-section-background backdrop-blur-md rounded-xl p-4 border-2 border-border-background flex items-center gap-4 shadow-xl min-w-50">
+                    <div class="p-2 bg-card-background rounded-lg">
+                        <WerewolfIcon v-if="myRole === 'WEREWOLF'" class="w-10 h-10 text-bad"/>
+                        <DoctorIcon v-if="myRole === 'DOCTOR'" class="w-10 h-10 text-primary"/>
+                        <SeerIcon v-if="myRole === 'SEER'" class="w-10 h-10 text-primary"/>
+                        <VillagerIcon v-if="myRole === 'VILLAGER'" class="w-10 h-10 text-primary"/>
                     </div>
                     <div>
-                        <div class="text-[10px] uppercase tracking-wider text-gray-400">Your Role</div>
-                        <div class="text-red-400 font-bold text-lg leading-none">{{ myRole || 'Loading...' }}</div>
+                        <div class="text-xs uppercase text-secondary">Your Role</div>
+                        <div class=" font-bold text-lg leading-none"
+                            :class="myRole === 'WEREWOLF' ? 'text-bad' : 'text-primary'">
+                            {{ myRole || 'Loading...' }}
+                        </div>
                     </div>
-                    <button class="text-xs text-gray-500 border border-gray-600 rounded px-2 py-1 ml-auto hover:bg-gray-700">Swap</button>
                 </div>
             </div>
         </div>
 
-        <div class="sidebar-area w-96 bg-gray-900 border-l border-gray-800 flex flex-col shadow-2xl z-10">
-            <div class="h-16 border-b border-gray-800 flex items-center px-6 gap-3 bg-gray-900/50 backdrop-blur">
-                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
-                <span class="font-bold tracking-widest text-sm text-gray-200">TOWN LOG</span>
-                
-                <div class="ml-auto flex gap-2">
-                    <button class="p-2 rounded-lg hover:bg-gray-800 text-gray-500 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    </button>
+        <div class="w-96 bg-section-background border-2 border-border-background flex flex-col rounded-xl shadow-xl z-10">
+            <div class="h-16 bg-card-background border-b flex items-center px-6 gap-3 rounded-t-xl backdrop-blur justify-center">
+                <span class="font-bold tracking-widest text-sm text-white">TOWN LOG</span>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 thin-scrollbar flex flex-col-reverse">
+                <div v-for="(msg, idx) in reversedMessages" :key="idx">
+                    <span class="text-primary text-sm">{{ msg }}</span>
                 </div>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-4 space-y-4 thin-scrollbar flex flex-col-reverse">
-                <div v-for="(msg, idx) in reversedMessages" :key="idx" 
-                     class="bg-gray-800/50 p-3 rounded-lg border border-gray-700/50 text-sm">
-                     <span class="text-gray-300">{{ msg }}</span>
-                </div>
-            </div>
-
-            <div class="p-4 bg-gray-900 border-t border-gray-800">
-                <form @submit.prevent="onSend" class="relative">
-                    <input v-model="newMessage" 
-                           placeholder="Discuss..." 
-                           class="w-full bg-gray-800 text-white rounded-xl pl-4 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 border border-gray-700 placeholder-gray-500 text-sm transition-all">
+            <div class="p-4 bg-card-background border-t rounded-b-xl">
+                <form @submit.prevent="onSend" class="flex gap-2 items-center">
+                    <input 
+                        v-model="newMessage" 
+                        id="chat-message"
+                        placeholder="Discuss..." 
+                        class="form-field bg-background! flex-1">
                     
-                    <button type="submit" class="absolute right-2 top-2 p-1.5 bg-purple-600 rounded-lg hover:bg-purple-500 transition-colors shadow-lg shadow-purple-900/20">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    <button type="submit" class="form-button p-1.5">
+                        <svg class="w-4 h-4 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                     </button>
                 </form>
             </div>
@@ -92,6 +90,7 @@ import { useAuthStore } from '../stores/authStore';
 import { defineAsyncComponent } from 'vue'
 import PlayerCardList from './PlayerCardList.vue';
 const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
+const rolesIcons = import.meta.glob('../assets/img/characters/*.svg', { query: '?component' });
 
 export default {
     name: 'GameContainer',
@@ -99,6 +98,10 @@ export default {
         DayIcon: defineAsyncComponent(icons['../assets/img/day.svg']),
         DefenseIcon: defineAsyncComponent(icons['../assets/img/defense.svg']),
         NightIcon: defineAsyncComponent(icons['../assets/img/night.svg']),
+        WerewolfIcon: defineAsyncComponent(rolesIcons['../assets/img/characters/wolf.svg']),
+        VillagerIcon: defineAsyncComponent(rolesIcons['../assets/img/characters/citizen.svg']),
+        DoctorIcon: defineAsyncComponent(rolesIcons['../assets/img/characters/doctor.svg']),
+        SeerIcon: defineAsyncComponent(rolesIcons['../assets/img/characters/seer.svg']),
         PlayerCardList
     },
     data() {
@@ -149,7 +152,7 @@ export default {
                     return "Sleep well.";
                 }
             }  
-            if (this.phase === 'DEFENSE') return "Judgement Time";
+            if (this.phase === 'DEFENCE') return "Judgement Time";
             return "Town Discussion";
         },
         phaseSubtitle() {
@@ -160,7 +163,7 @@ export default {
                     return "Hope to stay alive.";
                 }
             }       
-            if (this.phase === 'DEFENSE') return "Listen to the defense.";
+            if (this.phase === 'DEFENCE') return "Listen to the defense.";
             return "Find the wolves among us.";
         }
     },
@@ -172,11 +175,14 @@ export default {
                 if (response.status === 200 || response.status === 201) {
                     this.players = response.data.players;
                     this.duration = response.data.phaseDuration * 1000;
-                    this.phase = response.data.currentPhase;
-                    
-                    // Nota: Assumiamo che il server restituisca il ruolo in response.data.role 
-                    // o response.data.clientPlayer.role. Aggiungi il campo se manca.
-                    this.myRole = response.data.role || "Citizen"; 
+                    this.phase = response.data.phase;
+
+                    const authStore = useAuthStore();
+                    this.players.find(p => {
+                        if(String(p.userId) === String(authStore.user.id)) {
+                            this.myRole = p.role;
+                        }
+                    });
 
                     this.resetTimer();
                     this.setupSocket();
