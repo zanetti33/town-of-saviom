@@ -119,7 +119,7 @@
 }
 
 .error-message {
-    @apply mt-4 p-3 bg-bad rounded-lg text-sm text-center;
+    @apply mt-4 p-3 border-2 border-bad rounded-lg font-bold text-bad text-sm text-center;
 }
 
 .ok-message {
