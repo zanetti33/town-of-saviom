@@ -8,12 +8,15 @@
                     </h1>
                 </div>
                 
-                <div class="username-info-top-right">
+                <button @click="openOptions" 
+                    class="username-info-top-right cursor-pointer 
+                    focus:outline-none focus:ring-4 focus:ring-highlight focus:ring-inset 
+                    hover:ring-4 hover:ring-highlight hover:ring-inset">
                     <span class="text-white font-bold text-sm tracking-wide">{{ username }}</span>
                     <component 
                         :is="getAvatarComponent(imageUrl)"
                         class="w-12 h-12 rounded-full border-2 border-primary"/>
-                </div>
+                </button>
             </div>
 
             <StatsTable />
@@ -30,18 +33,11 @@
                 Join Room
             </button>
 
-            <div class="grid grid-cols-2 gap-4">
-                <button @click="showRules = true" class="secondary-button">
+            <button @click="showRules = true" class="secondary-button">
                     <RulesIcon class="w-8 h-8"
                                 :aria-label="'Icon rules'"/>
                     Rules
-                </button>
-                <button @click="openOptions" class="secondary-button">
-                    <OptionsIcon class="w-8 h-8"
-                                :aria-label="'Icon options'"/>
-                    Options
-                </button>
-            </div>
+            </button>
 
             <div v-if="showRules" class="fixed inset-0 bg-background bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
                 <div class="main-container max-w-2xl md:max-w-4xl">  
@@ -65,12 +61,15 @@
                     </h1>
                 </div>
                 
-                <div class="username-info-top-right mb-6">
+                <button @click="openOptions" 
+                    class="mb-6 username-info-top-right cursor-pointer 
+                    focus:outline-none focus:ring-4 focus:ring-highlight focus:ring-inset 
+                    hover:ring-4 hover:ring-highlight hover:ring-inset">
                     <span class="text-white font-bold text-sm tracking-wide">{{ username }}</span>
                     <component 
                         :is="getAvatarComponent(imageUrl)"
                         class="w-12 h-12 rounded-full border-2 border-primary"/>
-                </div>
+                </button>
             </div>
             <div class="flex justify-between">
                 <div class="invisible-main-container">
@@ -82,18 +81,11 @@
                         Create Room
                     </button>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <button @click="showRules = true" class="secondary-button">
+                    <button @click="showRules = true" class="secondary-button">
                             <RulesIcon class="w-8 h-8"
                                 :aria-label="'Icon rules'"/>
                             Rules
-                        </button>
-                        <button @click="openOptions" class="secondary-button">
-                            <OptionsIcon class="w-8 h-8"
-                                :aria-label="'Icon options'"/>
-                            Options
-                        </button>
-                    </div>
+                    </button>
 
                     <div v-if="showRules" class="fixed inset-0 bg-background bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
                         <div class="main-container max-w-2xl">  

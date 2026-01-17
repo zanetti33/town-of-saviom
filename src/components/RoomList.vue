@@ -32,6 +32,7 @@
 <script>
 import { lobbyApi } from '../services/api';
 import RoomCard from './RoomCard.vue';
+import { useAuthStore } from '../stores/authStore';
 
 export default {
     name: 'RoomList',
@@ -57,12 +58,19 @@ export default {
                                      (room.code && room.code.toLowerCase().includes(query));
                 
                 const matchesMode = this.selectedMode === "all" || room.gameMode === this.selectedMode;
-                const status = room.status !== 'playing';
-                return matchesSearch && matchesMode && status;
+                if(!this.isAdmin() ) {                  
+                    const status = room.status !== 'playing';
+                    return matchesSearch && matchesMode && status;
+                }
+                return matchesSearch && matchesMode;
             });
         }
     },
    methods: {
+        isAdmin() {
+            const authStore = useAuthStore();
+            return authStore.user.isAdmin;
+        },
         async fetchRooms() {
             try {
                 const response = await lobbyApi.get('/rooms');

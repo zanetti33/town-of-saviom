@@ -112,7 +112,7 @@
             </div>
 
             <div class="text-center">
-                <button @click="$router.push('/dashboard')" class="link-button">Close Options</button>
+                <button @click="$router.push('/dashboard')" class="link-button">Back to Dashboard</button>
             </div>
         </div>
     </div>
@@ -246,14 +246,9 @@ export default {
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         try {
-                            await loginApi.delete('/users/me/delete');
+                            await loginApi.post('/auth/logout');
                             console.log('Logout clicked');
-                            Swal.fire({
-                            title: "LogOut!",
-                            text: "You have been logged out.",
-                            icon: "success"
-                            });
-                            router.push('/logout');
+                            router.push('/login');
                         } catch (err){
                             console.error('Error in logout:', err);
                         }
@@ -278,11 +273,6 @@ export default {
                         try {
                             await loginApi.delete('/users/me/delete');
                             console.log('Account deleted. Return to login.');
-                            Swal.fire({
-                            title: "Deleted!",
-                            text: "Your account has been deleted.",
-                            icon: "success"
-                            });
                             router.push('/login');
                         } catch (err){
                             console.error('Error in deleting account:', err);
