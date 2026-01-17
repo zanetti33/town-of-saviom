@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex flex-col items-center gap-1 rounded-lg transition-all p-1" 
-        :class="isHighlighted() ? 'border-light-blue border-2' : 'border-light-primary border'">
+        :class="isHighlighted() ? 'border-primary border-2' : 'border-highlight border'">
         <!-- If extraInfo we display image on the left and info on the right -->
         <div v-if="extraInfo()" class="grid grid-cols-2 gap-8 justify-center items-center pt-2">
             <component 
@@ -10,9 +10,9 @@
             />
 
             <div class="grid grid-cols-1 gap-2 justify-center items-center">
-                <span v-if="player.isHost" class="text-sm text-background-5">Host</span>
-                <span v-if="player.isReady" class="text-light-blue">Ready</span>
-                <span v-if="player.role" class="text-sm text-background-5">{{ player.role }}</span>
+                <span v-if="player.isHost" class="text-sm text-secondary">Host</span>
+                <span v-if="player.isReady" class="text-primary">Ready</span>
+                <span v-if="player.role" class="text-sm text-bad">{{ player.role }}</span>
             </div>
         </div>
 

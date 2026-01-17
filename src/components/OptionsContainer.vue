@@ -1,10 +1,11 @@
 <template>
     <div class="bg-container">
         <div class="main-container max-w-2xl">
-            <h2 class="section-title">Options</h2>
-            
-            <div class="ok-message" v-if="message">
-                <p>{{ message }}</p>
+            <h2 class="section-title">{{ username }}</h2>
+            <div class="flex items-center justify-center">
+                <component 
+                        :is="getAvatarComponent(imageUrl)"
+                        class="w-35 h-35 rounded-full border-2 border-primary object-cover"/>
             </div>
             <button 
                 v-if="!showImagePicker" 
@@ -102,6 +103,10 @@
                 </form>
             </div>
 
+            <div class="options-logout">
+                <button @click="logout" class="secondary-button w-full py-4">LogOut</button>
+            </div>
+
             <div class="options-delete">
                 <button @click="deleteAccount" class="no-button w-full py-4">Delete Account</button>
             </div>
@@ -127,9 +132,10 @@ export default {
     name: 'OptionsContainer',
     data() {
         return {
+            username: 'Player',
+            imageUrl: 'default.svg',
             showImagePicker: false,
             availableImages: ['default.svg', 'jocker.svg', 'king.svg', 'princess.svg', 'soldier.svg'],
-            selectedImageName: 'default.svg',
             showChangePasswordForm: false,
             oldPassword: '',
             newPassword: '',
@@ -138,7 +144,25 @@ export default {
             error: ''
         };
     },
+    mounted() {
+        this.loadUserData();
+    },
     methods: {
+        async loadUserData() {
+            try {
+                const response = await loginApi.get(`/users/me`);
+                const userData = response.data; 
+
+                if (userData) {
+                    this.username = userData.name || 'Player';
+                    if (userData.imageUrl) {
+                        this.imageUrl = userData.imageUrl;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        },
         getAvatarComponent(imgName) {
             const path = `../assets/img/profile/${imgName}`;
             
@@ -155,13 +179,22 @@ export default {
             return comp;
         },
         async selectImage(imgName) {
-            this.selectedImageName = imgName;
+            this.imageUrl = imgName;
             this.showImagePicker = false;
             try {
                     const res = await loginApi.put('/users/me/imageUrl', { imageUrl: imgName });
                     if (res.status === 200){
                         console.log('Profile picture updated successfully');
-                        this.message = 'Profile picture updated successfully.';
+                        Swal.fire({
+                            title: "Good job!",
+                            text: "Profile picture updated successfully!",
+                            icon: "success",
+                            timer: 1500,
+                            showConfirmButton: false,
+                            color: "var(--color-primary)",
+                            iconColor: "var(--color-secondary)",
+                            background: "var(--color-section-background)",
+                            });
                     }
                 } catch (err) {
                     console.error('Error updating profile picture:', err);
@@ -177,7 +210,16 @@ export default {
                         { oldPassword: this.oldPassword, newPassword: this.newPassword });
                     if (res.status === 200){
                         console.log('Password updated successfully');
-                        this.message = 'Password updated successfully.';
+                        Swal.fire({
+                            title: "Good job!",
+                            text: "Password updated successfully!",
+                            icon: "success",
+                            timer: 1500,
+                            showConfirmButton: false,
+                            color: "var(--color-primary)",
+                            iconColor: "var(--color-secondary)",
+                            background: "var(--color-section-background)",
+                            });
                         this.showChangePasswordForm = false;
                         this.error = '';
                     }
@@ -189,15 +231,47 @@ export default {
                 this.error = 'New password and confirm new password must be the same.';
             }
         },
+        logout() {
+            Swal.fire({
+                title: "Do you want to Logout?",
+                text: "You will need to login again to access your account.",
+                icon: "warning",
+                showCancelButton: true,
+                color: "var(--color-primary)",
+                iconColor: "var(--color-highlight)",
+                background: "var(--color-section-background)",
+                confirmButtonColor: "var(--color-primary)",
+                cancelButtonColor: "var(--color-bad)",
+                confirmButtonText: "Yes, log me out!"
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            await loginApi.delete('/users/me/delete');
+                            console.log('Logout clicked');
+                            Swal.fire({
+                            title: "LogOut!",
+                            text: "You have been logged out.",
+                            icon: "success"
+                            });
+                            router.push('/logout');
+                        } catch (err){
+                            console.error('Error in logout:', err);
+                        }
+                    }
+            });
+            
+        },
         deleteAccount() {
             Swal.fire({
                 title: "Do you want to delete your account?",
                 text: "All your data will be lost forever.",
                 icon: "warning",
                 showCancelButton: true,
-                //background: "#000000",
-                //confirmButtonColor: "#3085d6",
-                //cancelButtonColor: "#d33",
+                color: "var(--color-primary)",
+                iconColor: "var(--color-highlight)",
+                background: "var(--color-section-background)",
+                confirmButtonColor: "var(--color-primary)",
+                cancelButtonColor: "var(--color-bad)",
                 confirmButtonText: "Yes, delete it!"
                 }).then(async (result) => {
                     if (result.isConfirmed) {

@@ -1,16 +1,16 @@
 <template>
-    <div class="bg-background-1 p-4 min-h-screen h-screen w-full flex overflow-hidden text-white font-sans">
+    <div class="bg-background p-4 min-h-screen h-screen w-full flex overflow-hidden text-primary font-sans">
         
         <div class="flex-1 flex flex-col relative p-6">
             
             <div class="flex flex-col items-center mt-8 mb-8 transition-all duration-500">
-                <div class="icon-wrapper mb-4 drop-shadow-glow">
-                    <DayIcon v-if="isDay" class="w-16 h-16 text-yellow-400" />
-                    <NightIcon v-if="isNight" class="w-16 h-16 text-purple-400" />
-                    <DefenseIcon v-if="phase === 'DEFENSE'" class="w-16 h-16 text-blue-400" />
+                <div class="icon-wrapper mb-4">
+                    <DayIcon v-if="isDay" class="w-16 h-16 text-highlight" />
+                    <NightIcon v-if="isNight" class="w-16 h-16 text-bad" />
+                    <DefenseIcon v-if="phase === 'DEFENSE'" class="w-16 h-16 text-secondary" />
                 </div>
                 <h1 class="text-3xl font-bold tracking-wide">{{ phaseTitle }}</h1>
-                <p class="text-gray-400 text-sm mt-1">{{ phaseSubtitle }}</p>
+                <p class="text-sm mt-1">{{ phaseSubtitle }}</p>
             </div>
 
             <div class="flex-1 flex justify-center items-center overflow-y-auto">
@@ -18,19 +18,19 @@
             </div>
 
             <div v-if="votedPlayerId" class="absolute bottom-32 left-0 right-0 flex justify-center pointer-events-none">
-                <div class="bg-red-700/90 backdrop-blur px-8 py-3 rounded-full shadow-2xl border border-red-500 flex items-center gap-3">
-                    <span class="w-3 h-3 bg-red-400 rounded-full animate-ping"></span>
+                <div class="bg-bad backdrop-blur px-8 py-3 rounded-full shadow-2xl border border-bad flex items-center gap-3">
+                    <span class="w-3 h-3 bg-bad rounded-full animate-ping"></span>
                     <span class="font-bold text-lg tracking-wider">TARGET: {{ getPlayerName(votedPlayerId).toUpperCase() }}</span>
                 </div>
             </div>
 
             <div class="mt-auto pt-6 flex items-end justify-between relative">
                 <div class="w-2/3 pr-12">
-                    <div class="flex justify-between text-xs font-bold tracking-widest uppercase mb-2 text-gray-400">
+                    <div class="flex justify-between text-xs font-bold tracking-widest uppercase mb-2">
                         <span>{{ phase }} Phase</span>
                         <span>{{ Math.max(0, ((duration - elapsed) / 1000)).toFixed(0) }}s</span>
                     </div>
-                    <div class="h-2 bg-gray-800 rounded-full overflow-hidden w-full">
+                    <div class="h-2 bg-section-background rounded-full overflow-hidden w-full">
                         <div class="h-full transition-all duration-1000 linear shadow-[0_0_10px_currentColor]"
                              :class="progressBarClass"
                              :style="{ width: (progressRate * 100) + '%' }">
@@ -63,8 +63,8 @@
                 </div>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-4 space-y-4 thin-scrollbar"> <!-- CONTROLLARE STA ROBA -->
-                <div v-for="(msg, idx) in messages" :key="idx" 
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 thin-scrollbar flex flex-col-reverse">
+                <div v-for="(msg, idx) in reversedMessages" :key="idx" 
                      class="bg-gray-800/50 p-3 rounded-lg border border-gray-700/50 text-sm">
                      <span class="text-gray-300">{{ msg }}</span>
                 </div>
@@ -90,8 +90,6 @@ import { gameplayApi, GAMEPLAY_API_URL } from '../services/api';
 import { io } from 'socket.io-client';
 import { useAuthStore } from '../stores/authStore';
 import { defineAsyncComponent } from 'vue'
-
-// Import icons (ensure path matches your project structure)
 import PlayerCardList from './PlayerCardList.vue';
 const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
 
@@ -114,7 +112,7 @@ export default {
             phase: 'STARTUP', // Default phase
             elapsed: 0,
             votedPlayerId: null, // Track who we voted for
-            myRole: null, // Needs to be populated from API/Socket
+            myRole: null,
             handle: null,
             lastTime: 0
         };
@@ -127,6 +125,9 @@ export default {
         if(this.socket) this.socket.disconnect();
     },
     computed: {
+        reversedMessages() {
+            return [...this.messages].reverse();
+        },
         isDay() {
             return this.phase === 'DAY' || this.phase === 'STARTUP';
         },
@@ -138,16 +139,27 @@ export default {
             return Math.min(1 - this.elapsed / this.duration, 1);
         },
         progressBarClass() {
-            // Tailwind classes for the progress bar color
-            return this.isNight ? 'bg-purple-600' : 'bg-yellow-500';
+            return this.isNight ? 'bg-bad' : 'bg-highlight';
         },
         phaseTitle() {
-            if (this.isNight) return "Who to eliminate?";
+            if (this.isNight) {
+                if (this.myRole === 'WEREWOLF') {
+                    return "Who to eliminate?";
+                } else {
+                    return "Sleep well.";
+                }
+            }  
             if (this.phase === 'DEFENSE') return "Judgement Time";
             return "Town Discussion";
         },
         phaseSubtitle() {
-            if (this.isNight) return "Select a target before sunrise.";
+            if (this.isNight) {
+                if (this.myRole === 'WEREWOLF') {
+                    return "Select a target before sunrise.";
+                } else {
+                    return "Hope to stay alive.";
+                }
+            }       
             if (this.phase === 'DEFENSE') return "Listen to the defense.";
             return "Find the wolves among us.";
         }
@@ -190,7 +202,6 @@ export default {
 
             this.socket.on('MESSAGE_SENT', (message) => {
                 this.messages.push(message);
-                // Auto-scroll logic could be added here
             });
 
             this.socket.on('PHASE_CHANGE', (data) => {
@@ -250,12 +261,4 @@ export default {
 </script>
 
 <style scoped>
-.drop-shadow-glow {
-    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.15));
-}
-
-@keyframes fade-in {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
 </style>

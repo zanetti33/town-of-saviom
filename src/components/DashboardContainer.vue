@@ -43,12 +43,6 @@
                 </button>
             </div>
 
-            <div class="text-center pb-2">
-                <button @click="logout" class="no-link-button">
-                    Log Out
-                </button>
-            </div>
-
             <div v-if="showRules" class="fixed inset-0 bg-background bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
                 <div class="main-container max-w-2xl md:max-w-4xl">  
                     <h1 class="section-title">Town of Saviom Rules</h1>                          
@@ -101,11 +95,6 @@
                         </button>
                     </div>
 
-                    <div class="text-center pb-2">
-                        <button @click="logout" class="no-link-button">
-                            Log Out
-                        </button>
-                    </div>
                     <div v-if="showRules" class="fixed inset-0 bg-background bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
                         <div class="main-container max-w-2xl">  
                             <h1 class="section-title">Town of Saviom Rules</h1>                          
@@ -193,10 +182,6 @@ export default {
         openOptions() {
             console.log('Options clicked');
             router.push('/options');
-        },
-        logout() {
-            console.log('Logout clicked');
-            router.push('/logout');
         },
         getAvatarComponent(imgName) {
             const path = `../assets/img/profile/${imgName}`;
