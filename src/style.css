@@ -115,23 +115,18 @@ progress {
 }
 
 .thin-scrollbar::-webkit-scrollbar-track {
-    background: #020617;     /*background-1*/
+    background: var(--color-background);     /*background-1*/
     border-radius: 10px;
 }
 
 .thin-scrollbar::-webkit-scrollbar-thumb {
-    background: #7c3aed;      
+    background: var(--color-primary);      
     border-radius: 10px;
-    border: 2px solid #1f2937; /* Crea un effetto di distacco dalla pista */
-}
-
-/* Colore del cursore quando ci passi sopra con il mouse */
-.thin-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #a78bfa;      
+    border: 2px solid var(--color-background); /* Crea un effetto di distacco dalla pista */
 }
 
 /* Supporto per Firefox */
 .thin-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: #7c3aed #1f2937;
+    scrollbar-color: var(--color-primary) var(--color-background);
 }
