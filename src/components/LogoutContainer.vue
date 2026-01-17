@@ -3,8 +3,8 @@
         <div class="main-container max-w-2xl">
             <h2 class="section-title">Are you sure you want to logout?</h2>
             <div class="flex gap-4 mt-6">
-                <button class="no-button px-3 py-5 flex-1" @click="handleLogout">Yes, log me out</button>
-                <button class="submit-button px-3 py-5 flex-1" @click="$router.push('/dashboard')">No, return to dashboard</button>
+                <button class="submit-button px-3 py-5 flex-1" @click="handleLogout">Yes, log me out</button>
+                <button class="no-button px-3 py-5 flex-1" @click="$router.push('/dashboard')">No, return to dashboard</button>
             </div>
         </div>
     </div>

@@ -11,15 +11,17 @@
         No: red-500 // invariato
     */
   --font-display: "Pirata One";
-  --color-primary: var(--color-indigo-300); /* #93c5fd */
-  --color-secondary: var(--color-purple-300);
+  --color-primary: var(--color-indigo-300)/* var(--color-indigo-300) */; /* #93c5fd */
+  --color-secondary: #7CB4B8 /* var(--color-indigo-100) #A5809C #ADB6C4 var(--color-purple-300) */;
   --color-background: var(--color-slate-950); /* #020617 */
   --color-section-background: #090F21; /* Halfway between slate-950 and slate-900 */
   --color-card-background: var(--color-slate-800);
   --color-border-background: var(--color-slate-700);
   --color-bad: var(--color-red-500);
-  --color-highlight: var(--color-yellow-300);
+  --color-highlight: #F7DBA7/* var(--color-violet-400) var(--color-yellow-300) */;
 }
+
+/* --- Containers --- */
 
 .bg-container {
     @apply bg-background text-white p-4 font-sans min-h-screen flex flex-col items-center justify-center;
@@ -29,13 +31,19 @@
     @apply w-full mx-auto max-w-2xl flex flex-col gap-6 bg-section-background border border-border-background rounded-2xl p-8;
 }
 
-.invisible-main-container {
+.invisible-main-container, .invisible-main-container-with-border {
     @apply w-full mx-auto max-w-2xl flex flex-col gap-6 bg-transparent p-8;
+}
+
+.invisible-main-container-with-border {
+    @apply border border-border-background rounded-2xl 
 }
 
 .wide-container {
      @apply w-full max-w-11/12 bg-section-background border border-border-background rounded-2xl p-8;
 }
+
+/* --- Titles ---*/
 
 .main-title {
     @apply font-display text-4xl md:text-6xl font-bold tracking-widest mb-2 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)];
@@ -49,20 +57,53 @@
     @apply text-primary text-sm uppercase;
 }
 
+/* --- Forms ---*/
+
+.form-label {
+    @apply text-primary;
+}
+
 .form-field {
-    @apply w-full bg-card-background border border-border-background text-white placeholder-primary text-sm rounded-lg focus:ring-2 focus:ring-primary block p-3.5 transition-all outline-none;
+    @apply w-full bg-card-background border border-border-background text-white placeholder-primary text-sm rounded-lg focus:ring-2
+    focus:ring-primary block p-3.5 transition-all outline-none;
 }
 
+/* selectables */
+.submit-button, .secondary-button, .form-button, .item-selector {
+    @apply font-bold text-sm text-center
+    rounded-lg 
+    cursor-pointer 
+    focus:outline-none focus:ring-4 focus:ring-highlight focus:ring-inset
+    hover:ring-4 hover:ring-highlight hover:ring-inset
+}
+
+/* buttons */
+.submit-button, .secondary-button, .form-button {
+    @apply text-background;
+}
+
+/* small inputs in forms */
+.form-button, .item-selector {
+    @apply px-4 py-2 
+}
+
+/* big inputs in forms */
 .submit-button, .secondary-button {
-    @apply w-full text-background cursor-pointer focus:outline-none focus:ring-4 focus:ring-highlight hover:ring-4 hover:ring-highlight font-bold rounded-lg text-sm text-center transition-all flex items-center justify-center gap-3 py-4;
+    @apply w-full
+    transition-all flex items-center justify-center gap-3 py-4;
 }
 
-.submit-button {
+/* primary color */
+.submit-button, .form-button {
     @apply bg-primary;
 }
 
 .secondary-button {
     @apply bg-secondary;
+}
+
+.item-selector {
+    @apply rounded-md text-sm text-primary transition-all peer-checked:bg-primary peer-checked:text-black block
 }
 
 .no-button {
@@ -89,12 +130,8 @@
     @apply object-cover rounded-full border-2 border-primary;
 }
 
-.item-selector {
-    @apply px-4 py-2 rounded-md text-sm text-white transition-all peer-checked:bg-primary peer-checked:text-black block
-}
-
 .username-info-top-right {
-    @apply flex items-center gap-3 bg-card-background px-3 py-1.5 rounded-full border border-primary backdrop-blur-sm;
+    @apply flex items-center justify-center bg-card-background gap-6 pl-6 pr-3 py-2 rounded-full border border-border-background;
 }
 
 progress {
