@@ -7,8 +7,8 @@
         class="form-field"
     />
     <div class="mode-filters justify-center flex items-center gap-4">
-        <label class="text-background-5">Game Mode:</label>
-        <div class="p-1 rounded-lg inline-flex border border-background-4">
+        <label class="text-primary">Game Mode:</label>
+        <div class="p-1 rounded-lg inline-flex border border-border-background">
             <label for="all" class="cursor-pointer">
                 <input id="all" value="all" v-model="selectedMode" type="radio" class="peer sr-only" checked/>
                 <span class="item-selector">All</span>

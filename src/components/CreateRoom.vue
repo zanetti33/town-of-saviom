@@ -17,27 +17,27 @@
                 </div>
                 <div class="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-12 my-6">
                     <div class="flex items-center justify-center gap-4">
-                        <label class="text-slate-500 whitespace-nowrap">Game Mode:</label>
-                        <div class="p-1 rounded-lg inline-flex border border-slate-700">
+                        <label class="form-label whitespace-nowrap">Game Mode:</label>
+                        <div class="p-1 rounded-lg inline-flex border border-border-background">
                             <label for="classic" class="cursor-pointer">
                                 <input id="classic" value="classic" v-model="gameMode" type="radio" class="peer sr-only" checked/>
-                                <span class="item-selector">Classic</span>
+                                <span class="form-label item-selector">Classic</span>
                             </label>
                             <label for="advanced" class="cursor-pointer">
                                 <input id="advanced" value="advanced" v-model="gameMode" type="radio" class="peer sr-only"/>
-                                <span class="item-selector">Advanced</span>
+                                <span class="form-label item-selector">Advanced</span>
                             </label>
                         </div>
                     </div>
 
                     <div class="flex items-center justify-center gap-4">
-                        <label class="text-slate-500 whitespace-nowrap">Max Players:</label>
-                        <div class="flex items-center border border-slate-700 rounded-lg overflow-hidden bg-gray-900">
-                            <button type="button" @click="decrementPlayers" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors">-</button>
-                            <div class="w-12 text-center font-bold text-purple-400">
+                        <label class="form-label whitespace-nowrap">Max Players:</label>
+                        <div class="flex items-center border border-border-background rounded-lg overflow-hidden bg-section-background">
+                            <button type="button" @click="decrementPlayers" class="form-button">-</button>
+                            <div class="w-12 text-center font-bold text-primary">
                                 {{ maxPlayers }}
                             </div>
-                            <button type="button" @click="incrementPlayers" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors">+</button>
+                            <button type="button" @click="incrementPlayers" class="form-button">+</button>
                         </div>
                     </div>
 

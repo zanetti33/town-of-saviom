@@ -12,7 +12,7 @@
                     <span class="text-white font-bold text-sm tracking-wide">{{ username }}</span>
                     <component 
                         :is="getAvatarComponent(imageUrl)"
-                        class="w-12 h-12 rounded-full border-2 border-purple-500 object-cover"/>
+                        class="w-12 h-12 rounded-full border-2 border-primary"/>
                 </div>
             </div>
 
@@ -69,7 +69,7 @@
                     <span class="text-white font-bold text-sm tracking-wide">{{ username }}</span>
                     <component 
                         :is="getAvatarComponent(imageUrl)"
-                        class="w-12 h-12 rounded-full border-2 border-purple-500 object-cover"/>
+                        class="w-12 h-12 rounded-full border-2 border-primary"/>
                 </div>
             </div>
             <div class="flex justify-between">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="invisible-main-container max-w-2xl">
+                <div class="invisible-main-container-with-border max-w-2xl">
                     <RoomList />
                 </div>
             </div>
