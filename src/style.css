@@ -11,9 +11,9 @@
         No: red-500 // invariato
     */
   --font-display: "Pirata One";
-  --color-primary: var(--color-indigo-300);
+  --color-primary: var(--color-indigo-300); /* #93c5fd */
   --color-secondary: var(--color-purple-300);
-  --color-background: var(--color-slate-950);
+  --color-background: var(--color-slate-950); /* #020617 */
   --color-section-background: #090F21; /* Halfway between slate-950 and slate-900 */
   --color-card-background: var(--color-slate-800);
   --color-border-background: var(--color-slate-700);
