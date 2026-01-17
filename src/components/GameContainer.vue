@@ -14,24 +14,7 @@
             </div>
 
             <div class="flex-1 flex justify-center items-center overflow-y-auto">
-                <div class="grid grid-cols-4 gap-6 w-full max-w-4xl px-4">
-                    <div v-for="(player, index) in players" :key="player.userId" 
-                         class="player-card flex flex-col items-center group cursor-pointer"
-                         @click="onVotePlayer(player.userId)">
-                        
-                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold mb-2 transition-transform transform group-hover:scale-110 shadow-lg border-2"
-                             :class="[votedPlayerId === player.userId ? 'border-white ring-2 ring-red-500' : 'border-white']">
-                            {{ getInitial(player.name) }}
-                        </div>
-                        
-                        <span class="text-sm font-medium tracking-wide group-hover:text-white text-gray-300">
-                            {{ player.name }}
-                        </span>
-                        <span v-if="votedPlayerId === player.userId" class="text-xs text-red-400 mt-1 font-bold animate-pulse">
-                            TARGET
-                        </span>
-                    </div>
-                </div>
+                <PlayerCardList :players="players" />
             </div>
 
             <div v-if="votedPlayerId" class="absolute bottom-32 left-0 right-0 flex justify-center pointer-events-none">
@@ -236,7 +219,9 @@ export default {
         },
         onVotePlayer(playerId) {
             // Toggle logic: if clicking same player, could cancel vote if API supports it
+            this.players.find(p => p.userId = this.votedPlayerId).forEach(p => p.isSelected = false);
             this.votedPlayerId = playerId;
+            this.players.find(p => p.userId = this.votedPlayerId).forEach(p => p.isSelected = true);
             this.socket.emit("VOTE", playerId);
         },
         getPlayerName(playerId) {

@@ -18,13 +18,13 @@
 
             <StatsTable />
             
-            <button @click="createRoom" class="submit-button w-full flex items-center text-background justify-center gap-3 py-4 text-base m-0!" >
-                <CreateIcon class="w-8 h-8 text-background"
+            <button @click="createRoom" class="submit-button" >
+                <CreateIcon class="w-8 h-8"
                                 :aria-label="'Icon create'"/>
-                <p class="text-background" >Create Room</p>
+                <p>Create Room</p>
             </button>
 
-            <button  @click="joinRoom" class="w-full bg-card-background hover:bg-[#2D3F59] border border-slate-600 text-slate-200 font-bold rounded-lg px-5 py-4 flex items-center justify-center gap-3 transition-all shadow-lg">
+            <button  @click="joinRoom" class="submit-button">
                 <JoinIcon class="w-8 h-8"
                                 :aria-label="'Icon join room'"/>
                 Join Room
@@ -82,7 +82,7 @@
                 <div class="invisible-main-container">
                     <StatsTable />
 
-                    <button @click="createRoom" class="submit-button w-full flex items-center justify-center gap-3 py-4 text-base m-0!" >
+                    <button @click="createRoom" class="submit-button" >
                         <CreateIcon class="w-8 h-8"
                                 :aria-label="'Icon create'"/>
                         Create Room

@@ -1,48 +1,48 @@
 <template>
-    <div class="bg-background-2 border border-background-4 rounded-xl p-5 shadow-inner relative group">
+    <div class="bg-section-background border border-border-background rounded-xl p-5 relative group">
 
-        <div class="flex items-center justify-between mb-4 border-b border-background-4 pb-2">
+        <div class="flex items-center justify-between mb-4 border-b border-border-background pb-2">
             <div class="flex items-center gap-2">
-                <RecordIcon class="w-8 h-8 text-light-yellow" :aria-label="'Icon stats'"/>
+                <RecordIcon class="w-8 h-8 text-highlight" :aria-label="'Icon stats'"/>
                 <span class="section-title tracking-wider">Record</span>
             </div>
 
             <button 
                 @click="fetchHistory" 
-                class="flex items-center gap-1 text-sm uppercase font-bold cursor-pointer text-light-primary hover:text-white bg-dark-primary/10 hover:bg-dark-primary/20 border border-dark-primary/30 px-2 py-1 rounded transition-all"
+                class="flex items-center gap-1 text-sm uppercase font-bold cursor-pointer text-primary hover:text-white bg-dark-primary/10 hover:bg-dark-primary/20 border border-dark-primary/30 px-2 py-1 rounded transition-all"
             >
                 <HistoryIcon class="w-4 h-4" :aria-label="'Icon history'"/>
                 <span>History</span>
             </button>
         </div>
 
-        <div class="grid grid-cols-4 gap-2 text-center divide-x divide-background-4">
+        <div class="grid grid-cols-4 gap-2 text-center divide-x divide-border-background">
             <div>
-                <div class="text-xl font-bold text-light-primary">{{ stats.totalGames }}</div>
+                <div class="text-xl font-bold text-primary">{{ stats.totalGames }}</div>
                 <div class="subtitle mt-1">Played</div>
             </div>
             <div>
-                <div class="text-xl font-bold text-light-blue">{{ stats.totalWins }}</div>
+                <div class="text-xl font-bold text-secondary">{{ stats.totalWins }}</div>
                 <div class="subtitle mt-1">Wins</div>
             </div>
             <div>
-                <div class="text-xl font-bold text-light-red">{{ stats.totalLosses }}</div>
+                <div class="text-xl font-bold text-bad">{{ stats.totalLosses }}</div>
                 <div class="subtitle mt-1">Losses</div>
             </div>
             <div>
-                <div class="text-xl font-bold text-light-primary">{{ stats.winRate }}</div>
+                <div class="text-xl font-bold text-primary">{{ stats.winRate }}</div>
                 <div class="subtitle mt-1">Winrate</div>
             </div>
         </div>
     </div>
 
-    <div v-if="showHistory" class="fixed inset-0 bg-background-1 bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
-        <div class="bg-gray-800 border-2 border-dark-primary p-6 rounded-lg max-w-4xl w-full shadow-2xl">
+    <div v-if="showHistory" class="fixed inset-0 bg-dark bg-opacity-70 rounded-2xl flex justify-center items-center z-50">
+        <div class="bg-card-background border-2 border-dark-primary p-6 rounded-lg max-w-4xl w-full shadow-2xl">
             <h2 class="section-title">History</h2>
             
             <div class="thin-scrollbar overflow-y-auto mb-4">
                 <table class="w-full table-fixed text-sm mt-4">
-                    <thead class="text-light-primary border-b border-background-4">
+                    <thead class="text-primary border-b border-border-background">
                         <tr>
                             <th class="p-3 w-1/5 text-lg text-center tracking-tighter">Date</th>
                             <th class="p-3 w-1/5 text-lg text-center tracking-tighter">Mode</th>
@@ -53,7 +53,7 @@
                     </thead>
                     <tbody>
                         <tr v-if="historyList.length === 0">
-                            <td colspan="5" class="p-8 text-center text-background-4 italic">
+                            <td colspan="5" class="p-8 text-center text-white italic">
                                 No matches found, go play some games!
                             </td>
                         </tr>
@@ -61,12 +61,12 @@
                         <tr 
                             v-for="(game, index) in historyList" 
                             :key="index" 
-                            class="border-b border-background-4 hover:bg-background-3 transition-colors"
+                            class="border-b border-border-background hover:bg-card-background transition-colors"
                         >
                             <td class="p-3 text-center truncate">{{ formatDate(game.playedAt) }}</td>
                             <td 
                                 class="p-3 text-center capitalize font-bold"
-                                :class="game.gameMode === 'classic' ? 'text-light-blue' : 'text-light-yellow'"
+                                :class="game.gameMode === 'classic' ? 'text-secondary' : 'text-highlight'"
                             >
                                 {{ game.gameMode }}
                             </td>
@@ -74,7 +74,7 @@
                             <td class="p-3 text-center italic capitalize font-bold text-dark-yellow">{{ game.role }}</td>
                             <td 
                                 class="p-3 text-center font-black" 
-                                :class="game.result === 'won' ? 'text-light-blue' : 'text-light-red'"
+                                :class="game.result === 'won' ? 'text-secondary' : 'text-bad'"
                             >
                                 {{ game.result.toUpperCase() }}
                             </td>
