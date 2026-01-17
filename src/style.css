@@ -78,7 +78,7 @@
 }
 
 /* buttons */
-.submit-button, .secondary-button, .form-button {
+.submit-button, .secondary-button, .form-button, .no-button {
     @apply text-background;
 }
 
@@ -88,7 +88,7 @@
 }
 
 /* big inputs in forms */
-.submit-button, .secondary-button {
+.submit-button, .secondary-button, .no-button {
     @apply w-full
     transition-all flex items-center justify-center gap-3 py-4;
 }
@@ -102,12 +102,12 @@
     @apply bg-secondary;
 }
 
-.item-selector {
-    @apply rounded-md text-sm text-primary transition-all peer-checked:bg-primary peer-checked:text-black block
+.no-button {
+    @apply bg-bad;
 }
 
-.no-button {
-    @apply text-background bg-bad cursor-pointer focus:outline-none font-bold rounded-lg text-sm text-center transition-all;
+.item-selector {
+    @apply rounded-md text-sm text-primary transition-all peer-checked:bg-primary peer-checked:text-black block
 }
 
 .link-button {
