@@ -2,9 +2,18 @@
     <div class="bg-background p-4 min-h-screen h-screen w-full flex overflow-hidden text-primary font-sans">
         
         <div class="flex-1 flex flex-col relative p-6">
+
+            <button @click="onQuit" class="absolute top-6 left-6 no-button w-20! h-10 px-8 py-5 text-white!">
+                <div class="items-center">
+                    <QuitIcon class="w-5 h-5 ml-2"/>
+                </div>
+                <span class="text-sm font-bold tracking-wider transition-opacity">
+                    QUIT
+                </span>
+            </button>
             
             <div class="flex flex-col items-center mt-8 mb-8 transition-all duration-500">
-                <div class="icon-wrapper mb-4">
+                <div class="mb-4">
                     <DayIcon v-if="isDay" class="w-16 h-16 text-highlight" />
                     <NightIcon v-if="isNight" class="w-16 h-16 text-bad" />
                     <DefenseIcon v-if="phase === 'DEFENCE'" class="w-16 h-16 text-secondary" />
@@ -98,6 +107,7 @@ export default {
         DayIcon: defineAsyncComponent(icons['../assets/img/day.svg']),
         DefenseIcon: defineAsyncComponent(icons['../assets/img/defense.svg']),
         NightIcon: defineAsyncComponent(icons['../assets/img/night.svg']),
+        QuitIcon: defineAsyncComponent(icons['../assets/img/surrend.svg']),
         WerewolfIcon: defineAsyncComponent(rolesIcons['../assets/img/characters/wolf.svg']),
         VillagerIcon: defineAsyncComponent(rolesIcons['../assets/img/characters/citizen.svg']),
         DoctorIcon: defineAsyncComponent(rolesIcons['../assets/img/characters/doctor.svg']),
@@ -203,7 +213,7 @@ export default {
             this.socket.on('connect', () => console.log('Socket Connected'));
             
             this.socket.on('PLAYER_ELIMINATED', (data) => {
-                this.messages.push(`💀 ${this.getPlayerName(data.userId)} was eliminated (${data.cause})`);
+                this.messages.push(`${this.getPlayerName(data.userId)} was eliminated (${data.cause})`);
             });
 
             this.socket.on('MESSAGE_SENT', (message) => {
@@ -261,7 +271,24 @@ export default {
             this.elapsed = 0;
             this.lastTime = performance.now();
             this.updateTimer();
-        }
+        }, 
+        onQuit() {
+            if (confirm("Are you sure you want to leave the game? You might not be able to rejoin.")) {
+                const authStore = useAuthStore();
+                this.players.find(p => {
+                        if(String(p.userId) === String(authStore.user.id)) {
+                            p.status = 'LEFT';
+                        }
+                    });
+                
+                if (this.socket) {
+                    this.socket.emit("QUIT");
+                    this.socket.disconnect();
+                }
+
+                this.$router.push('/dashboard'); 
+            }
+        },
     }
 };
 </script>
