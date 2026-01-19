@@ -23,13 +23,9 @@
             </div>
 
             <div class="flex-1 flex justify-center items-center overflow-y-auto">
-                <PlayerCardList :players="players" />
-            </div>
-
-            <div v-if="votedPlayerId" class="absolute bottom-32 left-0 right-0 flex justify-center pointer-events-none">
-                <div class="bg-bad backdrop-blur px-8 py-3 rounded-full shadow-2xl border border-bad flex items-center gap-3">
-                    <span class="font-bold text-lg tracking-wider">TARGET: {{ getPlayerName(votedPlayerId).toUpperCase() }}</span>
-                </div>
+                <PlayerCardList 
+                    :players="players"
+                    @player-clicked="onVotePlayer"/>
             </div>
 
             <div class="mt-auto pt-6 flex items-end justify-between relative">
@@ -105,7 +101,7 @@ const rolesIcons = import.meta.glob('../assets/img/characters/*.svg', { query: '
 export default {
     name: 'GameContainer',
     components: {
-        DayIcon: defineAsyncComponent(icons['../assets/img/day.svg']),
+        DayIcon: defineAsyncComponent(icons['../assets/img/sun.svg']),
         DefenseIcon: defineAsyncComponent(icons['../assets/img/defense.svg']),
         NightIcon: defineAsyncComponent(icons['../assets/img/night.svg']),
         QuitIcon: defineAsyncComponent(icons['../assets/img/surrend.svg']),
@@ -128,7 +124,8 @@ export default {
             votedPlayerId: null, // Track who we voted for
             myRole: null,
             handle: null,
-            lastTime: 0
+            lastTime: 0,
+            result: null
         };
     },
     mounted() {
@@ -174,7 +171,7 @@ export default {
                     return "Hope to stay alive.";
                 }
             }       
-            if (this.phase === 'DEFENCE') return "Listen to the defense.";
+            if (this.phase === 'DEFENCE') return "Listen to the defence.";
             return "Find the wolves among us.";
         }
     },
@@ -213,8 +210,17 @@ export default {
 
             this.socket.on('connect', () => console.log('Socket Connected'));
             
-            this.socket.on('PLAYER_ELIMINATED', (data) => {
+            this.socket.on('PLAYER_ELIMINATED', async (data) => {
                 this.messages.push(`${this.getPlayerName(data.userId)} was eliminated (${data.cause})`);
+                try {
+                    const response = await gameplayApi.get(`/games/${this.gameId}`);
+                    if (response.status === 200 || response.status === 201) {
+                        this.players = response.data.players;
+                    }
+                } catch (error) {
+                    console.log("Error eliminating player", error);
+                }
+                
             });
 
             this.socket.on('MESSAGE_SENT', (message) => {
@@ -239,6 +245,17 @@ export default {
                 this.lastTime = performance.now() - serverElapsedMs;
                 this.elapsed = serverElapsedMs;
             });
+
+            this.socket.on('GAMEOVER', (data) => {
+                data.find(p => {
+                    if (String(p.userId) === String(authStore.user.id)) {
+                        this.result = p.result;
+                    }
+                });
+                console.log("Final result: " + this.result);
+                //Il salvataggio delle stats va fatto qui o lo gestisce l'engine?
+                //Qui si può mettere una pagina? un alert? Per poi redirectare alla dashboard
+            });
         },
         onSend() {
             if (!this.newMessage || this.newMessage.trim() === "") return;
@@ -246,18 +263,22 @@ export default {
             this.newMessage = null;
         },
         onVotePlayer(playerId) {
-            // Toggle logic: if clicking same player, could cancel vote if API supports it
-            this.players.find(p => p.userId = this.votedPlayerId).forEach(p => p.isSelected = false);
+            this.players.find(p => {
+                if (String(p.userId) === String(this.votedPlayerId)) {
+                    p.isSelected = false;
+                }
+            });
             this.votedPlayerId = playerId;
-            this.players.find(p => p.userId = this.votedPlayerId).forEach(p => p.isSelected = true);
+            this.players.find(p => {
+                if (String(p.userId) === String(this.votedPlayerId)) {
+                    p.isSelected = true;
+                }
+            });
             this.socket.emit("VOTE", playerId);
         },
         getPlayerName(playerId) {
-            const p = this.players.find(p => p.userId === playerId);
+            const p = this.players.find(p => String(p.userId) === String(playerId));
             return p ? p.name : "Unknown";
-        },
-        getInitial(name) {
-            return name ? name.charAt(0).toUpperCase() : '?';
         },
         updateTimer() {
             this.elapsed = performance.now() - this.lastTime;

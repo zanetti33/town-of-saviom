@@ -8,6 +8,7 @@
             :avatarsCache="avatarsCache" 
             :thisPlayerHost="thisPlayerHost"
             @remove-player="$emit('remove-player', $event)" 
+            @player-clicked="$emit('player-clicked', $event)" 
         />
     </div>
 </template>
@@ -17,7 +18,7 @@ import PlayerCard from './PlayerCard.vue';
 const avatars = import.meta.glob('../assets/img/profile/*.svg', { query: '?component' });
 
 export default {
-    emits: ['remove-player'],
+    emits: ['remove-player', 'player-clicked'],
     data() {
         return {
             avatars: avatars

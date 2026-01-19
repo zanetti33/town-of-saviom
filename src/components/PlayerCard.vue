@@ -1,10 +1,10 @@
 <template>
     <div 
-        @click="player.isSelected = !player.isSelected" 
-        class="w-full flex flex-col items-center gap-1 rounded-lg transition-all p-1" 
-        :class="isHighlighted() ? 'border-highlight border-2' : 'border-primary border'">
+        @click.stop="$emit('playerClicked', player.userId)"
+        class="w-full flex flex-col items-center gap-1 rounded-lg transition-all p-1 bg-card-background" 
+        :class="cardClasses">
         <!-- If extraInfo we display image on the left and info on the right -->
-        <div v-if="extraInfo()" class="grid grid-cols-2 gap-8 justify-center items-center pt-2">
+        <div v-if="extraInfo()" class="grid grid-cols-2 gap-6 justify-center items-center pt-2">
             <component 
                 :is="getAvatarComponent(player.imageUrl)"
                 class="avatar-image w-20 h-20" 
@@ -18,12 +18,13 @@
                     @click.stop="$emit('removePlayer', player.userId)">Remove
                 </button>
                 <span v-if="player.isReady" class="text-primary">Ready</span>
-                <span v-if="player.role" class="text-sm text-bad">{{ player.role }}</span>
+                <span v-if="player.role" 
+                    class="text-sm"
+                    :class="player.role === 'WEREWOLF' ? 'text-bad' : 'text-secondary'">{{ player.role }}</span>
             </div>
         </div>
 
-        <div v-else-if="!thisPlayerHost" class="pt-2">
-
+        <div v-else class="pt-2">
             <component
                 :is="getAvatarComponent(player.imageUrl)"
                 class="avatar-image w-20 h-20" 
@@ -31,17 +32,29 @@
             />
         </div>
         
-        <span class="text-lg font-bold">{{ player.name }}</span>
+        <div class="flex flex-row">
+            <component
+                v-if="isMe(player.userId)"
+                :is="getAvatarComponent('default.svg')"
+                class="w-8 h-8 text-secondary font-bold" 
+                :aria-label="'Me Icon'"
+            />
+            <span class="text-lg font-bold" :class="isMe(player.userId) ? 'text-secondary' : ''">
+                {{ isMe(player.userId) ? 'You' : player.name}}
+            </span>
+        </div>
+        
     </div>
 </template>
 
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import { useAuthStore } from '../stores/authStore';
 
 export default {
     name: 'PlayerCard',
-    emits: ['removePlayer'],
+    emits: ['removePlayer', 'playerClicked'],
     props: {
         player: {
             type: Object,
@@ -59,6 +72,15 @@ export default {
             type: Boolean,
             required: false,
             default: false
+        }
+    },
+    computed: {
+        cardClasses() {
+            if (this.player.status === 'WATCHING' || this.player.status === 'LEFT') {
+                return 'grayscale opacity-50 cursor-not-allowed border border-bad';
+            }
+            
+            return this.isHighlighted() ? 'border-highlight border-2' : 'border-primary border';
         }
     },
     methods: {
@@ -87,6 +109,10 @@ export default {
         },
         isHighlighted() {
             return this.player.isSelected || this.player.isReady;
+        },
+        isMe(player) {
+            const authStore = useAuthStore();
+            return String(player) === String(authStore.user.id);
         }
     }
 };
