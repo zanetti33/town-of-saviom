@@ -21,7 +21,7 @@
                 :thisPlayerHost="isHost" 
                 @remove-player="kickPlayer" 
             />
-            <div class="w-full flex flex-col md:flex-row gap-4">
+            <div class="w-full flex flex-row gap-4">
                 <button @click="onExitButtonClick" class="no-button">Exit</button>
                 <button 
                     v-if="isHost" 
@@ -116,6 +116,16 @@ export default {
                 }
             } catch (error) {
                 console.error('Error joining room:', error);
+                Swal.fire({
+                            title: "Error joining room!",
+                            text: "Try again.",
+                            icon: "warning",
+                            color: "var(--color-primary)",
+                            iconColor: "var(--color-secondary)",
+                            background: "var(--color-section-background)",
+                            confirmButtonColor: "var(--color-primary)",
+                            iconColor: "var(--color-highlight)"
+                            }).then( () => router.push("/dashboard"));
             }
         },
         async checkPlayers() {
@@ -191,9 +201,7 @@ export default {
             // A player was kicked
             this.socket.on('PLAYER_KICKED', (data) => {
                 const authStore = useAuthStore();
-                console.log('Player: ' + data.userId + ' sono qui.');
                 if (String(data.userId) === String(authStore.user.id)) {
-                    console.log('sono nel if')
                     router.push("/dashboard"); // Reindirizza alla dashboard
                     Swal.fire({
                             title: "You have been removed!",
@@ -206,7 +214,7 @@ export default {
                             iconColor: "var(--color-highlight)"
                             });
                 }
-                console.log('fuori if')
+                this.players = this.players.filter(p => String(p.userId) !== String(data.userId));
             });
 
             // A player is ready to start the game

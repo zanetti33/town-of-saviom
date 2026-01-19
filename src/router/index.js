@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 // Import your components
 import LoginContainer from '../components/LoginContainer.vue';
-import LogoutContainer from '../components/LogoutContainer.vue';
 import DashboardContainer from '../components/DashboardContainer.vue';
 import RoomContainer from '../components/RoomContainer.vue';
 import CreateRoom from '../components/CreateRoom.vue';
@@ -14,7 +13,6 @@ const routes = [
   { path: '/dashboard', component: DashboardContainer, name: 'Dashboard' },
   { path: '/login', component: LoginContainer, name: 'Login' },
   { path: '/register', component: RegisterContainer, name: 'Register' },
-  { path: '/logout', component: LogoutContainer, name: 'Logout' },
   { path: '/rooms', component: RoomListContainer, name: 'RoomList' },
   { path: '/rooms/:id', component: RoomContainer, name: 'Room' },
   { path: '/rooms/create', component: CreateRoom, name: 'CreateRoom' },
