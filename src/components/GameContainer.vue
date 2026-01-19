@@ -22,7 +22,25 @@
                 <p class="text-sm mt-1">{{ phaseSubtitle }}</p>
             </div>
 
-            <div class="flex-1 flex justify-center items-center overflow-y-auto">
+            <div v-if="phase === 'DEFENCE'" class="flex flex-col items-center justify-center w-full mt-8">
+                <h2 class="text-2xl md:text-4xl font-bold text-primary mb-8 text-center">
+                    Do you find <span class="text-secondary">{{ getPlayerName(accusedPlayerId) }}</span> guilty?
+                </h2>
+                <div class="flex flex-row gap-8 w-full justify-center">
+                    <button 
+                        @click="voteInnocent"
+                        class="submit-button">
+                        Innocent
+                    </button>
+                    <button 
+                        @click="voteGuilty"
+                        class="no-button">
+                        Guilty
+                    </button>
+                </div>
+            </div>
+
+            <div v-else class="flex-1 flex justify-center items-center overflow-y-auto">
                 <PlayerCardList 
                     :players="players"
                     @player-clicked="onVotePlayer"/>
@@ -121,7 +139,8 @@ export default {
             duration: null,
             phase: 'STARTUP', // Default phase
             elapsed: 0,
-            votedPlayerId: null, // Track who we voted for
+            votedPlayerId: null,
+            accusedPlayerId: null,
             myRole: null,
             handle: null,
             lastTime: 0,
@@ -230,6 +249,7 @@ export default {
             this.socket.on('PHASE_CHANGE', (data) => {
                 this.phase = data.phase;
                 this.duration = data.timeRemaining * 1000;
+                this.accusedPlayerId = data.accused || null;
                 
                 let sysMsg = `Phase changed to: ${data.phase}`;
                 if (data.accused) sysMsg += ` | Accused: ${this.getPlayerName(data.accused)}`;
@@ -275,6 +295,14 @@ export default {
                 }
             });
             this.socket.emit("VOTE", playerId);
+        },
+        // Aggiungi i metodi per votare Guilt/Innocent
+        voteGuilty() {
+            this.socket.emit("GUILTY");
+            // Opzionale: feedback visivo o disabilitazione pulsanti
+        },
+        voteInnocent() {
+            this.socket.emit("INNOCENT");
         },
         getPlayerName(playerId) {
             const p = this.players.find(p => String(p.userId) === String(playerId));
