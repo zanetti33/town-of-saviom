@@ -3,7 +3,7 @@
         <div class="text-center mb-8">
             <div class="flex justify-center mb-4">
                 <div class="relative">
-                    <div class="absolute inset-0 bg-purple-600 blur-xl opacity-50 rounded-full"></div>
+                    <div class="absolute inset-0 bg-primary blur-xl opacity-50 rounded-full"></div>
                     <CastleIcon class="w-25 h-25"/>
                 </div>
             </div>

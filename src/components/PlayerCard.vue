@@ -13,13 +13,17 @@
 
             <div class="grid grid-cols-1 gap-2 justify-center items-center">
                 <span v-if="player.isHost" class="text-sm text-secondary">Host</span>
+                <button v-else-if="thisPlayerHost" 
+                    class="no-button px-1! py-1!" 
+                    @click.stop="$emit('removePlayer', player.userId)">Remove
+                </button>
                 <span v-if="player.isReady" class="text-primary">Ready</span>
                 <span v-if="player.role" class="text-sm text-bad">{{ player.role }}</span>
             </div>
         </div>
 
-        <!-- Else we diplay only the image centered -->
-        <div v-else class="pt-2">
+        <div v-else-if="!thisPlayerHost" class="pt-2">
+
             <component
                 :is="getAvatarComponent(player.imageUrl)"
                 class="avatar-image w-20 h-20" 
@@ -37,6 +41,7 @@ import { defineAsyncComponent } from 'vue';
 
 export default {
     name: 'PlayerCard',
+    emits: ['removePlayer'],
     props: {
         player: {
             type: Object,
@@ -49,6 +54,11 @@ export default {
         avatarsCache: {
             type: Map,
             required: true
+        },
+        thisPlayerHost: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     methods: {
@@ -73,7 +83,7 @@ export default {
         },
         extraInfo() {
             console.log(this.player);
-            return this.player.isHost || this.player.isReady || this.player.role;
+            return this.player.isHost || this.player.isReady || this.player.role || this.thisPlayerHost;
         },
         isHighlighted() {
             return this.player.isSelected || this.player.isReady;

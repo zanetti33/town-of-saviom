@@ -4,19 +4,23 @@
             <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
 
             <!-- Pulsante Copia -->
-            <div class="subtitle flex flex-row items-center gap-4">
-                <label class="text-primary">Room code: {{ roomCode }}</label>
-                <button v-if="roomCode" @click="copyRoomCode" class="form-button">
-                    <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-background-5 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <div class="subtitle flex flex-row items-center gap-2">
+                <label class="text-primary border border-primary p-2 rounded-lg">id: {{ roomCode }}</label>
+                <button v-if="roomCode" @click="copyRoomCode" class="text-primary p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-highlight focus:ring-inset hover:ring-2 hover:ring-highlight hover:ring-inset">
+                    <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-light-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                 </button>
             </div>
             <WaitingPlayersLabel :ready-to-start="canStartGame" :players-number="players.length" :room-capacity="roomCapacity" />
-            <PlayerCardList :players="players" />
+            <PlayerCardList 
+                :players="players" 
+                :thisPlayerHost="isHost" 
+                @remove-player="kickPlayer" 
+            />
             <div class="w-full flex flex-col md:flex-row gap-4">
                 <button @click="onExitButtonClick" class="no-button">Exit</button>
                 <button 
@@ -42,6 +46,7 @@ import { useAuthStore } from '../stores/authStore';
 import router from '../router';
 import PlayerCardList from './PlayerCardList.vue';
 import WaitingPlayersLabel from './WaitingPlayersLabel.vue';
+import Swal from 'sweetalert2';
 
 export default {
     data() {
@@ -183,6 +188,27 @@ export default {
                 this.players = this.players.filter(p => String(p.userId) !== String(userInfo.userId));
             });
 
+            // A player was kicked
+            this.socket.on('PLAYER_KICKED', (data) => {
+                const authStore = useAuthStore();
+                console.log('Player: ' + data.userId + ' sono qui.');
+                if (String(data.userId) === String(authStore.user.id)) {
+                    console.log('sono nel if')
+                    router.push("/dashboard"); // Reindirizza alla dashboard
+                    Swal.fire({
+                            title: "You have been removed!",
+                            text: "The host removed you from the room.",
+                            icon: "warning",
+                            color: "var(--color-primary)",
+                            iconColor: "var(--color-secondary)",
+                            background: "var(--color-section-background)",
+                            confirmButtonColor: "var(--color-primary)",
+                            iconColor: "var(--color-highlight)"
+                            });
+                }
+                console.log('fuori if')
+            });
+
             // A player is ready to start the game
             this.socket.on('PLAYER_READY', (userInfo) => {
                 console.log('Player: ' + userInfo.userId + ' isReady: ' + userInfo.isReady);
@@ -273,6 +299,29 @@ export default {
             });
             
             return isThisPlayerReady;
+        },
+        async kickPlayer(targetUserId) {
+            console.log(`Attempting to remove player: ${targetUserId}`);
+            try {
+                // 1. Chiamata API per rimuovere lo specifico giocatore
+                // Nota: Assicurati che il tuo backend accetti l'ID del giocatore da rimuovere in questa DELETE
+                const response = await lobbyApi.delete(`/rooms/${this.roomId}/players/${targetUserId}`);
+                
+                if (response.status === 200) {
+                    console.log(`Player ${targetUserId} removed by host`);
+                    
+                    // 2. Opzionale: Se il backend non invia già un broadcast 'PLAYER_LEFT', 
+                    // puoi emettere un evento socket qui per forzare l'uscita dell'altro client
+                    if (this.socket) {
+                        this.socket.emit('PLAYER_KICKED', { userId: targetUserId });
+                    }
+                    
+                    // Aggiorna la lista locale
+                    this.players = this.players.filter(p => String(p.userId) !== String(targetUserId));
+                }
+            } catch (error) {
+                console.error('Error removing player:', error);
+            }
         }
     }
 };
