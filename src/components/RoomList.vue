@@ -1,5 +1,12 @@
 <template>
-    <h2 class="section-title">Join Room</h2>
+    <div class="relative flex justify-center items-center w-full">
+        <h2 class="section-title">Join Room</h2>
+
+        <button @click="refreshRoomList" class="form-button bg-secondary! absolute right-0">
+            <UpdateIcon class="w-4 h-4"
+                                :aria-label="'Icon update'"/>
+        </button>
+    </div>
     <input 
         type="text" 
         v-model="searchQuery" 
@@ -24,8 +31,10 @@
         </div>
     </div>
     <p v-if="filteredRooms.length === 0">No rooms found.</p>
-    <div v-else v-for="room in filteredRooms" :key="room.id">
-        <RoomCard :room="room" />
+    <div v-else class="max-h-96 overflow-y-auto thin-scrollbar">
+        <div v-for="room in filteredRooms" :key="room.id" class="mb-4">
+            <RoomCard :room="room" />
+        </div>
     </div>
 </template>
 
@@ -33,10 +42,13 @@
 import { lobbyApi } from '../services/api';
 import RoomCard from './RoomCard.vue';
 import { useAuthStore } from '../stores/authStore';
+import { defineAsyncComponent } from 'vue'
+const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
 
 export default {
     name: 'RoomList',
     components: {
+        UpdateIcon: defineAsyncComponent(icons['../assets/img/update.svg']),
         RoomCard
     },
     data() {
@@ -81,6 +93,9 @@ export default {
         },
         setMode(mode) {
             this.selectedMode = this.selectedMode === mode ? null : mode;
+        },
+        refreshRoomList(){
+            this.fetchRooms();
         }
     }
 };
