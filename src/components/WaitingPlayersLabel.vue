@@ -1,12 +1,12 @@
 <template>
     <div v-if="readyToStart" class="border-2 border-highlight p-2 rounded-full">
-        <span class="text-highlight">ready to start!</span>
+        <span class="text-highlight">Ready to start!</span>
     </div>
-    <div v-else-if="playersNumber<roomCapacity" class="border-2 border-primary p-2 rounded-full">
-        <span class="text-primary">waiting for players... ({{ playersNumber }}/{{ roomCapacity }})</span>
+    <div v-else-if="playersNumber < roomCapacity" class="border-2 border-primary p-2 rounded-full">
+        <span class="text-primary">Waiting for players... ({{ playersNumber }}/{{ roomCapacity }})</span>
     </div>
     <div v-else class="border-2 border-bad p-2 rounded-full">
-        <span class="text-bad">room is full! ({{ playersNumber }}/{{ roomCapacity }})</span>
+        <span class="text-bad">Room is full! ({{ playersNumber }}/{{ roomCapacity }})</span>
     </div>
 </template>
 

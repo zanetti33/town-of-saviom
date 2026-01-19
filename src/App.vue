@@ -27,8 +27,8 @@ onMounted(async () => {
 		try {		
 			const gameStatusRes = await gameplayApi.get("/status");
 			console.log(gameStatusRes.data);
-			const gameId = gameStatusRes.data.id;
-			if (gameId) {
+			if (gameStatusRes.data) {
+				const gameId = gameStatusRes.data.id;
 				router.push(`/games/${gameId}`);
 			}
 		} catch (_) {}

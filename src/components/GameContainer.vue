@@ -98,6 +98,7 @@ import { io } from 'socket.io-client';
 import { useAuthStore } from '../stores/authStore';
 import { defineAsyncComponent } from 'vue'
 import PlayerCardList from './PlayerCardList.vue';
+import Swal from 'sweetalert2';
 const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
 const rolesIcons = import.meta.glob('../assets/img/characters/*.svg', { query: '?component' });
 
@@ -273,21 +274,32 @@ export default {
             this.updateTimer();
         }, 
         onQuit() {
-            if (confirm("Are you sure you want to leave the game? You might not be able to rejoin.")) {
-                const authStore = useAuthStore();
-                this.players.find(p => {
-                        if(String(p.userId) === String(authStore.user.id)) {
-                            p.status = 'LEFT';
+            Swal.fire({
+                title: "Are you sure you want to leave the game?",
+                text: "You will not be able to rejoin.",
+                icon: "warning",
+                showCancelButton: true,
+                color: "var(--color-primary)",
+                iconColor: "var(--color-highlight)",
+                background: "var(--color-section-background)",
+                confirmButtonColor: "var(--color-primary)",
+                cancelButtonColor: "var(--color-bad)",
+                confirmButtonText: "Yes, leave the game."
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const authStore = useAuthStore();
+                        // Forse non c'è bisogno perchè è già fatto nella gameSocket
+                        this.players.find(p => {
+                                if(String(p.userId) === String(authStore.user.id)) {
+                                    p.status = 'LEFT';
+                                }
+                            });
+                        if (this.socket) {
+                            this.socket.emit("QUIT");
                         }
-                    });
-                
-                if (this.socket) {
-                    this.socket.emit("QUIT");
-                    this.socket.disconnect();
-                }
-
-                this.$router.push('/dashboard'); 
-            }
+                        this.$router.push('/dashboard'); 
+                    }
+            });
         },
     }
 };
