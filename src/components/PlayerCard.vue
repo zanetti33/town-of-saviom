@@ -39,7 +39,7 @@
                 class="w-8 h-8 text-secondary font-bold" 
                 :aria-label="'Me Icon'"
             />
-            <span class="text-lg font-bold" :class="isMe(player.userId) ? 'text-secondary' : ''">
+            <span class="text-lg font-bold" :class="isMe(player.userId) ? 'text-secondary' : 'text-white'">
                 {{ isMe(player.userId) ? 'You' : player.name}}
             </span>
         </div>
