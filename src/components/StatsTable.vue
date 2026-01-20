@@ -9,7 +9,7 @@
 
             <button 
                 @click="fetchHistory" 
-                class="flex items-center gap-1 text-sm uppercase font-bold cursor-pointer text-primary hover:text-white bg-dark-primary/10 hover:bg-dark-primary/20 border border-dark-primary/30 px-2 py-1 rounded transition-all"
+                class="form-button bg-secondary! flex items-center gap-1 text-sm uppercase font-bold cursor-pointer px-2 py-1 rounded transition-all"
             >
                 <HistoryIcon class="w-4 h-4" :aria-label="'Icon history'"/>
                 <span>History</span>
