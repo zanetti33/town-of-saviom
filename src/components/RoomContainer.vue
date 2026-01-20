@@ -1,6 +1,6 @@
 <template>
     <div class="bg-container">
-        <div class="main-container items-center">
+        <div class="main-container max-w-4xl items-center">
             <h2 v-if="roomName" class="section-title">{{ roomName }}</h2>
 
             <!-- Pulsante Copia -->

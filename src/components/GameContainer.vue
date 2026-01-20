@@ -52,12 +52,7 @@
                         <span>{{ phase }} Phase</span>
                         <span>{{ Math.max(0, ((duration - elapsed) / 1000)).toFixed(0) }}s</span>
                     </div>
-                    <div class="h-2 bg-section-background rounded-full overflow-hidden w-full">
-                        <div class="h-full transition-all duration-1000 linear shadow-[0_0_10px_currentColor]"
-                             :class="progressBarClass"
-                             :style="{ width: (progressRate * 100) + '%' }">
-                        </div>
-                    </div>
+                    <progress :value="progressRate" label="Phase Progress" :class="progressBarClass"></progress>
                 </div>
 
                 <div class="bg-section-background backdrop-blur-md rounded-xl p-4 border-2 border-border-background flex items-center gap-4 shadow-xl min-w-50">
@@ -161,15 +156,22 @@ export default {
         isDay() {
             return this.phase === 'DAY' || this.phase === 'STARTUP';
         },
+        isDefence() {
+            return this.phase === 'DEFENCE';
+        },
         isNight() {
             return this.phase === 'NIGHT';
         },
         progressRate() {
             if (!this.duration) return 1;
-            return Math.min(1 - this.elapsed / this.duration, 1);
+            return this.elapsed / this.duration;
         },
         progressBarClass() {
-            return this.isNight ? 'bg-bad' : 'bg-highlight';
+            return {
+                'day-progress-bar': this.isDay,
+                'night-progress-bar': this.isNight,
+                'defence-progress-bar': this.isDefence
+            }
         },
         phaseTitle() {
             if (this.isNight) {
@@ -179,7 +181,7 @@ export default {
                     return "Sleep well.";
                 }
             }  
-            if (this.phase === 'DEFENCE') return "Judgement Time";
+            if (this.isDefence) return "Judgement Time";
             return "Town Discussion";
         },
         phaseSubtitle() {
@@ -190,7 +192,7 @@ export default {
                     return "Hope to stay alive.";
                 }
             }       
-            if (this.phase === 'DEFENCE') return "Listen to the defence.";
+            if (this.isDefence) return "Listen to the defence.";
             return "Find the wolves among us.";
         }
     },
@@ -355,4 +357,42 @@ export default {
 </script>
 
 <style scoped>
+    /* Chrome e simili */
+    progress::-webkit-progress-value {
+        background-color: var(--color-background);
+    }
+    .day-progress-bar::-webkit-progress-bar {
+        background-color: var(--color-highlight);
+    }
+    .night-progress-bar::-webkit-progress-bar {
+        background-color: var(--color-bad);
+    }
+    .defence-progress-bar::-webkit-progress-bar {
+        background-color: var(--color-secondary);
+    }
+
+    /* Altri browser */
+    .progress {
+        color: var(--color-background);
+    }
+    .night-progress-bar {
+        background: var(--color-bad);
+    }
+    .day-progress-bar {
+        background: var(--color-highlight);
+    }
+    .defence-progress-bar {
+        background: var(--color-secondary);
+    }
+
+    /* Firefox */
+    .day-progress-bar::-moz-progress-bar {
+        background-color: var(--color-highlight);
+    }
+    .night-progress-bar::-moz-progress-bar {
+        background-color: var(--color-bad);
+    }
+    .defence-progress-bar::-moz-progress-bar {
+        background-color: var(--color-secondary);
+    }
 </style>
