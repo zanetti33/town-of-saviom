@@ -16,13 +16,13 @@
                 <div class="mb-4">
                     <DayIcon v-if="isDay" class="w-16 h-16 text-highlight" />
                     <NightIcon v-if="isNight" class="w-16 h-16 text-bad" />
-                    <DefenseIcon v-if="phase === 'DEFENCE'" class="w-16 h-16 text-secondary" />
+                    <DefenseIcon v-if="this.isDefence" class="w-16 h-16 text-secondary" />
                 </div>
                 <h1 class="text-3xl font-bold tracking-wide">{{ phaseTitle }}</h1>
                 <p class="text-sm mt-1">{{ phaseSubtitle }}</p>
             </div>
 
-            <div v-if="phase === 'DEFENCE'" class="flex flex-col items-center justify-center w-full mt-8">
+            <div v-if="this.isDefence" class="flex flex-col items-center justify-center w-full mt-8">
                 <h2 class="text-2xl md:text-4xl font-bold text-primary mb-8 text-center">
                     Do you find <span class="text-secondary">{{ getPlayerName(accusedPlayerId) }}</span> guilty?
                 </h2>
