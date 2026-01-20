@@ -55,6 +55,8 @@
                             v-model="oldPassword"
                             type="password"
                             required
+                            pattern="(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+"
+                            title="Must contain 1 capital letter, 1 number and 1 symbol"
                             placeholder="Enter your old password"
                             class="form-field"
                         />
@@ -67,6 +69,8 @@
                             type="password"
                             required
                             maxlength="16"
+                            pattern="(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+"
+                            title="Must contain 1 capital letter, 1 number and 1 symbol"
                             placeholder="Enter your new password (max 16 characters)"
                             class="form-field"
                         />
@@ -78,6 +82,8 @@
                             v-model="confirmNewPassword"
                             type="password"
                             required
+                            pattern="(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+"
+                            title="Must contain 1 capital letter, 1 number and 1 symbol"
                             placeholder="Confirm your new password"
                             class="form-field"
                         />
@@ -124,6 +130,7 @@ import { loginApi } from '../services/api';
 import router from '../router';
 import { defineAsyncComponent} from 'vue';
 import Swal from 'sweetalert2';
+import { useAuthStore } from '../stores/authStore';
 
 const avatarModules = import.meta.glob('../assets/img/profile/*.svg', { query: '?component' });
 const avatarCache = new Map();
@@ -185,6 +192,8 @@ export default {
                     const res = await loginApi.put('/users/me/imageUrl', { imageUrl: imgName });
                     if (res.status === 200){
                         console.log('Profile picture updated successfully');
+                        const authStore = useAuthStore();
+                        authStore.clearAuth();
                         Swal.fire({
                             title: "Good job!",
                             text: "Profile picture updated successfully!",

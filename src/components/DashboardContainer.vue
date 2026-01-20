@@ -151,7 +151,7 @@ export default {
         async loadUserData() {
             try {
                 const response = await loginApi.get(`/users/me`);
-                const userData = response.data; 
+                const userData = response.data;
 
                 if (userData) {
                     this.username = userData.name || 'Player';
