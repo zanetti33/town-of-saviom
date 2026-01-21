@@ -3,16 +3,18 @@
         
         <div class="flex-1 flex flex-col relative p-2 lg:p-6 h-1/2 lg:h-auto">
 
-            <button @click="onQuit" class="absolute top-4 left-4 lg:top-6 lg:left-6 no-button w-auto! h-10 px-4 lg:px-8 py-5 text-white! z-20">
+            <button @click="onQuit" class="absolute top-4 left-4 lg:top-6 lg:left-6 no-button w-auto! h-10 px-4 lg:px-8 py-5 z-20">
                 <span class="text-sm font-bold tracking-wider transition-opacity">
                     QUIT
                 </span>
             </button>
             
             <div class="flex flex-col items-center mt-12 lg:mt-8 mb-4 lg:mb-8 transition-all duration-500">
-                <div class="mb-2 lg:mb-4">
+                <div class="p-2 lg:p-3 mb-2 lg:mb-4 rounded-full bg-card-background">
                     <DayIcon v-if="isDay" class="w-12 h-12 lg:w-16 lg:h-16 text-highlight" />
-                    <NightIcon v-if="isNight" class="w-12 h-12 lg:w-16 lg:h-16 text-bad" />
+                    <NightIcon v-if="isNight" 
+                        class="w-12 h-12 lg:w-16 lg:h-16"
+                        :class="this.myRole === 'WEREWOLF' ? 'text-bad' : 'text-primary'" />
                     <DefenseIcon v-if="this.isDefence" class="w-12 h-12 lg:w-16 lg:h-16 text-secondary" />
                 </div>
                 <h1 class="text-2xl lg:text-3xl font-bold tracking-wide text-center">{{ phaseTitle }}</h1>
@@ -26,12 +28,12 @@
                 <div class="flex flex-row gap-4 lg:gap-8 w-full justify-center">
                     <button 
                         @click="voteInnocent"
-                        class="submit-button text-sm lg:text-base px-6 py-3">
+                        class="submit-button text-sm lg:text-base px-6 py-3 uppercase">
                         Innocent
                     </button>
                     <button 
                         @click="voteGuilty"
-                        class="no-button text-sm lg:text-base px-6 py-3">
+                        class="no-button text-sm lg:text-base px-6 py-3 uppercase">
                         Guilty
                     </button>
                 </div>
@@ -71,8 +73,8 @@
                 </div>
                 
                 <div class="mt-4 pt-4 border-t border-section-background">
-                    <button @click="showVoteModal = false" class="submit-button uppercase">
-                        Confirm Selection
+                    <button @click="showVoteModal = false" class="no-button uppercase">
+                        Close
                     </button>
                 </div>
             </div>
@@ -97,7 +99,7 @@
                         <div class="hidden lg:block text-xs uppercase text-secondary">Your Role</div>
                         <div class="font-bold text-lg leading-none"
                             :class="myRole === 'WEREWOLF' ? 'text-bad' : 'text-primary'">
-                            {{ myRole || 'Loading...' }}
+                            {{ myRole || 'Spectator' }}
                         </div>
                     </div>
                 </div>
@@ -172,6 +174,7 @@ export default {
             myRole: null,
             handle: null,
             lastTime: 0,
+            defenceVote: null,
             result: null,
             showVoteModal: false
         };
@@ -294,10 +297,18 @@ export default {
             });
 
             this.socket.on('MESSAGE_SENT', (message) => {
-                this.messages.push({
-                    text: message,
-                    type: "MESSAGE"           
-                });
+                if ((message.includes('Player') || message.includes('Werewolf') || message.includes('You')) 
+                    && message.includes('vote')) {
+                    this.messages.push({
+                        text: message,
+                        type: "VOTE"
+                    });
+                } else {
+                    this.messages.push({
+                        text: message,
+                        type: "MESSAGE"           
+                    });
+                }
             });
 
             this.socket.on('PHASE_CHANGE', (data) => {
@@ -316,6 +327,7 @@ export default {
                 });
                 
                 this.votedPlayerId = null; // Reset vote on phase change
+                this.defenceVote = null;
                 this.resetTimer();
             });
 
@@ -333,15 +345,13 @@ export default {
                     }
                 });
 
-                this.socket.emit('MESSAGE', ` was a ${this.myRole}`);
-
                 Swal.fire({
                     title: this.result === 'WON' ? 'YOU WON!' : 'You Lost...',
                     text: "Game will be added to your history.",
                     icon: this.result === 'WON' ? "success" : "error",
                     showCancelButton: false,
                     color: "var(--color-primary)",
-                    iconColor: this.result === 'WON' ? "var(--color-secondary)" : "var(--color-highlight)",
+                    iconColor: this.result === 'WON' ? "var(--color-secondary)" : "var(--color-bad)",
                     background: "var(--color-section-background)",
                     confirmButtonColor: "var(--color-primary)",
                     confirmButtonText: "Ok"
@@ -358,8 +368,8 @@ export default {
             this.newMessage = null;
         },
         onMobileVote(playerId) {
-            // Non chiudiamo il modale subito per far vedere la selezione
             this.onVotePlayer(playerId);
+            this.showVoteModal = false;
         },
         onVotePlayer(playerId) {
             this.players.find(p => {
@@ -382,10 +392,22 @@ export default {
             }
         },
         voteGuilty() {
-            this.socket.emit("GUILTY");
+            if (this.defenceVote === 'GUILTY') {
+                this.defenceVote = null;
+                this.socket.emit("CANCEL_VOTE");
+            } else {
+                this.defenceVote = 'GUILTY';
+                this.socket.emit("GUILTY");
+            }
         },
         voteInnocent() {
-            this.socket.emit("INNOCENT");
+            if (this.defenceVote === 'INNOCENT') {
+                this.defenceVote = null;
+                this.socket.emit("CANCEL_VOTE");
+            } else {
+                this.defenceVote = 'INNOCENT';
+                this.socket.emit("INNOCENT");
+            }
         },
         messageType(msg) {
              if (msg.type == 'WEREWOLF_KILL' || msg.type == 'QUIT') return 'text-bad';
