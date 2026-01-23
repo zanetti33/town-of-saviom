@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import { setupAuthInterceptors } from './authInterceptor';
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.PROD === 'true';
 const LOGIN_API_URL = isProd ? '/api/login' : 'http://localhost:3000';
 const LOBBY_API_URL = isProd ? '/api/lobby' : 'http://localhost:3001';
 const GAMEPLAY_API_URL = isProd ? '/api/gameplay' : 'http://localhost:3002';
@@ -25,6 +25,7 @@ const lobbySocket = (accessToken) => {
         io('/', {
             path: LOBBY_API_URL + "/socket.io",
             auth: { token: accessToken },
+            query: { token: accessToken },
             withCredentials: true,
             reconnection: false
         }) :
@@ -40,7 +41,7 @@ const gameplaySocket = (accessToken, gameId) => {
         io('/', {
             path: GAMEPLAY_API_URL + "/socket.io",
             auth: { token: accessToken },
-            query: { gameId: gameId },
+            query: { gameId: gameId, token: accessToken },
             withCredentials: true,
             reconnection: false
         }) :
