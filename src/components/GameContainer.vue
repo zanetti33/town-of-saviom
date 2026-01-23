@@ -135,8 +135,7 @@
 </template>
 
 <script>
-import { gameplayApi, GAMEPLAY_API_URL } from '../services/api';
-import { io } from 'socket.io-client';
+import { gameplayApi, gameplaySocket } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
 import { defineAsyncComponent } from 'vue'
 import PlayerCardList from './PlayerCardList.vue';
@@ -259,12 +258,7 @@ export default {
         },
         setupSocket() {
             const authStore = useAuthStore();
-            this.socket = io(GAMEPLAY_API_URL, {
-                auth: { token: authStore.accessToken },
-                query: { gameId: this.gameId },
-                withCredentials: true,
-                reconnection: false
-            });
+            this.socket = gameplaySocket(authStore.accessToken, this.gameId);
 
             this.socket.on('connect', () => console.log('Socket Connected'));
             

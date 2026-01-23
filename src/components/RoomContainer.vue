@@ -40,8 +40,7 @@
 </template>
 
 <script>
-import { lobbyApi, LOBBY_API_URL } from '../services/api';
-import { io } from 'socket.io-client';
+import { lobbyApi, lobbySocket } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
 import router from '../router';
 import PlayerCardList from './PlayerCardList.vue';
@@ -145,13 +144,7 @@ export default {
         setupSocket() {
             const authStore = useAuthStore();
             console.log(`using access token: ${authStore.accessToken}`)
-            this.socket = io(LOBBY_API_URL, {
-                auth: {
-                    token: authStore.accessToken 
-                },
-                withCredentials: true,
-                reconnection: false
-            });
+            this.socket = lobbySocket(authStore.accessToken);
 
             // --- STANDARD EVENTS --
             this.socket.on('connect', () => {
