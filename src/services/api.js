@@ -25,7 +25,6 @@ const lobbySocket = (accessToken) => {
         io('/', {
             path: LOBBY_API_URL + "/socket.io",
             auth: { token: accessToken },
-            query: { token: accessToken },
             withCredentials: true,
             reconnection: false
         }) :
@@ -41,7 +40,7 @@ const gameplaySocket = (accessToken, gameId) => {
         io('/', {
             path: GAMEPLAY_API_URL + "/socket.io",
             auth: { token: accessToken },
-            query: { gameId: gameId, token: accessToken },
+            query: { gameId: gameId },
             withCredentials: true,
             reconnection: false
         }) :
