@@ -75,7 +75,7 @@ export default {
         }
     },
     mounted() {
-        this.joinRoom();
+        await this.joinRoom();
         this.checkPlayers();
         this.isMobileDevice = this.isMobile();
     },
