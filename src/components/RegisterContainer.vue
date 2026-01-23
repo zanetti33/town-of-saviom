@@ -49,6 +49,8 @@
                         type="password"
                         required
                         maxlength="16"
+                        pattern="(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+"
+                        title="Must contain 1 capital letter, 1 number and 1 symbol"
                         placeholder="Password (max 16 characters)"
                         class="form-field"
                     />
@@ -60,6 +62,8 @@
                         v-model="confirmPassword"
                         type="password"
                         required
+                        pattern="(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+"
+                        title="Must contain 1 capital letter, 1 number and 1 symbol"
                         placeholder="Confirm password"
                         class="form-field"
                     />
@@ -128,7 +132,7 @@ export default {
                     this.error = 'Email or Username already in use.';
                 }
             } else {
-                this.error = 'Please fill in all fields and ensure passwords match.';
+                this.error = 'Ensure passwords match.';
             }
         }
     }

@@ -57,7 +57,7 @@ export default {
             roomId: null,
             roomCode: null,
             copied: false,
-            roomCapacity: null,
+            roomCapacity: 0,
             isHost: null,
             isReady: null,
             gameStarted: false,

@@ -1,98 +1,131 @@
 <template>
-    <div class="bg-background p-4 min-h-screen h-screen w-full flex overflow-hidden text-primary font-sans">
+    <div class="bg-background p-0 lg:p-4 min-h-screen h-screen w-full flex flex-col lg:flex-row overflow-hidden text-primary font-sans relative">
         
-        <div class="flex-1 flex flex-col relative p-6">
+        <div class="flex-1 flex flex-col relative p-2 lg:p-6 h-1/2 lg:h-auto">
 
-            <button @click="onQuit" class="absolute top-6 left-6 no-button w-20! h-10 px-8 py-5 text-white!">
-                <div class="items-center">
-                    <QuitIcon class="w-5 h-5 ml-2"/>
-                </div>
+            <button @click="onQuit" class="absolute top-4 left-4 lg:top-6 lg:left-6 no-button w-auto! h-10 px-4 lg:px-8 py-5 z-20">
                 <span class="text-sm font-bold tracking-wider transition-opacity">
                     QUIT
                 </span>
             </button>
             
-            <div class="flex flex-col items-center mt-8 mb-8 transition-all duration-500">
-                <div class="mb-4">
-                    <DayIcon v-if="isDay" class="w-16 h-16 text-highlight" />
-                    <NightIcon v-if="isNight" class="w-16 h-16 text-bad" />
-                    <DefenseIcon v-if="this.isDefence" class="w-16 h-16 text-secondary" />
+            <div class="flex flex-col items-center mt-12 lg:mt-8 mb-4 lg:mb-8 transition-all duration-500">
+                <div class="p-2 lg:p-3 mb-2 lg:mb-4 rounded-full bg-card-background">
+                    <DayIcon v-if="isDay" class="w-12 h-12 lg:w-16 lg:h-16 text-highlight" />
+                    <NightIcon v-if="isNight" 
+                        class="w-12 h-12 lg:w-16 lg:h-16"
+                        :class="this.myRole === 'WEREWOLF' ? 'text-bad' : 'text-primary'" />
+                    <DefenseIcon v-if="this.isDefence" class="w-12 h-12 lg:w-16 lg:h-16 text-secondary" />
                 </div>
-                <h1 class="text-3xl font-bold tracking-wide">{{ phaseTitle }}</h1>
-                <p class="text-sm mt-1">{{ phaseSubtitle }}</p>
+                <h1 class="text-2xl lg:text-3xl font-bold tracking-wide text-center">{{ phaseTitle }}</h1>
+                <p class="text-xs lg:text-sm mt-1">{{ phaseSubtitle }}</p>
             </div>
 
-            <div v-if="this.isDefence" class="flex flex-col items-center justify-center w-full mt-8">
-                <h2 class="text-2xl md:text-4xl font-bold text-primary mb-8 text-center">
+            <div v-if="this.isDefence" class="flex flex-col items-center justify-center w-full mt-4 lg:mt-8">
+                <h2 class="text-xl lg:text-4xl font-bold text-primary mb-4 lg:mb-8 text-center px-4">
                     Do you find <span class="text-secondary">{{ getPlayerName(accusedPlayerId) }}</span> guilty?
                 </h2>
-                <div class="flex flex-row gap-8 w-full justify-center">
+                <div class="flex flex-row gap-4 lg:gap-8 w-full justify-center">
                     <button 
                         @click="voteInnocent"
-                        class="submit-button">
+                        class="submit-button text-sm lg:text-base px-6 py-3 uppercase">
                         Innocent
                     </button>
                     <button 
                         @click="voteGuilty"
-                        class="no-button">
+                        class="no-button text-sm lg:text-base px-6 py-3 uppercase">
                         Guilty
                     </button>
                 </div>
             </div>
 
-            <div v-else class="flex-1 flex justify-center items-center overflow-y-auto">
-                <PlayerCardList 
-                    :players="players"
-                    @player-clicked="onVotePlayer"/>
+            <div v-else class="flex-1 flex flex-col justify-center items-center overflow-hidden w-full">
+                <div class="hidden lg:flex w-full h-full justify-center items-center overflow-y-auto">
+                    <!-- DESKTOP VOTE -->
+                    <PlayerCardList 
+                        :players="players"
+                        @player-clicked="onVotePlayer"/>
+                </div>
+
+                <div class="lg:hidden flex flex-col items-center justify-center w-80">
+                    <button 
+                        @click="showVoteModal = true" class="submit-button">
+                        <span class="font-bold text-md tracking-wider">
+                            {{votedPlayerId ? 'VOTED FOR: ' + getPlayerName(votedPlayerId) : 'VOTE'}}
+                        </span>
+                    </button>
+                </div>
             </div>
 
-            <div class="mt-auto pt-6 flex items-end justify-between relative">
-                <div class="w-2/3 pr-12">
-                    <div class="flex justify-between text-xs font-bold tracking-widest uppercase mb-2">
-                        <span>{{ phase }} Phase</span>
+            <!-- MOBILE VOTE-->
+            <div v-if="showVoteModal" class="fixed inset-0 z-50 bg-background backdrop-blur-sm flex flex-col p-6 animate-fade-in lg:hidden">
+                <div class="flex justify-center items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">VOTE PLAYER</h2>
+                </div>
+            
+                <div class="flex overflow-y-auto gap-4 content-start cursor-pointer thin-scrollbar">
+                    <div class="p-4 rounded-xl border-2 flex flex-col w-full items-center gap-2 transition-all active:scale-95">
+                        <PlayerCardList 
+                            :players="players"
+                            @player-clicked="onMobileVote"/>
+                        
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-section-background">
+                    <button @click="showVoteModal = false" class="no-button uppercase">
+                        Close
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-auto pt-4 flex items-end justify-between relative shrink-0">
+                <div class="flex-1 pr-4 lg:pr-12">
+                    <div class="flex justify-between text-[10px] lg:text-xs font-bold tracking-widest mb-2">
+                        <span class="uppercase">{{ phase }} Phase</span>
                         <span>{{ Math.max(0, ((duration - elapsed) / 1000)).toFixed(0) }}s</span>
                     </div>
                     <progress :value="progressRate" label="Phase Progress" :class="progressBarClass"></progress>
                 </div>
 
-                <div class="bg-section-background backdrop-blur-md rounded-xl p-4 border-2 border-border-background flex items-center gap-4 shadow-xl min-w-50">
-                    <div class="p-2 bg-card-background rounded-lg">
-                        <WerewolfIcon v-if="myRole === 'WEREWOLF'" class="w-10 h-10 text-bad"/>
-                        <DoctorIcon v-if="myRole === 'DOCTOR'" class="w-10 h-10 text-primary"/>
-                        <SeerIcon v-if="myRole === 'SEER'" class="w-10 h-10 text-primary"/>
-                        <VillagerIcon v-if="myRole === 'VILLAGER'" class="w-10 h-10 text-primary"/>
+                <div class="bg-section-background backdrop-blur-md rounded-xl p-2 lg:p-4 border-2 border-border-background flex items-center gap-2 lg:gap-4 shadow-xl">
+                    <div class="p-1.5 lg:p-2 bg-card-background rounded-lg">
+                        <WerewolfIcon v-if="myRole === 'WEREWOLF'" class="w-6 h-6 lg:w-10 lg:h-10 text-bad"/>
+                        <DoctorIcon v-if="myRole === 'DOCTOR'" class="w-6 h-6 lg:w-10 lg:h-10 text-primary"/>
+                        <SeerIcon v-if="myRole === 'SEER'" class="w-6 h-6 lg:w-10 lg:h-10 text-primary"/>
+                        <VillagerIcon v-if="myRole === 'VILLAGER'" class="w-6 h-6 lg:w-10 lg:h-10 text-primary"/>
                     </div>
                     <div>
-                        <div class="text-xs uppercase text-secondary">Your Role</div>
-                        <div class=" font-bold text-lg leading-none"
+                        <div class="hidden lg:block text-xs uppercase text-secondary">Your Role</div>
+                        <div class="font-bold text-lg leading-none"
                             :class="myRole === 'WEREWOLF' ? 'text-bad' : 'text-primary'">
-                            {{ myRole || 'Loading...' }}
+                            {{ myRole || 'Spectator' }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="w-96 bg-section-background border-2 border-border-background flex flex-col rounded-xl shadow-xl z-10">
-            <div class="h-16 bg-card-background border-b flex items-center px-6 gap-3 rounded-t-xl backdrop-blur justify-center">
-                <span class="font-bold tracking-widest text-sm text-white">TOWN LOG</span>
+        <div class="w-full lg:w-96 bg-section-background border-2 border-border-background flex flex-col h-1/2 lg:h-auto rounded-2xl z-10">
+            <div class="h-8 lg:h-16 bg-card-background border-b flex items-center p-6 gap-3 rounded-t-xl backdrop-blur justify-start lg:justify-center">
+                <span class="font-bold tracking-widest text-xs lg:text-sm text-white">TOWN LOG</span>
             </div>
 
             <div class="flex-1 overflow-y-auto p-4 thin-scrollbar flex flex-col-reverse">
                 <div v-for="(msg, idx) in reversedMessages" :key="idx">
-                    <span class="text-primary text-sm">{{ msg }}</span>
+                    <span class="text-xs lg:text-sm" :class="messageType(msg)">{{ msg.text }}</span>
                 </div>
             </div>
 
-            <div class="p-4 bg-card-background border-t rounded-b-xl">
+            <div class="p-2 bg-card-background border-t rounded-b-xl">
                 <form @submit.prevent="onSend" class="flex gap-2 items-center">
                     <input 
                         v-model="newMessage" 
                         id="chat-message"
                         placeholder="Discuss..." 
-                        class="form-field bg-background! flex-1">
+                        class="form-field bg-background! text-xs! lg:text-sm! flex-1">
                     
-                    <button type="submit" class="form-button p-1.5">
+                    <button type="submit" class="form-button p-1.5 flex items-center justify-center">
                         <svg class="w-4 h-4 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                     </button>
                 </form>
@@ -110,6 +143,8 @@ import PlayerCardList from './PlayerCardList.vue';
 import Swal from 'sweetalert2';
 const icons = import.meta.glob('../assets/img/*.svg', { query: '?component' });
 const rolesIcons = import.meta.glob('../assets/img/characters/*.svg', { query: '?component' });
+const avatars = import.meta.glob('../assets/img/profile/*.svg', { query: '?component' });
+const avatarsCache = new Map();
 
 export default {
     name: 'GameContainer',
@@ -139,7 +174,9 @@ export default {
             myRole: null,
             handle: null,
             lastTime: 0,
-            result: null
+            defenceVote: null,
+            result: null,
+            showVoteModal: false
         };
     },
     mounted() {
@@ -232,7 +269,22 @@ export default {
             this.socket.on('connect', () => console.log('Socket Connected'));
             
             this.socket.on('PLAYER_ELIMINATED', async (data) => {
-                this.messages.push(`${this.getPlayerName(data.userId)} was eliminated (${data.cause})`);
+                if (data.cause === 'WEREWOLF_KILL') {
+                    this.messages.push({
+                        text: `Werewolves eliminated ${this.getPlayerName(data.userId)} during the night.`,
+                        type: 'WEREWOLF_KILL'
+                    });
+                } else if (data.cause === 'VILLAGER_KILL') {
+                    this.messages.push({
+                        text: `The Town has chosen to eliminate ${this.getPlayerName(data.userId)}.`,
+                        type: 'VILLAGER_KILL'
+                    });
+                } else {
+                    this.messages.push({
+                        text: `Player ${this.getPlayerName(data.userId)} surrendered.`,
+                        type: 'QUIT'
+                    });
+                }
                 try {
                     const response = await gameplayApi.get(`/games/${this.gameId}`);
                     if (response.status === 200 || response.status === 201) {
@@ -245,7 +297,18 @@ export default {
             });
 
             this.socket.on('MESSAGE_SENT', (message) => {
-                this.messages.push(message);
+                if ((message.includes('Player') || message.includes('Werewolf') || message.includes('You')) 
+                    && message.includes('vote')) {
+                    this.messages.push({
+                        text: message,
+                        type: "VOTE"
+                    });
+                } else {
+                    this.messages.push({
+                        text: message,
+                        type: "MESSAGE"           
+                    });
+                }
             });
 
             this.socket.on('PHASE_CHANGE', (data) => {
@@ -254,10 +317,17 @@ export default {
                 this.accusedPlayerId = data.accused || null;
                 
                 let sysMsg = `Phase changed to: ${data.phase}`;
-                if (data.accused) sysMsg += ` | Accused: ${this.getPlayerName(data.accused)}`;
-                this.messages.push(`--- ${sysMsg} ---`);
+                if (data.accused) sysMsg += ` | Accusing: ${this.getPlayerName(data.accused)}`;
+
+                this.players.forEach(p => p.isSelected = false);
+
+                this.messages.push({
+                    text: sysMsg,
+                    type: 'PHASE_CHANGE'
+                });
                 
                 this.votedPlayerId = null; // Reset vote on phase change
+                this.defenceVote = null;
                 this.resetTimer();
             });
 
@@ -274,9 +344,22 @@ export default {
                         this.result = p.result;
                     }
                 });
-                console.log("Final result: " + this.result);
-                //Il salvataggio delle stats va fatto qui o lo gestisce l'engine?
-                //Qui si può mettere una pagina? un alert? Per poi redirectare alla dashboard
+
+                Swal.fire({
+                    title: this.result === 'WON' ? 'YOU WON!' : 'You Lost...',
+                    text: "Game will be added to your history.",
+                    icon: this.result === 'WON' ? "success" : "error",
+                    showCancelButton: false,
+                    color: "var(--color-primary)",
+                    iconColor: this.result === 'WON' ? "var(--color-secondary)" : "var(--color-bad)",
+                    background: "var(--color-section-background)",
+                    confirmButtonColor: "var(--color-primary)",
+                    confirmButtonText: "Ok"
+                    }).then((res) => {
+                        if (res.isConfirmed) {
+                            this.$router.push('/dashboard');
+                        }
+                });
             });
         },
         onSend() {
@@ -284,27 +367,53 @@ export default {
             this.socket.emit("MESSAGE", this.newMessage);
             this.newMessage = null;
         },
+        onMobileVote(playerId) {
+            this.onVotePlayer(playerId);
+            this.showVoteModal = false;
+        },
         onVotePlayer(playerId) {
             this.players.find(p => {
                 if (String(p.userId) === String(this.votedPlayerId)) {
                     p.isSelected = false;
                 }
             });
-            this.votedPlayerId = playerId;
-            this.players.find(p => {
-                if (String(p.userId) === String(this.votedPlayerId)) {
-                    p.isSelected = true;
-                }
-            });
-            this.socket.emit("VOTE", playerId);
+
+            if (String(this.votedPlayerId) === String(playerId)) {
+                this.votedPlayerId = null;
+                this.socket.emit("CANCEL_VOTE");
+            } else {
+                this.votedPlayerId = playerId;
+                this.players.find(p => {
+                    if (String(p.userId) === String(this.votedPlayerId)) {
+                        p.isSelected = true;
+                    }
+                });
+                this.socket.emit("VOTE", this.votedPlayerId);
+            }
         },
-        // Aggiungi i metodi per votare Guilt/Innocent
         voteGuilty() {
-            this.socket.emit("GUILTY");
-            // Opzionale: feedback visivo o disabilitazione pulsanti
+            if (this.defenceVote === 'GUILTY') {
+                this.defenceVote = null;
+                this.socket.emit("CANCEL_VOTE");
+            } else {
+                this.defenceVote = 'GUILTY';
+                this.socket.emit("GUILTY");
+            }
         },
         voteInnocent() {
-            this.socket.emit("INNOCENT");
+            if (this.defenceVote === 'INNOCENT') {
+                this.defenceVote = null;
+                this.socket.emit("CANCEL_VOTE");
+            } else {
+                this.defenceVote = 'INNOCENT';
+                this.socket.emit("INNOCENT");
+            }
+        },
+        messageType(msg) {
+             if (msg.type == 'WEREWOLF_KILL' || msg.type == 'QUIT') return 'text-bad';
+             if (msg.type == 'VILLAGER_KILL' || msg.type == 'PHASE_CHANGE') return 'text-highlight';
+             if (msg.type == 'VOTE') return 'text-secondary';
+             return 'text-primary';
         },
         getPlayerName(playerId) {
             const p = this.players.find(p => String(p.userId) === String(playerId));
@@ -323,7 +432,25 @@ export default {
             this.elapsed = 0;
             this.lastTime = performance.now();
             this.updateTimer();
-        }, 
+        },
+        getAvatarComponent(imgName) {
+            const path = `../assets/img/profile/${imgName}`;
+            
+            if (avatarsCache.has(path)) {
+                return avatarsCache.get(path);
+            }
+            
+            const loader = avatars[path] || avatars['../assets/img/profile/default.svg'];
+
+            if (!loader) {
+                console.warn(`Avatar not found and default missing: ${path}`);
+                return null;
+            }
+
+            const comp = defineAsyncComponent(loader);
+            avatarsCache.set(path, comp);
+            return comp;
+        },
         onQuit() {
             Swal.fire({
                 title: "Are you sure you want to leave the game?",

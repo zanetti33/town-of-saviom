@@ -1,7 +1,7 @@
 <template>
     <div 
         @click.stop="$emit('playerClicked', player.userId)"
-        class="w-full flex flex-col items-center gap-1 rounded-lg transition-all p-1 bg-card-background" 
+        class="w-full flex flex-col items-center gap-1 rounded-lg transition-all p-1 bg-card-background cursor-pointer" 
         :class="cardClasses">
         <!-- If extraInfo we display image on the left and info on the right -->
         <div v-if="extraInfo()" class="grid grid-cols-2 gap-6 justify-center items-center pt-2">
@@ -14,7 +14,7 @@
             <div class="grid grid-cols-1 gap-2 justify-center items-center">
                 <span v-if="player.isHost" class="text-sm text-secondary">Host</span>
                 <button v-else-if="thisPlayerHost" 
-                    class="no-button px-1! py-1!" 
+                    class="no-button px-1! py-1! cursor-pointer" 
                     @click.stop="$emit('removePlayer', player.userId)">Remove
                 </button>
                 <span v-if="player.isReady" class="text-primary">Ready</span>
@@ -39,7 +39,7 @@
                 class="w-8 h-8 text-secondary font-bold" 
                 :aria-label="'Me Icon'"
             />
-            <span class="text-lg font-bold" :class="isMe(player.userId) ? 'text-secondary' : ''">
+            <span class="text-lg font-bold" :class="isMe(player.userId) ? 'text-secondary' : 'text-white'">
                 {{ isMe(player.userId) ? 'You' : player.name}}
             </span>
         </div>
