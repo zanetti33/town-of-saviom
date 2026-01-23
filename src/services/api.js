@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { setupAuthInterceptors } from './authInterceptor';
-const isProd = import.meta.env.PROD;
+const isProd = !(rocess.env.NODE_ENV == 'debug');
 const LOGIN_API_URL = isProd ? '/api/login' : 'http://localhost:3000';
 const LOBBY_API_URL = isProd ? '/api/lobby' : 'http://localhost:3001';
 const GAMEPLAY_API_URL = isProd ? '/api/gameplay' : 'http://localhost:3002';
