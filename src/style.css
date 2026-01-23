@@ -131,7 +131,7 @@
 }
 
 .username-info-top-right {
-    @apply transition-all flex items-center justify-center bg-card-background gap-6 pl-6 pr-3 py-2 rounded-full border border-border-background;
+    @apply transition-all flex items-center justify-center bg-card-background gap-6 pl-6 pr-3 max-md:px-3 py-2 rounded-full border border-border-background;
 }
 
 progress {

@@ -75,8 +75,11 @@ export default {
         }
     },
     mounted() {
-        await this.joinRoom();
-        this.checkPlayers();
+        this.joinRoom().then((success) => {
+            if (success) {
+                this.checkPlayers()
+            }
+        });
         this.isMobileDevice = this.isMobile();
     },
     beforeUnmount() {
@@ -113,6 +116,7 @@ export default {
                     }
                     this.setupSocket();
                 }
+                return true;
             } catch (error) {
                 console.error('Error joining room:', error);
                 Swal.fire({
@@ -125,6 +129,7 @@ export default {
                             confirmButtonColor: "var(--color-primary)",
                             iconColor: "var(--color-highlight)"
                             }).then( () => router.push("/dashboard"));
+                return false;
             }
         },
         async checkPlayers() {

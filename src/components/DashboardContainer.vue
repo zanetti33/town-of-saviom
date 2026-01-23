@@ -2,7 +2,7 @@
     <div class="bg-container">
         <div class="mobile-only main-container max-w-2xl">
             <div class="flex justify-between">
-                <div style="align-items: center;">
+                <div class="place-self-center">
                     <h1 class="section-title text-4xl!">
                         Dashboard
                     </h1>
@@ -12,7 +12,7 @@
                     class="username-info-top-right cursor-pointer 
                     focus:outline-none focus:ring-4 focus:ring-highlight focus:ring-inset 
                     hover:ring-4 hover:ring-highlight hover:ring-inset">
-                    <span class="text-white font-bold text-sm tracking-wide">{{ username }}</span>
+                    <span class="text-white font-bold text-sm tracking-wide max-md:hidden">{{ username }}</span>
                     <component 
                         :is="getAvatarComponent(imageUrl)"
                         class="w-12 h-12 rounded-full border-2 border-primary"/>
@@ -55,14 +55,14 @@
         </div>
         <div class="desktop-only wide-container">
             <div class="flex justify-between">
-                <div style="align-items: center;">
+                <div class="place-self-center">
                     <h1 class="section-title text-4xl!">
                         Dashboard
                     </h1>
                 </div>
                 
                 <button @click="openOptions" 
-                    class="mb-6 username-info-top-right cursor-pointer 
+                    class="username-info-top-right cursor-pointer place-self-center
                     focus:outline-none focus:ring-4 focus:ring-highlight focus:ring-inset 
                     hover:ring-4 hover:ring-highlight hover:ring-inset">
                     <span class="text-white font-bold text-sm tracking-wide">{{ username }}</span>
@@ -71,7 +71,7 @@
                         class="w-12 h-12 rounded-full border-2 border-primary"/>
                 </button>
             </div>
-            <div class="flex justify-between">
+            <div class="flex justify-between mt-4">
                 <div class="invisible-main-container">
                     <StatsTable />
 
