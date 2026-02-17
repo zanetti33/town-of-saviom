@@ -42,13 +42,13 @@ const gameplaySocket = (accessToken, gameId) => {
             auth: { token: accessToken },
             query: { gameId: gameId },
             withCredentials: true,
-            reconnection: false
+            reconnection: true
         }) :
         io(GAMEPLAY_API_URL, {
             auth: { token: accessToken },
             query: { gameId: gameId },
             withCredentials: true,
-            reconnection: false
+            reconnection: true
         });
 }
 
